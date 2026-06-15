@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Olya's English Space</title>
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      
+      /* Яркие акценты */
+      --primary: #ff5e62;
+      --secondary: #ff9966;
+      --accent-blue: #4a90e2;
+      --accent-purple: #7b1fa2;
+      --success: #2ec4b6;
+      
+      --gradient-hero: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);
+      --shadow: rgba(255, 94, 98, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: all 0.25s ease;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      padding: 30px 15px;
+    }
+
+    /* Яркая интерактивная шапка */
+    .hero {
+      background: var(--gradient-hero);
+      padding: 35px;
+      border-radius: 30px;
+      box-shadow: 0 15px 30px var(--shadow);
+      margin-bottom: 35px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 180px;
+      height: 180px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .hero-text h1 {
+      margin: 0 0 8px 0;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-text p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .level-badge {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(5px);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 99px;
+      font-weight: 700;
+      font-size: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Сетка блоков */
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0 0 20px 5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tasks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    /* Стили ярких карточек заданий */
+    .task-card {
+      background: var(--card);
+      padding: 25px;
+      border-radius: 24px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+      border: 2px solid transparent;
+      position: relative;
+    }
+
+    .task-card.homework-type { border-bottom: 5px solid var(--primary); }
+    .task-card.vocab-type { border-bottom: 5px solid var(--accent-blue); }
+
+    .task-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    }
+    .task-card.homework-type:hover { border-color: var(--primary); }
+    .task-card.vocab-type:hover { border-color: var(--accent-blue); }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .icon-wrapper {
+      font-size: 28px;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+    }
+    .homework-type .icon-wrapper { background: #ffebee; color: var(--primary); }
+    .vocab-type .icon-wrapper { background: #e3f2fd; color: var(--accent-blue); }
+
+    .task-info h3 {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .task-info p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .status {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .homework-type .status { background: #ffebee; color: var(--primary); }
+    .vocab-type .status { background: #e3f2fd; color: var(--accent-blue); }
+
+    .go-btn {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+    }
+    .homework-type .go-btn { background: var(--primary); }
+    .vocab-type .go-btn { background: var(--accent-blue); }
+    .task-card:hover .go-btn { transform: scale(1.15); }
+
+    /* --- БЛОК ПРАВИЛ (Шпаргалки) --- */
+    .rules-section {
+      background: var(--card);
+      padding: 30px;
+      border-radius: 28px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.03);
+    }
+
+    .rule-block {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 18px;
+      margin-bottom: 25px;
+      border-left: 5px solid var(--accent-purple);
+    }
+    .rule-block.structure { border-left-color: var(--success); }
+    .rule-block.verbs { border-left-color: var(--secondary); margin-bottom: 0; }
+
+    .rule-block h3 {
+      margin: 0 0 12px 0;
+      font-size: 17px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Таблицы правил */
+    .rule-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .rule-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      min-width: 550px;
+    }
+
+    .rule-table th, .rule-table td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+
+    .rule-table th {
+      background: rgba(0,0,0,0.02);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Формула структуры предложений */
+    .formula {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .formula-item {
+      background: white;
+      padding: 8px 14px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+      font-weight: 600;
+      font-size: 13px;
+      border: 1px solid #e2e8f0;
+    }
+    .formula-item.subject { border-color: #f87171; color: #ef4444; }
+    .formula-item.verb { border-color: #60a5fa; color: #3b82f6; }
+    .formula-item.object { border-color: #34d399; color: #10b981; }
+    .formula-item.manner { border-color: #fbbf24; color: #d97706; }
+    .formula-item.place { border-color: #a78bfa; color: #7c3aed; }
+    .formula-item.time { border-color: #f472b6; color: #db2777; }
+
+    /* Адаптивность */
+    @media (max-width: 600px) {
+      .hero { flex-direction: column; align-items: flex-start; gap: 20px; }
+      .tasks-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header class="hero">
+      <div class="hero-text">
+        <h1>Welcome back, Olya! ✨</h1>
+        <p>Твой интерактивный английский уголок. Время учиться!</p>
+      </div>
+      <div class="level-badge">Pre-Intermediate (A2)</div>
+    </header>
+
+    <div class="section-title">🚀 Твои задания на сегодня</div>
+    <main class="tasks-grid">
+      
+      <a href="EFPIWB2A12.html" class="task-card homework-type">
+        <div>
+          <div class="task-header">
+            <div class="icon-wrapper">📝</div>
+            <div class="task-info">
+              <h3>Домашнее задание</h3>
+              <p>Тема: Past Simple (Regular & Irregular)</p>
+            </div>
+          </div>
+        </div>
+        <div class="action-row">
+          <span class="status">Грамматика</span>
+          <div class="go-btn">→</div>
+        </div>
+      </a>
+
+      <a href="vocabulary.html" class="task-card vocab-type">
+        <div>
+          <div class="task-header">
+            <div class="icon-wrapper">🧠</div>
+            <div class="task-info">
+              <h3>Лексика</h3>
+              <p>Интерактивные карточки слов и тест</p>
+            </div>
+          </div>
+        </div>
+        <div class="action-row">
+          <span class="status">Словарь</span>
+          <div class="go-btn">→</div>
+        </div>
+      </a>
+
+    </main>
+
+    <div class="section-title">📚 База знаний и важные правила (A2)</div>
+    <section class="rules-section">
+      
+      <div class="rule-block tenses">
+        <h3>⚡ Времена и конструкции: Тонкости уровня A2</h3>
+        <div class="rule-table-wrapper">
+          <table class="rule-table">
+            <thead>
+              <tr>
+                <th style="width: 25%">Время / Конструкция</th>
+                <th style="width: 40%">Зачем нужно? (Нюансы)</th>
+                <th style="width: 35%">Пример</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Present Continuous</b><br><small style="color:var(--success)"><i>(Будущее время)</i></small></td>
+                <td>Для <b>100% запланированных</b> дел и договоренностей (куплены билеты, забронирован столик).<br><small>🗓️ <i>tonight, this weekend</i></small></td>
+                <td>I <b>am meeting</b> my friends at 7 PM tonight. <br><small><i>(Мы уже созвонились и договорились)</i></small></td>
+              </tr>
+              <tr>
+                <td><b>Future Simple (Will)</b></td>
+                <td>Для <b>спонтанных решений</b> (принятых в момент речи), обещаний или предсказаний.<br><small>🔮 <i>I think, maybe, I promise</i></small></td>
+                <td>— It's cold here.<br>— I <b>will close</b> the window! <br><small><i>(Решил прямо сейчас)</i></small></td>
+              </tr>
+              <tr>
+                <td><b>to be going to</b></td>
+                <td>Для <b>намерений и планов</b> (я собираюсь, но точного времени или билетов еще нет).<br><small>🎯 <i>next year, in the future</i></small></td>
+                <td>We <b>are going to buy</b> a new car next year. <br><small><i>(Планируем, копим деньги)</i></small></td>
+              </tr>
+              <tr>
+                <td><b>Past Continuous</b></td>
+                <td>Показывает длительный <b>процесс в конкретный момент</b> в прошлом (часто прерывается коротким Past Simple).<br><small>⏱️ <i>at 5 o'clock yesterday, while</i></small></td>
+                <td>I <b>was watching</b> a movie when you called. <br><small><i>(Я был в процессе просмотра фильма)</i></small></td>
+              </tr>
+              <tr>
+                <td><b>Present Perfect</b></td>
+                <td>Когда важен <b>результат или жизненный опыт сейчас</b>, а точное время в прошлом вообще не имеет значения.<br><small>🍿 <i>already, yet, ever, never, just</i></small></td>
+                <td>I <b>have already seen</b> this film. <br><small><i>(Я знаю сюжет, сейчас мне не интересно)</i></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="rule-block structure">
+        <h3>🧩 Расширенная структура предложения (Формула SVOMPT)</h3>
+        <p style="margin: 0 0 12px 0; font-size: 14px; color: var(--text-muted);">Чтобы строить длинные и грамотные предложения, соблюдай строгий порядок слов:</p>
+        <div class="formula">
+          <div class="formula-item subject">1. Кто / Что (Subject)</div>
+          <div class="formula-item verb">2. Действие (Verb)</div>
+          <div class="formula-item object">3. Кого / Что (Object)</div>
+          <div class="formula-item manner">4. Как (Manner)</div>
+          <div class="formula-item place">5. Где (Place)</div>
+          <div class="formula-item time">6. Когда (Time)</div>
+        </div>
+        <p style="margin: 14px 0 0 0; font-size: 14px;"><i>Пример: <b>We</b> (1) + <b>rented</b> (2) + <b>a car</b> (3) + <b>easily</b> (4) + <b>in London</b> (5) + <b>last week</b> (6).</i></p>
+      </div>
+
+      <div class="rule-block verbs">
+        <h3>📊 Неправильные глаголы (Топ-30 для уровня A2)</h3>
+        <p style="margin: 0 0 12px 0; font-size: 14px; color: var(--text-muted);">Форма V3 (Past Participle) необходима для построения времени Present Perfect.</p>
+        <div class="rule-table-wrapper">
+          <table class="rule-table">
+            <thead>
+              <tr>
+                <th>Infinitive (V1)</th>
+                <th>Past Simple (V2)</th>
+                <th>Past Participle (V3)</th>
+                <th>Перевод</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><b>be</b></td><td>was / were</td><td>been</td><td>быть, являться</td></tr>
+              <tr><td><b>bring</b></td><td>brought</td><td>brought</td><td>приносить</td></tr>
+              <tr><td><b>buy</b></td><td>bought</td><td>bought</td><td>покупать</td></tr>
+              <tr><td><b>can</b></td><td>could</td><td>been able to</td><td>мочь, уметь</td></tr>
+              <tr><td><b>choose</b></td><td>chose</td><td>chosen</td><td>выбирать</td></tr>
+              <tr><td><b>come</b></td><td>came</td><td>come</td><td>приходить, приезжать</td></tr>
+              <tr><td><b>do</b></td><td>did</td><td>done</td><td>делать</td></tr>
+              <tr><td><b>drink</b></td><td>drank</td><td>drunk</td><td>пить</td></tr>
+              <tr><td><b>drive</b></td><td>drove</td><td>driven</td><td>водить (машину)</td></tr>
+              <tr><td><b>eat</b></td><td>ate</td><td>eaten</td><td>есть, кушать</td></tr>
+              <tr><td><b>find</b></td><td>found</td><td>found</td><td>находить</td></tr>
+              <tr><td><b>fly</b></td><td>flew</td><td>flown</td><td>летать</td></tr>
+              <tr><td><b>get</b></td><td>got</td><td>got</td><td>получать, становиться</td></tr>
+              <tr><td><b>give</b></td><td>gave</td><td>given</td><td>давать</td></tr>
+              <tr><td><b>go</b></td><td>went</td><td>gone / been</td><td>идти, ехать</td></tr>
+              <tr><td><b>have</b></td><td>had</td><td>had</td><td>иметь</td></tr>
+              <tr><td><b>know</b></td><td>knew</td><td>known</td><td>знать</td></tr>
+              <tr><td><b>leave</b></td><td>left</td><td>left</td><td>покидать, оставлять</td></tr>
+              <tr><td><b>make</b></td><td>made</td><td>made</td><td>делать, создавать</td></tr>
+              <tr><td><b>meet</b></td><td>met</td><td>met</td><td>встречать, знакомиться</td></tr>
+              <tr><td><b>read</b></td><td>read <small>(red)</small></td><td>read <small>(red)</small></td><td>читать</td></tr>
+              <tr><td><b>run</b></td><td>ran</td><td>run</td><td>бежать</td></tr>
+              <tr><td><b>say</b></td><td>said</td><td>said</td><td>сказать, говорить</td></tr>
+              <tr><td><b>see</b></td><td>saw</td><td>seen</td><td>видеть</td></tr>
+              <tr><td><b>send</b></td><td>sent</td><td>sent</td><td>отправлять</td></tr>
+              <tr><td><b>speak</b></td><td>spoke</td><td>spoken</td><td>говорить (на языке)</td></tr>
+              <tr><td><b>spend</b></td><td>spent</td><td>spent</td><td>тратить (время/деньги)</td></tr>
+              <tr><td><b>take</b></td><td>took</td><td>taken</td><td>брать, брать с собой</td></tr>
+              <tr><td><b>think</b></td><td>thought</td><td>thought</td><td>думать</td></tr>
+              <tr><td><b>understand</b></td><td>understood</td><td>understood</td><td>понимать</td></tr>
+              <tr><td><b>write</b></td><td>wrote</td><td>written</td><td>писать</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+</body>
+</html>
