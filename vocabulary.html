@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Учить английские слова</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6f8; margin: 0; padding: 20px; color: #222; }
+    .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+    h1, h2 { text-align: center; }
+    .tabs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+    button { border: none; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-size: 16px; background: #2563eb; color: white; }
+    button:hover { background: #1d4ed8; }
+    button.secondary { background: #e5e7eb; color: #111; }
+    button.secondary:hover { background: #d1d5db; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 25px; margin: 15px 0; text-align: center; background: #fafafa; }
+    .word { font-size: 42px; font-weight: bold; margin: 20px 0; }
+    .translation { font-size: 28px; margin: 15px 0; color: #047857; display: none; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    th { background: #eef2ff; }
+    input { padding: 12px; width: 80%; max-width: 400px; font-size: 18px; border-radius: 8px; border: 1px solid #aaa; }
+    .result { font-weight: bold; margin-top: 15px; font-size: 20px; }
+    .correct { color: #047857; }
+    .wrong { color: #dc2626; }
+    .hidden { display: none; }
+    .score { text-align: center; font-size: 20px; margin: 15px 0; }
+    .small { color: #555; font-size: 14px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Английские слова: учим и проверяем</h1>
+    <p class="small">Нажимай на режимы: словарь, карточки или тест.</p>
+
+    <div class="tabs">
+      <button onclick="showSection('dictionary')">Словарь</button>
+      <button onclick="showSection('flashcards')">Карточки</button>
+      <button onclick="showSection('quiz')">Тест</button>
+    </div>
+
+    <section id="dictionary">
+      <h2>Словарь</h2>
+      <table>
+        <thead>
+          <tr><th>English</th><th>Русский</th></tr>
+        </thead>
+        <tbody id="wordTable"></tbody>
+      </table>
+    </section>
+
+    <section id="flashcards" class="hidden">
+      <h2>Карточки</h2>
+      <div class="card">
+        <div class="word" id="cardWord"></div>
+        <div class="translation" id="cardTranslation"></div>
+        <button onclick="showTranslation()">Показать перевод</button>
+        <button class="secondary" onclick="nextCard()">Следующее слово</button>
+      </div>
+    </section>
+
+    <section id="quiz" class="hidden">
+      <h2>Тест</h2>
+      <div class="score" id="score">Счёт: 0 / 0</div>
+      <div class="card">
+        <p>Напиши русский перевод слова:</p>
+        <div class="word" id="quizWord"></div>
+        <input id="answerInput" placeholder="Введите перевод..." onkeydown="if(event.key==='Enter') checkAnswer()" />
+        <br><br>
+        <button onclick="checkAnswer()">Проверить</button>
+        <button class="secondary" onclick="nextQuestion()">Следующий вопрос</button>
+        <div class="result" id="result"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const words = [
+      { en: "title", ru: ["название", "заголовок"] },
+      { en: "lost", ru: ["потерял", "потерянный", "потерялся"] },
+      { en: "last", ru: ["последний", "прошлый"] },
+      { en: "climb", ru: ["взбираться", "подниматься"] },
+      { en: "table", ru: ["стол"] },
+      { en: "top", ru: ["верх", "вершина"] },
+      { en: "view", ru: ["вид", "пейзаж"] },
+      { en: "could", ru: ["мог", "могла", "могли"] },
+      { en: "distance", ru: ["расстояние"] },
+      { en: "for a while", ru: ["некоторое время"] },
+      { en: "thing", ru: ["вещь", "предмет"] },
+      { en: "probably", ru: ["вероятно", "наверное"] },
+      { en: "decide", ru: ["решать", "принять решение"] },
+      { en: "out", ru: ["наружу", "снаружи", "вне"] },
+      { en: "terrible", ru: ["ужасный", "страшный"] },
+      { en: "find", ru: ["находить"] },
+      { en: "angry", ru: ["сердитый", "злой"] }
+    ];
+
+    let cardIndex = 0;
+    let quizIndex = 0;
+    let correct = 0;
+    let total = 0;
+
+    function normalize(text) {
+      return text.toLowerCase().trim().replace(/[ё]/g, "е");
+    }
+
+    function showSection(id) {
+      document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
+      document.getElementById(id).classList.remove("hidden");
+      if (id === "flashcards") loadCard();
+      if (id === "quiz") loadQuestion();
+    }
+
+    function fillDictionary() {
+      const table = document.getElementById("wordTable");
+      words.forEach(w => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${w.en}</td><td>${w.ru.join(", ")}</td>`;
+        table.appendChild(row);
+      });
+    }
+
+    function loadCard() {
+      document.getElementById("cardWord").textContent = words[cardIndex].en;
+      const tr = document.getElementById("cardTranslation");
+      tr.textContent = words[cardIndex].ru.join(", ");
+      tr.style.display = "none";
+    }
+
+    function showTranslation() {
+      document.getElementById("cardTranslation").style.display = "block";
+    }
+
+    function nextCard() {
+      cardIndex = (cardIndex + 1) % words.length;
+      loadCard();
+    }
+
+    function loadQuestion() {
+      document.getElementById("quizWord").textContent = words[quizIndex].en;
+      document.getElementById("answerInput").value = "";
+      document.getElementById("result").textContent = "";
+      document.getElementById("answerInput").focus();
+    }
+
+    function checkAnswer() {
+      const input = normalize(document.getElementById("answerInput").value);
+      const answers = words[quizIndex].ru.map(normalize);
+      const result = document.getElementById("result");
+
+      total++;
+      if (answers.includes(input)) {
+        correct++;
+        result.textContent = "Правильно!";
+        result.className = "result correct";
+      } else {
+        result.textContent = "Неправильно. Правильный ответ: " + words[quizIndex].ru.join(", ");
+        result.className = "result wrong";
+      }
+      document.getElementById("score").textContent = `Счёт: ${correct} / ${total}`;
+    }
+
+    function nextQuestion() {
+      quizIndex = Math.floor(Math.random() * words.length);
+      loadQuestion();
+    }
+
+    fillDictionary();
+    loadCard();
+    loadQuestion();
+  </script>
+</body>
+</html>
