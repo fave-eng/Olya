@@ -95,10 +95,25 @@
       { en: "angry", ru: ["сердитый", "злой"] }
     ];
 
-    let cardIndex = 0;
-    let quizIndex = 0;
+    // Очереди слов для режимов, чтобы ничего не повторялось
+    let flashcardPool = [];
+    let quizPool = [];
+
+    let currentCardWord = null;
+    let currentQuizWord = null;
+
     let correct = 0;
     let total = 0;
+
+    // Функция перемешивания массива (Алгоритм Фишера-Йетса)
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
 
     function normalize(text) {
       return text.toLowerCase().trim().replace(/[ё]/g, "е");
@@ -107,8 +122,8 @@
     function showSection(id) {
       document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
       document.getElementById(id).classList.remove("hidden");
-      if (id === "flashcards") loadCard();
-      if (id === "quiz") loadQuestion();
+      if (id === "flashcards" && !currentCardWord) loadCard();
+      if (id === "quiz" && !currentQuizWord) loadQuestion();
     }
 
     function fillDictionary() {
@@ -121,9 +136,16 @@
     }
 
     function loadCard() {
-      document.getElementById("cardWord").textContent = words[cardIndex].en;
+      // Если колода пуста, перемешиваем заново
+      if (flashcardPool.length === 0) {
+        flashcardPool = shuffle(words);
+      }
+      
+      currentCardWord = flashcardPool.pop();
+      
+      document.getElementById("cardWord").textContent = currentCardWord.en;
       const tr = document.getElementById("cardTranslation");
-      tr.textContent = words[cardIndex].ru.join(", ");
+      tr.textContent = currentCardWord.ru.join(", ");
       tr.style.display = "none";
     }
 
@@ -132,21 +154,32 @@
     }
 
     function nextCard() {
-      cardIndex = (cardIndex + 1) % words.length;
       loadCard();
     }
 
     function loadQuestion() {
-      document.getElementById("quizWord").textContent = words[quizIndex].en;
+      // Если колода тестов пуста, перемешиваем заново
+      if (quizPool.length === 0) {
+        quizPool = shuffle(words);
+      }
+
+      currentQuizWord = quizPool.pop();
+
+      document.getElementById("quizWord").textContent = currentQuizWord.en;
       document.getElementById("answerInput").value = "";
       document.getElementById("result").textContent = "";
       document.getElementById("answerInput").focus();
     }
 
     function checkAnswer() {
+      if (!currentQuizWord) return;
+      
       const input = normalize(document.getElementById("answerInput").value);
-      const answers = words[quizIndex].ru.map(normalize);
+      const answers = currentQuizWord.ru.map(normalize);
       const result = document.getElementById("result");
+
+      // Проверка: если ответ уже был проверен, не засчитываем клик дважды
+      if (result.textContent !== "") return;
 
       total++;
       if (answers.includes(input)) {
@@ -154,20 +187,18 @@
         result.textContent = "Правильно!";
         result.className = "result correct";
       } else {
-        result.textContent = "Неправильно. Правильный ответ: " + words[quizIndex].ru.join(", ");
+        result.textContent = "Неправильно. Правильный ответ: " + currentQuizWord.ru.join(", ");
         result.className = "result wrong";
       }
       document.getElementById("score").textContent = `Счёт: ${correct} / ${total}`;
     }
 
     function nextQuestion() {
-      quizIndex = Math.floor(Math.random() * words.length);
       loadQuestion();
     }
 
+    // Инициализация при загрузке страницы
     fillDictionary();
-    loadCard();
-    loadQuestion();
   </script>
 </body>
 </html>
