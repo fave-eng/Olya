@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grammar — Olya's English Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--rose:#f43f5e;--orange:#fb923c;--amber:#f59e0b;--emerald:#10b981;--blue:#3b82f6;--indigo:#4f46e5;--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--radius:16px;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:100px;}
+
+    .hero{background:linear-gradient(135deg,#f43f5e 0%,#fb923c 50%,#f59e0b 100%);padding:40px 24px 100px;position:relative;}
+    .hero-wave{position:absolute;bottom:-1px;left:0;right:0;line-height:0;pointer-events:none;}
+    .hero-wave svg{display:block;width:100%;}
+    .hero-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.75);font-size:13px;font-weight:600;text-decoration:none;margin-bottom:20px;transition:color 0.2s;}
+    .hero-back:hover{color:#fff;}
+    .hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(28px,5vw,42px);font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:8px;}
+    .hero p{color:rgba(255,255,255,0.75);font-size:15px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:12px;font-weight:600;padding:5px 14px;border-radius:100px;margin-bottom:16px;}
+
+    .page{max-width:700px;margin:0 auto;padding:24px 20px 0;}
+    .section-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:28px 0 14px;}
+
+    /* ACCORDION */
+    .topic-card{background:var(--card);border-radius:var(--radius);border:1.5px solid var(--border);margin-bottom:12px;overflow:hidden;}
+    .topic-header{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none;transition:background 0.15s;}
+    .topic-header:hover{background:#fafbff;}
+    .topic-icon{font-size:24px;}
+    .topic-meta{flex:1;}
+    .topic-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;}
+    .topic-tags{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;}
+    .topic-tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:100px;}
+    .tag-a2{background:#fce7f3;color:#9d174d;}
+    .tag-level{background:#ede9fe;color:#5b21b6;}
+    .topic-status{font-size:18px;transition:transform 0.3s;}
+    .topic-card.open .topic-status{transform:rotate(180deg);}
+
+    .topic-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border);}
+    .topic-card.open .topic-body{display:block;}
+
+    /* FORMULA BLOCK */
+    .formula-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;}
+    .formula-cell{border-radius:10px;padding:12px;text-align:center;}
+    .formula-cell.plus{background:#f0fdf4;border:1.5px solid #86efac;}
+    .formula-cell.minus{background:#fef2f2;border:1.5px solid #fca5a5;}
+    .formula-cell.quest{background:#eff6ff;border:1.5px solid #93c5fd;}
+    .formula-label{font-size:18px;font-weight:800;margin-bottom:4px;}
+    .formula-cell.plus .formula-label{color:var(--emerald);}
+    .formula-cell.minus .formula-label{color:#ef4444;}
+    .formula-cell.quest .formula-label{color:var(--blue);}
+    .formula-text{font-size:11px;color:var(--muted);line-height:1.4;}
+
+    /* EXAMPLES */
+    .examples{margin:12px 0;}
+    .examples h4{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+    .example-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:#fafbff;border-radius:8px;margin-bottom:6px;font-size:13px;}
+    .example-en{font-weight:600;color:var(--text);}
+    .example-ru{color:var(--muted);}
+
+    /* RULES TABLE */
+    .rules-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+    .rules-table th{background:#f8fafc;padding:8px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);}
+    .rules-table td{padding:8px 12px;border:1px solid var(--border);vertical-align:top;}
+    .rules-table tr:nth-child(even) td{background:#fafbff;}
+
+    /* WARNING */
+    .warning-block{background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:12px 14px;margin:12px 0;font-size:13px;color:#78350f;line-height:1.6;}
+    .warning-block strong{display:block;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;}
+
+    /* MCQ in grammar */
+    .grammar-test{margin-top:16px;}
+    .grammar-test h4{font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text);}
+    .gq{margin-bottom:14px;}
+    .gq-text{font-size:13px;font-weight:600;margin-bottom:6px;}
+    .gq-opts{display:flex;flex-direction:column;gap:6px;}
+    .gq-opt{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;font-size:13px;transition:all 0.15s;}
+    .gq-opt:hover{border-color:var(--rose);background:#fff8f8;}
+    .gq-opt.correct{border-color:var(--emerald)!important;background:#f0fdf4!important;pointer-events:none;}
+    .gq-opt.wrong{border-color:#ef4444!important;background:#fef2f2!important;pointer-events:none;}
+    .gq-opt.reveal-correct{border-color:var(--emerald)!important;background:#f0fdf4!important;pointer-events:none;}
+    .gq-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;}
+    .gq-opt.correct .gq-dot{border-color:var(--emerald);background:var(--emerald);}
+    .gq-opt.wrong .gq-dot{border-color:#ef4444;background:#ef4444;}
+    .gq-opt.reveal-correct .gq-dot{border-color:var(--emerald);background:var(--emerald);}
+
+    .test-result{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;display:none;}
+    .test-result.show{display:block;}
+    .test-result.pass{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;}
+    .test-result.fail{background:#fef2f2;color:#991b1b;border:1px solid #fecaca;}
+    .retry-btn{display:inline-block;margin-top:8px;background:var(--rose);color:#fff;font-size:12px;font-weight:700;padding:6px 16px;border-radius:8px;border:none;cursor:pointer;}
+
+    .nav-pill{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0f172a;border-radius:100px;padding:12px 24px;display:flex;gap:4px;box-shadow:0 8px 32px rgba(15,23,42,0.3);z-index:900;white-space:nowrap;}
+    .nav-pill a{color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;text-decoration:none;padding:6px 14px;border-radius:100px;transition:all 0.2s;}
+    .nav-pill a:hover,.nav-pill a.active{background:var(--rose);color:#fff;}
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="page" style="position:relative;z-index:1">
+    <a href="index.html" class="hero-back">← На главную</a>
+    <div class="hero-badge">📐 Grammar Reference</div>
+    <h1>Грамматика</h1>
+    <p>Кликни на тему → раскроется правило, примеры и мини-тест</p>
+  </div>
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#f1f5f9"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page">
+  <div class="section-title">📗 A2 — Твой уровень</div>
+
+  <!-- TOPIC 1: VERB BE -->
+  <div class="topic-card" id="topic-be">
+    <div class="topic-header" onclick="toggleTopic('be')">
+      <div class="topic-icon">🔵</div>
+      <div class="topic-meta">
+        <div class="topic-name">Verb Be — To Be</div>
+        <div class="topic-tags"><span class="topic-tag tag-a2">A2</span><span class="topic-tag tag-level">Урок 1</span></div>
+      </div>
+      <div class="topic-status">▼</div>
+    </div>
+    <div class="topic-body">
+      <div class="formula-grid">
+        <div class="formula-cell plus"><div class="formula-label">+</div><div class="formula-text">I'm / She's / They're</div></div>
+        <div class="formula-cell minus"><div class="formula-label">−</div><div class="formula-text">I'm not / She isn't / They aren't</div></div>
+        <div class="formula-cell quest"><div class="formula-label">?</div><div class="formula-text">Am I? / Is she? / Are they?</div></div>
+      </div>
+
+      <div class="examples">
+        <h4>Примеры из жизни художника</h4>
+        <div class="example-item"><span class="example-en">I'm an artist and an AI explorer.</span><span class="example-ru">Я художник и исследователь ИИ.</span></div>
+        <div class="example-item"><span class="example-en">My twin sister is in Bali right now.</span><span class="example-ru">Моя сестра-близнец сейчас на Бали.</span></div>
+        <div class="example-item"><span class="example-en">AI tools aren't scary — they're creative!</span><span class="example-ru">ИИ-инструменты не страшные — они творческие!</span></div>
+        <div class="example-item"><span class="example-en">Is Midjourney your favourite AI tool?</span><span class="example-ru">Midjourney — твой любимый ИИ-инструмент?</span></div>
+      </div>
+
+      <table class="rules-table">
+        <thead><tr><th>Местоимение</th><th>+</th><th>−</th><th>?</th></tr></thead>
+        <tbody>
+          <tr><td>I</td><td>I'm</td><td>I'm not</td><td>Am I?</td></tr>
+          <tr><td>You / We / They</td><td>You're / We're / They're</td><td>aren't</td><td>Are you/we/they?</td></tr>
+          <tr><td>He / She / It</td><td>He's / She's / It's</td><td>isn't</td><td>Is he/she/it?</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warning-block">
+        <strong>⚠ Типичная ошибка русскоговорящих</strong>
+        В русском языке глагол "быть" в настоящем не произносится.<br>
+        ❌ "I artist" ← НЕВЕРНО<br>
+        ✅ "I'm an artist" ← ВЕРНО<br>
+        Глагол be в английском ОБЯЗАТЕЛЕН!
+      </div>
+
+      <div class="grammar-test" id="test-be">
+        <h4>🧪 Мини-тест (3 вопроса)</h4>
+        <div class="gq" data-correct="b" data-test="be" data-idx="0">
+          <div class="gq-text">1. She ___ from Russia, she's from Indonesia.</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> aren't</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> isn't</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> not</div>
+          </div>
+        </div>
+        <div class="gq" data-correct="c" data-test="be" data-idx="1">
+          <div class="gq-text">2. ___ you interested in digital art?</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> Is</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> Am</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> Are</div>
+          </div>
+        </div>
+        <div class="gq" data-correct="a" data-test="be" data-idx="2">
+          <div class="gq-text">3. My favourite tools ___ Midjourney and ChatGPT.</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> are</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> is</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> am</div>
+          </div>
+        </div>
+        <div class="test-result" id="result-be"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 2: PRESENT SIMPLE -->
+  <div class="topic-card" id="topic-ps">
+    <div class="topic-header" onclick="toggleTopic('ps')">
+      <div class="topic-icon">🟢</div>
+      <div class="topic-meta">
+        <div class="topic-name">Present Simple — настоящее время</div>
+        <div class="topic-tags"><span class="topic-tag tag-a2">A2</span><span class="topic-tag tag-level">Урок 3</span></div>
+      </div>
+      <div class="topic-status">▼</div>
+    </div>
+    <div class="topic-body">
+      <div class="formula-grid">
+        <div class="formula-cell plus"><div class="formula-label">+</div><div class="formula-text">I work / She work<b>s</b></div></div>
+        <div class="formula-cell minus"><div class="formula-label">−</div><div class="formula-text">I don't / She doesn't</div></div>
+        <div class="formula-cell quest"><div class="formula-label">?</div><div class="formula-text">Do you? / Does she?</div></div>
+      </div>
+      <div class="examples">
+        <h4>Примеры из жизни художника и ИИ</h4>
+        <div class="example-item"><span class="example-en">I create digital art every day.</span><span class="example-ru">Я создаю цифровое искусство каждый день.</span></div>
+        <div class="example-item"><span class="example-en">She uses Midjourney for her projects.</span><span class="example-ru">Она использует Midjourney для своих проектов.</span></div>
+        <div class="example-item"><span class="example-en">I don't use Photoshop anymore.</span><span class="example-ru">Я больше не использую Photoshop.</span></div>
+        <div class="example-item"><span class="example-en">Do you sell your paintings online?</span><span class="example-ru">Ты продаёшь свои картины онлайн?</span></div>
+      </div>
+      <div class="warning-block">
+        <strong>⚠ He/She/It → всегда +S!</strong>
+        ❌ She work at home → ✅ She work<b>s</b> at home<br>
+        ❌ He don't know → ✅ He <b>doesn't</b> know
+      </div>
+      <div class="grammar-test" id="test-ps">
+        <h4>🧪 Мини-тест (3 вопроса)</h4>
+        <div class="gq" data-correct="b" data-test="ps" data-idx="0">
+          <div class="gq-text">1. She ___ digital art for exhibitions.</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> create</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> creates</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> is create</div>
+          </div>
+        </div>
+        <div class="gq" data-correct="a" data-test="ps" data-idx="1">
+          <div class="gq-text">2. I ___ AI tools every day.</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> use</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> uses</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> am use</div>
+          </div>
+        </div>
+        <div class="gq" data-correct="c" data-test="ps" data-idx="2">
+          <div class="gq-text">3. ___ she sell her art online?</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> Do</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> Are</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> Does</div>
+          </div>
+        </div>
+        <div class="test-result" id="result-ps"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 3: PAST SIMPLE -->
+  <div class="topic-card" id="topic-past">
+    <div class="topic-header" onclick="toggleTopic('past')">
+      <div class="topic-icon">🟠</div>
+      <div class="topic-meta">
+        <div class="topic-name">Past Simple — прошедшее время</div>
+        <div class="topic-tags"><span class="topic-tag tag-a2">A2</span><span class="topic-tag tag-level">Урок 7</span></div>
+      </div>
+      <div class="topic-status">▼</div>
+    </div>
+    <div class="topic-body">
+      <div class="formula-grid">
+        <div class="formula-cell plus"><div class="formula-label">+</div><div class="formula-text">I went / She visited / They saw</div></div>
+        <div class="formula-cell minus"><div class="formula-label">−</div><div class="formula-text">I didn't go / She didn't visit</div></div>
+        <div class="formula-cell quest"><div class="formula-label">?</div><div class="formula-text">Did you go? / Did she visit?</div></div>
+      </div>
+      <div class="examples">
+        <h4>Примеры про Бали и путешествия</h4>
+        <div class="example-item"><span class="example-en">I went to Bali last year.</span><span class="example-ru">Я ездила на Бали в прошлом году.</span></div>
+        <div class="example-item"><span class="example-en">I saw beautiful temples and rice fields.</span><span class="example-ru">Я увидела красивые храмы и рисовые поля.</span></div>
+        <div class="example-item"><span class="example-en">I didn't speak much English there.</span><span class="example-ru">Я там почти не говорила по-английски.</span></div>
+        <div class="example-item"><span class="example-en">Did you travel alone or with someone?</span><span class="example-ru">Ты путешествовала одна или с кем-то?</span></div>
+      </div>
+      <div class="warning-block">
+        <strong>⚠ В вопросах и отрицании — didn't, НЕ did + ed!</strong>
+        ❌ She didn't went → ✅ She didn't <b>go</b><br>
+        ❌ Did you went? → ✅ Did you <b>go</b>?
+      </div>
+      <div class="grammar-test" id="test-past">
+        <h4>🧪 Мини-тест (3 вопроса)</h4>
+        <div class="gq" data-correct="b" data-test="past" data-idx="0">
+          <div class="gq-text">1. I ___ to Bali last summer.</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> go</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> went</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> goed</div>
+          </div>
+        </div>
+        <div class="gq" data-correct="c" data-test="past" data-idx="1">
+          <div class="gq-text">2. She ___ stay in a hotel — she stayed with friends.</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> wasn't</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> not</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> didn't</div>
+          </div>
+        </div>
+        <div class="gq" data-correct="a" data-test="past" data-idx="2">
+          <div class="gq-text">3. ___ you visit the rice terraces in Bali?</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> Did</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> Were</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> Do</div>
+          </div>
+        </div>
+        <div class="test-result" id="result-past"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 4: GOING TO -->
+  <div class="topic-card" id="topic-future">
+    <div class="topic-header" onclick="toggleTopic('future')">
+      <div class="topic-icon">🚀</div>
+      <div class="topic-meta">
+        <div class="topic-name">Be Going To — планы и будущее</div>
+        <div class="topic-tags"><span class="topic-tag tag-a2">A2</span><span class="topic-tag tag-level">Урок 10</span></div>
+      </div>
+      <div class="topic-status">▼</div>
+    </div>
+    <div class="topic-body">
+      <div class="formula-grid">
+        <div class="formula-cell plus"><div class="formula-label">+</div><div class="formula-text">I'm going to / She's going to</div></div>
+        <div class="formula-cell minus"><div class="formula-label">−</div><div class="formula-text">I'm not going to / She isn't going to</div></div>
+        <div class="formula-cell quest"><div class="formula-label">?</div><div class="formula-text">Are you going to? / Is she going to?</div></div>
+      </div>
+      <div class="examples">
+        <h4>Примеры — планы на путешествия</h4>
+        <div class="example-item"><span class="example-en">I'm going to travel to Japan next year.</span><span class="example-ru">Я собираюсь поехать в Японию в следующем году.</span></div>
+        <div class="example-item"><span class="example-en">She's going to visit her sister in Bali.</span><span class="example-ru">Она собирается навестить сестру на Бали.</span></div>
+        <div class="example-item"><span class="example-en">Are you going to learn AI art seriously?</span><span class="example-ru">Ты собираешься серьёзно изучать ИИ-арт?</span></div>
+      </div>
+      <div class="warning-block">
+        <strong>⚠ Going to = уже принятое решение или план</strong>
+        Используй "going to" для планов, которые ты уже обдумала.<br>
+        I'm going to buy a new graphics tablet. (уже решила)
+      </div>
+      <div class="grammar-test" id="test-future">
+        <h4>🧪 Мини-тест (3 вопроса)</h4>
+        <div class="gq" data-correct="b" data-test="future" data-idx="0">
+          <div class="gq-text">1. I ___ going to visit Thailand next month.</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> is</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> am</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> are</div>
+          </div>
+        </div>
+        <div class="gq" data-correct="a" data-test="future" data-idx="1">
+          <div class="gq-text">2. ___ she going to show her art at an exhibition?</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> Is</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> Are</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> Does</div>
+          </div>
+        </div>
+        <div class="gq" data-correct="c" data-test="future" data-idx="2">
+          <div class="gq-text">3. They ___ not going to use old software anymore.</div>
+          <div class="gq-opts">
+            <div class="gq-opt" data-val="a"><div class="gq-dot"></div> is</div>
+            <div class="gq-opt" data-val="b"><div class="gq-dot"></div> am</div>
+            <div class="gq-opt" data-val="c"><div class="gq-dot"></div> are</div>
+          </div>
+        </div>
+        <div class="test-result" id="result-future"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav-pill">
+  <a href="index.html">🏠 Home</a>
+  <a href="homework.html">📝 HW</a>
+  <a href="grammar.html" class="active">📐 Grammar</a>
+  <a href="vocabulary.html">💥 Vocab</a>
+</div>
+
+<script>
+  function toggleTopic(id){
+    const card=document.getElementById('topic-'+id);
+    card.classList.toggle('open');
+  }
+
+  const testScores={};
+
+  document.querySelectorAll('.gq').forEach(gq=>{
+    const correct=gq.dataset.correct;
+    const testId=gq.dataset.test;
+    const idx=parseInt(gq.dataset.idx);
+    gq.querySelectorAll('.gq-opt').forEach(opt=>{
+      opt.addEventListener('click',()=>{
+        if(gq.dataset.answered==='1')return;
+        gq.dataset.answered='1';
+        const val=opt.dataset.val;
+        const isOk=val===correct;
+        if(!testScores[testId])testScores[testId]={correct:0,total:0};
+        testScores[testId].total++;
+        if(isOk)testScores[testId].correct++;
+        opt.classList.add(isOk?'correct':'wrong');
+        if(!isOk)gq.querySelector('[data-val="'+correct+'"]').classList.add('reveal-correct');
+        checkTestDone(testId);
+      });
+    });
+  });
+
+  function checkTestDone(testId){
+    const gqs=document.querySelectorAll('.gq[data-test="'+testId+'"]');
+    const answered=[...gqs].filter(g=>g.dataset.answered==='1').length;
+    if(answered===gqs.length){
+      const sc=testScores[testId];
+      const res=document.getElementById('result-'+testId);
+      const pass=sc.correct===sc.total;
+      res.className='test-result show '+(pass?'pass':'fail');
+      if(pass){
+        res.innerHTML='✅ Тема усвоена! Результат: '+sc.correct+'/'+sc.total;
+      } else {
+        res.innerHTML='❌ Повтори тему ещё раз. Результат: '+sc.correct+'/'+sc.total+'<br><button class="retry-btn" onclick="retryTest(\''+testId+'\')">🔄 Попробовать снова</button>';
+      }
+    }
+  }
+
+  function retryTest(testId){
+    const gqs=document.querySelectorAll('.gq[data-test="'+testId+'"]');
+    gqs.forEach(gq=>{
+      delete gq.dataset.answered;
+      gq.querySelectorAll('.gq-opt').forEach(opt=>{
+        opt.className='gq-opt';
+      });
+    });
+    testScores[testId]={correct:0,total:0};
+    const res=document.getElementById('result-'+testId);
+    res.className='test-result';
+  }
+</script>
+</body>
+</html>

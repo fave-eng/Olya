@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Homework — Olya's English Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose:#f43f5e; --orange:#fb923c; --amber:#f59e0b;
+      --emerald:#10b981; --indigo:#4f46e5;
+      --bg:#f1f5f9; --card:#ffffff; --text:#0f172a;
+      --muted:#64748b; --border:#e2e8f0; --radius:20px;
+    }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:100px; }
+
+    .hero { background:linear-gradient(135deg,#f43f5e 0%,#fb923c 50%,#f59e0b 100%); padding:40px 24px 48px; position:relative; }
+    .hero-wave { position:absolute; bottom:-1px; left:0; right:0; line-height:0; pointer-events:none; z-index: 0; }
+    .hero-wave svg { display:block; width:100%; }
+    .hero-back { display:inline-flex; align-items:center; gap:6px; color:rgba(255,255,255,0.75); font-size:13px; font-weight:600; text-decoration:none; margin-bottom:20px; transition:color 0.2s; }
+    .hero-back:hover { color:#fff; }
+    .hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.3); color:#fff; font-size:12px; font-weight:600; padding:5px 14px; border-radius:100px; margin-bottom:16px; }
+    .hero h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(28px,5vw,42px); font-weight:800; color:#fff; letter-spacing:-0.5px; margin-bottom:8px; }
+    .hero p { color:rgba(255,255,255,0.75); font-size:15px; }
+    .progress-bar-wrap { background:rgba(255,255,255,0.15); border-radius:100px; height:6px; margin-top:18px; max-width:340px; overflow:hidden; }
+    .progress-bar-fill { height:100%; background:#fff; border-radius:100px; transition:width 0.8s ease; }
+    .progress-label { color:rgba(255,255,255,0.8); font-size:12px; font-weight:600; margin-top:6px; }
+
+    .page { max-width:700px; margin:0 auto; padding:0 20px; }
+    .stats-row { display:flex; gap:12px; margin-top:24px; margin-bottom:32px; flex-wrap:wrap; position:relative; z-index:2; }
+    .stat-chip { background:var(--card); border-radius:14px; border:1.5px solid var(--border); padding:14px 20px; flex:1; min-width:100px; text-align:center; }
+    .stat-chip .sc-num { font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:800; }
+    .stat-chip .sc-lbl { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+    .stat-chip.done .sc-num { color:var(--emerald); }
+    .stat-chip.total .sc-num { color:var(--rose); }
+    .stat-chip.pct .sc-num { color:var(--amber); }
+    .section-title { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin:28px 0 14px; }
+
+    .lesson-card { background:var(--card); border-radius:18px; border:1.5px solid var(--border); margin-bottom:14px; overflow:hidden; transition:all 0.2s; }
+    .lesson-card.active:hover { border-color:var(--rose); box-shadow:0 8px 28px rgba(244,63,94,0.1); transform:translateY(-2px); }
+    .lesson-card.locked { opacity:0.55; }
+    .lc-main { padding:20px 22px; display:flex; align-items:center; gap:16px; }
+    .lc-num { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:17px; font-weight:800; flex-shrink:0; }
+    .lc-num.done-num { background:#d1fae5; color:#065f46; }
+    .lc-num.active-num { background:linear-gradient(135deg,#f43f5e,#fb923c); color:#fff; }
+    .lc-num.locked-num { background:#f1f5f9; color:#94a3b8; }
+    .lc-info { flex:1; min-width:0; }
+    .lc-lesson-label { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:3px; }
+    .lc-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .lc-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .lc-status-pill { font-size:11px; font-weight:700; padding:3px 10px; border-radius:100px; }
+    .pill-done { background:#d1fae5; color:#065f46; }
+    .pill-current { background:#fce7f3; color:#9d174d; }
+    .pill-locked { background:#f1f5f9; color:#94a3b8; }
+    .lc-score { font-size:12px; color:var(--muted); }
+    .lc-arrow { font-size:20px; color:var(--rose); opacity:0; transition:opacity 0.2s; }
+    .lesson-card.active:hover .lc-arrow { opacity:1; }
+    .lesson-card.locked .lc-arrow { display:none; }
+    .lc-vocab-strip { border-top:1px solid var(--border); padding:10px 22px; display:flex; align-items:center; justify-content:space-between; background:#fff8f8; }
+    .lvs-left { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); }
+    .lvs-left span { font-weight:600; color:var(--text); }
+    .lvs-link { font-size:12px; font-weight:700; color:var(--rose); text-decoration:none; display:flex; align-items:center; gap:4px; transition:gap 0.2s; }
+    .lvs-link:hover { gap:8px; }
+    .locked-strip { border-top:1px solid var(--border); padding:10px 22px; background:#f8fafc; font-size:12px; color:#94a3b8; display:flex; align-items:center; gap:6px; }
+
+    .nav-pill { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#0f172a; border-radius:100px; padding:12px 24px; display:flex; gap:4px; box-shadow:0 8px 32px rgba(15,23,42,0.3); z-index:900; white-space:nowrap; }
+    .nav-pill a { color:rgba(255,255,255,0.6); font-size:12px; font-weight:600; text-decoration:none; padding:6px 14px; border-radius:100px; transition:all 0.2s; }
+    .nav-pill a:hover, .nav-pill a.active { background:var(--rose); color:#fff; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="page" style="position:relative;z-index:1">
+    <a href="index.html" class="hero-back">← На главную</a>
+    <div class="hero-badge">📝 Homework Board</div>
+    <h1>Домашние задания</h1>
+    <p>Выполняй и отслеживай прогресс по каждому уроку</p>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="heroProgress" style="width:0%"></div></div>
+    <div class="progress-label" id="heroLabel">0 из 1 выполнено</div>
+  </div>
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#f1f5f9"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page">
+  <div class="stats-row">
+    <div class="stat-chip done"><div class="sc-num" id="statDone">0</div><div class="sc-lbl">Выполнено</div></div>
+    <div class="stat-chip total"><div class="sc-num">1</div><div class="sc-lbl">Всего уроков</div></div>
+    <div class="stat-chip pct"><div class="sc-num" id="statPct">0%</div><div class="sc-lbl">Прогресс</div></div>
+  </div>
+
+  <div id="section-done" style="display:none"><div class="section-title">✅ Выполнено</div></div>
+
+  <div class="section-title" id="section-current">📝 Текущее</div>
+
+  <div class="lesson-card active" id="card-1">
+    <a href="hw1.html" style="text-decoration:none;color:inherit;">
+      <div class="lc-main">
+        <div class="lc-num" id="num-1">1</div>
+        <div class="lc-info">
+          <div class="lc-lesson-label">Lesson 1</div>
+          <div class="lc-title">OMG! Where's my passport? — Past Simple</div>
+          <div class="lc-meta">
+            <span class="lc-status-pill" id="pill-1">📝 Выполнить</span>
+            <span class="lc-score" id="score-1"></span>
+          </div>
+        </div>
+        <div class="lc-arrow">→</div>
+      </div>
+    </a>
+    <div class="lc-vocab-strip">
+      <div class="lvs-left">💥 <span>Лексика:</span> The Holiday Story</div>
+      <a href="vocabulary.html" class="lvs-link">Тренировать <span>→</span></a>
+    </div>
+  </div>
+
+  <div class="section-title">🔒 Предстоящие</div>
+
+  <div class="lesson-card locked">
+    <div class="lc-main">
+      <div class="lc-num locked-num">2</div>
+      <div class="lc-info">
+        <div class="lc-lesson-label">Lesson 2</div>
+        <div class="lc-title">Coming soon…</div>
+        <div class="lc-meta"><span class="lc-status-pill pill-locked">🔒 Скоро</span></div>
+      </div>
+    </div>
+    <div class="locked-strip">🔒 Задание появится после урока 2</div>
+  </div>
+
+  <div class="lesson-card locked">
+    <div class="lc-main">
+      <div class="lc-num locked-num">3</div>
+      <div class="lc-info">
+        <div class="lc-lesson-label">Lesson 3</div>
+        <div class="lc-title">Coming soon…</div>
+        <div class="lc-meta"><span class="lc-status-pill pill-locked">🔒 Скоро</span></div>
+      </div>
+    </div>
+    <div class="locked-strip">🔒 Задание появится после урока 3</div>
+  </div>
+</div>
+
+<div class="nav-pill">
+  <a href="index.html">🏠 Home</a>
+  <a href="homework.html" class="active">📝 HW</a>
+  <a href="grammar.html">📐 Grammar</a>
+  <a href="vocabulary.html">💥 Vocab</a>
+</div>
+
+<script>
+  const SUPABASE_URL='https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1/';
+  const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
+  const STUDENT_ID='olya';
+
+  function sbH(){ return {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}; }
+
+  function render(){
+    const score=localStorage.getItem('olya_hw1_score');
+    const isDone=!!score;
+    const num1=document.getElementById('num-1');
+    const pill1=document.getElementById('pill-1');
+    const sc1=document.getElementById('score-1');
+    if(isDone){
+      num1.className='lc-num done-num'; num1.textContent='✓';
+      pill1.className='lc-status-pill pill-done'; pill1.textContent='Сдано ✅';
+      sc1.textContent='Результат: '+score;
+      document.getElementById('section-done').style.display='';
+      document.getElementById('section-current').style.display='none';
+    } else {
+      num1.className='lc-num active-num'; num1.textContent='1';
+      pill1.className='lc-status-pill pill-current'; pill1.textContent='📝 Выполнить';
+    }
+    const done=isDone?1:0; const pct=done*100;
+    document.getElementById('statDone').textContent=done;
+    document.getElementById('statPct').textContent=pct+'%';
+    document.getElementById('heroProgress').style.width=pct+'%';
+    document.getElementById('heroLabel').textContent=done+' из 1 выполнено';
+  }
+
+  async function syncCloud(){
+    try{
+      const r=await fetch(SUPABASE_URL+'homework_results?student_id=eq.'+STUDENT_ID+'&hw_id=eq.hw1&select=score',{headers:sbH()});
+      if(!r.ok)return;
+      const rows=await r.json();
+      if(rows.length&&rows[0].score&&!localStorage.getItem('olya_hw1_score')){
+        localStorage.setItem('olya_hw1_score',rows[0].score);
+        render();
+      }
+    }catch(e){}
+  }
+
+  render();
+  syncCloud();
+</script>
+</body>
+</html>
