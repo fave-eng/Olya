@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Неправильные глаголы — Olya's English Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--rose:#f43f5e;--orange:#fb923c;--emerald:#10b981;--blue:#3b82f6;--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px;}
+    .hero{background:linear-gradient(135deg,#f43f5e,#fb923c,#f59e0b);padding:40px 24px 100px;position:relative;}
+    .hero-wave{position:absolute;bottom:-1px;left:0;right:0;line-height:0;pointer-events:none;}
+    .hero-wave svg{display:block;width:100%;}
+    .hero-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.8);font-size:13px;font-weight:600;text-decoration:none;margin-bottom:20px;}
+    .hero-back:hover{color:#fff;}
+    .hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(26px,5vw,38px);font-weight:800;color:#fff;margin-bottom:6px;}
+    .hero p{color:rgba(255,255,255,.8);font-size:15px;}
+    .hero-stats{display:flex;gap:28px;margin-top:16px;}
+    .hs{color:rgba(255,255,255,.85);font-size:13px;}
+    .hs strong{display:block;font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;color:#fff;line-height:1;}
+    .page{max-width:760px;margin:0 auto;padding:28px 20px 0;}
+
+    /* TABS */
+    .tabs-wrap{background:var(--card);border-radius:18px;border:1.5px solid var(--border);overflow:hidden;}
+    .tabs{display:flex;padding:6px;gap:4px;border-bottom:1px solid var(--border);}
+    .tab-btn{flex:1;padding:10px;border:none;background:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s;font-family:'Inter',sans-serif;}
+    .tab-btn.active{background:linear-gradient(135deg,var(--rose),var(--orange));color:#fff;}
+    .tab-pane{display:none;padding:20px;}
+    .tab-pane.active{display:block;}
+
+    /* TABLE */
+    .irr-table{width:100%;border-collapse:collapse;font-size:14px;}
+    .irr-table th{padding:10px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);}
+    .irr-table td{padding:9px 12px;border-bottom:1px solid var(--border);}
+    .irr-table tr:last-child td{border-bottom:none;}
+    .irr-table td:first-child{font-weight:700;color:var(--rose);}
+    .irr-table td:last-child{color:var(--muted);}
+    .irr-table tr.known-row td:first-child::after{content:' ✓';color:var(--emerald);}
+
+    /* FLASHCARDS */
+    .fc-counter{text-align:center;font-size:13px;color:var(--muted);margin-bottom:12px;}
+    .fc-wrap{background:var(--card);border-radius:18px;border:1.5px solid var(--border);padding:24px;text-align:center;margin-bottom:18px;}
+    .fc-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+    .fc-form{text-align:center;}
+    .fc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px;}
+    .fc-v1{font-family:'Plus Jakarta Sans',sans-serif;font-size:30px;font-weight:800;color:var(--rose);}
+    .fc-v2{font-size:22px;font-weight:700;color:#334155;}
+    .fc-v3{font-size:22px;font-weight:700;color:var(--blue);}
+    .fc-arr{font-size:18px;color:#cbd5e1;}
+    .fc-ru{font-size:15px;color:var(--muted);margin-top:6px;}
+    .fc-btns{display:flex;gap:10px;}
+    .fc-btn{flex:1;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;}
+    .fc-btn.know{background:#d1fae5;color:#065f46;}
+    .fc-btn.hard{background:#fce7f3;color:#9d174d;}
+    .fc-done{text-align:center;padding:30px;}
+    .fc-done-emoji{font-size:40px;margin-bottom:8px;}
+    .fc-done-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;}
+    .fc-done-sub{font-size:13px;color:var(--muted);margin-bottom:18px;}
+
+    /* TEST */
+    .test-pb-bg{height:5px;background:var(--bg);border-radius:100px;overflow:hidden;margin-bottom:12px;}
+    .test-pb-fill{height:100%;background:linear-gradient(90deg,var(--rose),var(--orange));border-radius:100px;transition:width .4s;}
+    .test-word{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;text-align:center;margin-bottom:6px;}
+    .test-ask{font-size:12px;color:var(--muted);text-align:center;margin-bottom:16px;}
+    .test-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+    .test-opt{padding:12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;font-size:13px;font-weight:600;text-align:center;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif;}
+    .test-opt:hover{border-color:var(--rose);}
+    .test-opt.correct{border-color:var(--emerald)!important;background:#f0fdf4!important;pointer-events:none;}
+    .test-opt.wrong{border-color:#ef4444!important;background:#fef2f2!important;pointer-events:none;}
+    .test-opt.reveal{border-color:var(--emerald)!important;background:#f0fdf4!important;pointer-events:none;}
+    .test-done{text-align:center;padding:24px;}
+    .test-done-score{font-family:'Plus Jakarta Sans',sans-serif;font-size:44px;font-weight:800;color:var(--rose);margin-bottom:6px;}
+    .test-done-msg{font-size:14px;color:var(--muted);margin-bottom:18px;}
+    .btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--rose),var(--orange));color:#fff;border:none;border-radius:12px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+  </style>
+</head>
+<body>
+<div class="hero">
+  <div style="max-width:760px;margin:0 auto;position:relative;z-index:1">
+    <a href="index.html" class="hero-back">← На главную</a>
+    <h1>⚡ Неправильные глаголы</h1>
+    <p>30 ключевых глаголов A2 · все три формы · карточки и тест</p>
+    <div class="hero-stats">
+      <div class="hs"><strong id="heroKnown">0</strong>Знаю</div>
+      <div class="hs"><strong>31</strong>Всего</div>
+      <div class="hs"><strong id="heroPct">0%</strong>Прогресс</div>
+    </div>
+  </div>
+  <div class="hero-wave"><svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#f1f5f9"/></svg></div>
+</div>
+<div class="page">
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('table')">📋 Таблица</button>
+      <button class="tab-btn" onclick="switchTab('cards')">🃏 Карточки</button>
+      <button class="tab-btn" onclick="switchTab('test')">🎯 Тест</button>
+    </div>
+    <div class="tab-pane active" id="tab-table"></div>
+    <div class="tab-pane" id="tab-cards"></div>
+    <div class="tab-pane" id="tab-test"></div>
+  </div>
+</div>
+
+<script>
+const SB_URL='https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
+const STUDENT='olya';
+const LS_KEY='olya_irreg_known';
+
+const VERBS=[
+  {v1:'be',v2:'was / were',v3:'been',ru:'быть'},
+  {v1:'bring',v2:'brought',v3:'brought',ru:'приносить'},
+  {v1:'buy',v2:'bought',v3:'bought',ru:'покупать'},
+  {v1:'can',v2:'could',v3:'been able to',ru:'мочь, уметь'},
+  {v1:'choose',v2:'chose',v3:'chosen',ru:'выбирать'},
+  {v1:'come',v2:'came',v3:'come',ru:'приходить, приезжать'},
+  {v1:'do',v2:'did',v3:'done',ru:'делать'},
+  {v1:'drink',v2:'drank',v3:'drunk',ru:'пить'},
+  {v1:'drive',v2:'drove',v3:'driven',ru:'водить'},
+  {v1:'eat',v2:'ate',v3:'eaten',ru:'есть, кушать'},
+  {v1:'find',v2:'found',v3:'found',ru:'находить'},
+  {v1:'fly',v2:'flew',v3:'flown',ru:'летать'},
+  {v1:'get',v2:'got',v3:'got',ru:'получать, становиться'},
+  {v1:'give',v2:'gave',v3:'given',ru:'давать'},
+  {v1:'go',v2:'went',v3:'gone / been',ru:'идти, ехать'},
+  {v1:'have',v2:'had',v3:'had',ru:'иметь'},
+  {v1:'know',v2:'knew',v3:'known',ru:'знать'},
+  {v1:'leave',v2:'left',v3:'left',ru:'покидать'},
+  {v1:'make',v2:'made',v3:'made',ru:'делать, создавать'},
+  {v1:'meet',v2:'met',v3:'met',ru:'встречать'},
+  {v1:'read',v2:'read (red)',v3:'read (red)',ru:'читать'},
+  {v1:'run',v2:'ran',v3:'run',ru:'бежать'},
+  {v1:'say',v2:'said',v3:'said',ru:'говорить'},
+  {v1:'see',v2:'saw',v3:'seen',ru:'видеть'},
+  {v1:'send',v2:'sent',v3:'sent',ru:'отправлять'},
+  {v1:'speak',v2:'spoke',v3:'spoken',ru:'говорить на языке'},
+  {v1:'spend',v2:'spent',v3:'spent',ru:'тратить'},
+  {v1:'take',v2:'took',v3:'taken',ru:'брать'},
+  {v1:'think',v2:'thought',v3:'thought',ru:'думать'},
+  {v1:'understand',v2:'understood',v3:'understood',ru:'понимать'},
+  {v1:'write',v2:'wrote',v3:'written',ru:'писать'},
+];
+
+let knownMap={};
+function load(){ try{knownMap=JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){knownMap={}} }
+function save(){ localStorage.setItem(LS_KEY,JSON.stringify(knownMap)); }
+async function saveCloud(){
+  const kn=VERBS.filter((_,i)=>knownMap[i]).map(v=>v.v1);
+  try{ await fetch(SB_URL+'/irreg_progress',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({student:STUDENT,known_count:kn.length,known_verbs:kn.join(','),updated_at:new Date().toISOString()})}); }catch(e){}
+}
+function setKnown(i,v){ knownMap[i]=v; save(); saveCloud(); updateStats(); renderTable(); }
+function countKnown(){ return Object.values(knownMap).filter(Boolean).length; }
+function updateStats(){ const k=countKnown(),t=VERBS.length,pct=Math.round(k/t*100); document.getElementById('heroKnown').textContent=k; document.getElementById('heroPct').textContent=pct+'%'; }
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+
+// TABLE
+function renderTable(){
+  document.getElementById('tab-table').innerHTML=`<table class="irr-table"><thead><tr><th>V1</th><th>V2</th><th>V3</th><th>Перевод</th></tr></thead><tbody>${VERBS.map((v,i)=>`<tr class="${knownMap[i]?'known-row':''}"><td>${v.v1}</td><td>${v.v2}</td><td>${v.v3}</td><td>${v.ru}</td></tr>`).join('')}</tbody></table>`;
+}
+
+// CARDS
+let fcWords=[],fcIdx=0;
+function initCards(){ fcWords=shuffle(VERBS.map((v,i)=>({...v,idx:i}))); fcIdx=0; showCard(); }
+function showCard(){
+  const cont=document.getElementById('tab-cards');
+  if(fcIdx>=fcWords.length){ cont.innerHTML=`<div class="fc-done"><div class="fc-done-emoji">🎉</div><div class="fc-done-title">Все глаголы пройдены!</div><div class="fc-done-sub">Знаю: ${countKnown()} из ${VERBS.length}</div><button class="btn" onclick="initCards()">🔄 Снова</button></div>`; return; }
+  const w=fcWords[fcIdx];
+  cont.innerHTML=`<div class="fc-counter">${fcIdx+1} / ${fcWords.length}</div>
+  <div class="fc-wrap">
+    <div class="fc-row">
+      <div class="fc-form"><div class="fc-lbl">V1</div><div class="fc-v1">${w.v1}</div></div>
+      <div class="fc-arr">→</div>
+      <div class="fc-form"><div class="fc-lbl">V2</div><div class="fc-v2">${w.v2}</div></div>
+      <div class="fc-arr">→</div>
+      <div class="fc-form"><div class="fc-lbl">V3</div><div class="fc-v3">${w.v3}</div></div>
+    </div>
+    <div class="fc-ru">${w.ru}</div>
+  </div>
+  <div class="fc-btns">
+    <button class="fc-btn hard" onclick="markCard(${w.idx},false)">😅 Трудно</button>
+    <button class="fc-btn know" onclick="markCard(${w.idx},true)">✅ Знаю!</button>
+  </div>`;
+}
+function markCard(i,v){ setKnown(i,v); fcIdx++; showCard(); }
+
+// TEST — угадай V2 по V1
+let tWords=[],tIdx=0,tOk=0;
+function initTest(){ tWords=shuffle(VERBS.map((v,i)=>({...v,idx:i}))); tIdx=0; tOk=0; showTestQ(); }
+function showTestQ(){
+  const cont=document.getElementById('tab-test');
+  if(tIdx>=tWords.length){ const pct=Math.round(tOk/tWords.length*100); cont.innerHTML=`<div class="test-done"><div class="test-done-score">${tOk}/${tWords.length}</div><div class="test-done-msg">${pct>=80?'🎉 Отлично!':pct>=50?'👍 Хорошо!':'💪 Повтори карточки'}</div><button class="btn" onclick="initTest()">🔄 Снова</button></div>`; return; }
+  const w=tWords[tIdx];
+  const others=shuffle(VERBS.filter(v=>v.v1!==w.v1)).slice(0,3);
+  const opts=shuffle([w,...others]);
+  const pct=Math.round(tIdx/tWords.length*100);
+  cont.innerHTML=`<div class="test-pb-bg"><div class="test-pb-fill" style="width:${pct}%"></div></div>
+  <div style="text-align:right;font-size:12px;color:var(--muted);margin-bottom:12px">${tIdx+1}/${tWords.length}</div>
+  <div class="test-word">${w.v1}</div>
+  <div class="test-ask">Выбери Past Simple (V2):</div>
+  <div class="test-opts">${opts.map(o=>`<div class="test-opt" onclick="answerTest(this,'${o.v1}','${w.v1}',${w.idx})">${o.v2}</div>`).join('')}</div>`;
+}
+function answerTest(el,chosen,correct,idx){
+  if(el.parentNode.querySelector('.correct')) return;
+  const ok=chosen===correct;
+  el.classList.add(ok?'correct':'wrong');
+  if(!ok){ const cw=VERBS.find(v=>v.v1===correct); [...el.parentNode.children].forEach(c=>{ if(c.textContent.trim()===cw.v2.trim()) c.classList.add('reveal'); }); }
+  setKnown(idx,ok);
+  if(ok) tOk++;
+  setTimeout(()=>{ tIdx++; showTestQ(); }, ok?600:1300);
+}
+
+function switchTab(id){
+  ['table','cards','test'].forEach((t,i)=>{
+    document.querySelectorAll('.tab-btn')[i].className='tab-btn'+(t===id?' active':'');
+    document.getElementById('tab-'+t).className='tab-pane'+(t===id?' active':'');
+  });
+  if(id==='cards') initCards();
+  if(id==='test') initTest();
+}
+
+load(); renderTable(); updateStats();
+</script>
+</body>
+</html>
