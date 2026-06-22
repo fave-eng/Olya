@@ -6,100 +6,110 @@
   <title>HW 1 — Olya's English Space</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{--rose:#f43f5e;--orange:#fb923c;--amber:#f59e0b;--emerald:#10b981;--blue:#3b82f6;--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--radius:16px;}
-    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:120px;}
-
-    .top-bar{background:linear-gradient(135deg,#f43f5e,#fb923c);padding:20px 24px 20px;position:sticky;top:0;z-index:100;}
-    .top-bar-inner{max-width:700px;margin:0 auto;display:flex;align-items:center;gap:14px;}
-    .back-btn{color:rgba(255,255,255,0.8);text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap;}
-    .hw-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#fff;flex:1;}
-    .hw-badge{background:rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;}
-
-    .progress-strip{background:#fff;border-bottom:1px solid var(--border);}
-    .progress-strip-inner{max-width:700px;margin:0 auto;padding:10px 20px;}
-    .ps-label{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:5px;display:flex;justify-content:space-between;}
-    .ps-bar{height:6px;background:#f1f5f9;border-radius:100px;overflow:hidden;}
-    .ps-fill{height:100%;background:linear-gradient(90deg,var(--rose),var(--orange));border-radius:100px;transition:width 0.6s ease;width:0%;}
-
-    .page{max-width:700px;margin:0 auto;padding:24px 20px 0;}
-
-    .hint-block{border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:13px;line-height:1.6;}
-    .hint-grammar{background:#fff8f8;border:1.5px solid #fecdd3;color:#9f1239;}
-    .hint-grammar strong{display:block;font-size:12px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;color:#e11d48;}
-    .hint-block code{background:rgba(0,0,0,0.06);padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12px;}
-
-    .part-card{background:var(--card);border-radius:var(--radius);border:1.5px solid var(--border);margin-bottom:20px;overflow:hidden;}
-    .part-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-    .part-num{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;color:#fff;}
-    .part-num.a{background:linear-gradient(135deg,#f43f5e,#fb923c);}
-    .part-num.b{background:linear-gradient(135deg,#fb923c,#f59e0b);}
-    .part-num.c{background:linear-gradient(135deg,#3b82f6,#6366f1);}
-    .part-num.d{background:linear-gradient(135deg,#10b981,#059669);}
-    .part-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;}
-    .part-desc{font-size:12px;color:var(--muted);margin-top:1px;}
-    .part-body{padding:18px 20px;}
-
-    .word-bank{background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:10px;padding:12px 14px;font-size:13px;color:#1e40af;margin-bottom:16px;line-height:1.6;}
-
-    .columns{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-    .col-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;margin-bottom:8px;color:var(--text);}
-    .input-list{display:grid;gap:8px;}
-
-    .question{margin-bottom:20px;}
-    .question:last-child{margin-bottom:0;}
-    .q-text{font-size:14px;font-weight:600;margin-bottom:8px;line-height:1.5;}
-    .q-text em{font-style:normal;color:var(--rose);}
-    .q-num{display:inline-flex;width:20px;height:20px;border-radius:6px;background:#f1f5f9;color:var(--muted);font-size:11px;font-weight:700;align-items:center;justify-content:center;margin-right:6px;}
-
-    input[type="text"], .answer-input{
-      width:100%;border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;
-      font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:#fafbff;transition:border-color .2s,background .2s;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose: #f43f5e; --orange: #fb923c; --amber: #f59e0b;
+      --emerald: #10b981; --blue: #3b82f6;
+      --bg: #f1f5f9; --card: #fff; --text: #0f172a;
+      --muted: #64748b; --border: #e2e8f0;
     }
-    input[type="text"]:focus, .answer-input:focus{outline:none;border-color:var(--rose);}
-    .answer-input.is-correct{border-color:var(--emerald)!important;background:#f0fdf4!important;}
-    .answer-input.is-wrong{border-color:#ef4444!important;background:#fef2f2!important;}
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
 
-    .small-input{width:90px;}
+    /* TOP BAR */
+    .top-bar { background: linear-gradient(135deg, #f43f5e, #fb923c); padding: 0; position: sticky; top: 0; z-index: 100; }
+    .top-bar-inner { max-width: 760px; margin: 0 auto; padding: 16px 20px; display: flex; align-items: center; gap: 14px; }
+    .back-btn { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; font-weight: 600; white-space: nowrap; }
+    .back-btn:hover { color: #fff; }
+    .hw-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 800; color: #fff; flex: 1; }
+    .hw-badge { background: rgba(255,255,255,0.22); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; }
 
-    .story-card{background:#fff8f8;border:1.5px solid #fecdd3;border-radius:12px;padding:18px;line-height:2.4;font-size:14px;}
-    .story-card h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;letter-spacing:1px;color:#9f1239;margin-bottom:10px;text-transform:uppercase;}
-    .story-card input{width:120px;display:inline-block;}
+    /* PROGRESS STRIP */
+    .progress-strip { background: var(--card); border-bottom: 1px solid var(--border); }
+    .progress-strip-inner { max-width: 760px; margin: 0 auto; padding: 10px 20px; }
+    .ps-label { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 5px; display: flex; justify-content: space-between; }
+    .ps-bar { height: 6px; background: var(--bg); border-radius: 100px; overflow: hidden; }
+    .ps-fill { height: 100%; background: linear-gradient(90deg, var(--rose), var(--orange)); border-radius: 100px; transition: width 0.5s ease; width: 0%; }
 
-    .sentence-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;margin-bottom:4px;}
-    .sentence-row input{flex:1;min-width:140px;}
+    .page { max-width: 760px; margin: 0 auto; padding: 24px 20px 0; }
 
-    .explain-box{font-size:12px;color:#475569;margin-top:6px;line-height:1.5;min-height:0;}
+    /* HINT BLOCK */
+    .hint-block { background: #fff8f8; border: 1.5px solid #fecdd3; border-radius: 14px; padding: 16px; margin-bottom: 22px; }
+    .hint-block h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--rose); margin-bottom: 10px; }
+    .hint-block p { font-size: 13px; color: #7f1d1d; line-height: 1.6; }
+    .hint-block code { background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 4px; font-family: monospace; font-size: 12px; }
 
-    .check-btn{
-      display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--rose),var(--orange));
-      color:#fff;font-size:13px;font-weight:700;padding:9px 18px;border-radius:10px;border:none;cursor:pointer;
-      transition:opacity .2s;font-family:'Plus Jakarta Sans',sans-serif;
+    /* EXERCISE CARD */
+    .ex-card { background: var(--card); border-radius: 18px; border: 1.5px solid var(--border); margin-bottom: 18px; overflow: hidden; }
+    .ex-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+    .ex-num { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; color: #fff; }
+    .ex-num.a { background: linear-gradient(135deg, #f43f5e, #fb923c); }
+    .ex-num.b { background: linear-gradient(135deg, #fb923c, #f59e0b); }
+    .ex-num.c { background: linear-gradient(135deg, #3b82f6, #6366f1); }
+    .ex-num.d { background: linear-gradient(135deg, #10b981, #059669); }
+    .ex-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; }
+    .ex-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .ex-body { padding: 18px 20px; }
+
+    /* WORD BANK */
+    .word-bank { background: #f0f9ff; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+    .word-bank b { color: var(--text); }
+
+    /* COLUMNS for 1a */
+    .col-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .col-grid h3 { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .input-stack { display: flex; flex-direction: column; gap: 6px; }
+    .input-stack input { width: 100%; }
+
+    /* QUESTIONS for 1b, 1d */
+    .question { background: #f8fafc; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+    .question:last-child { margin-bottom: 0; }
+    .question p { font-size: 14px; margin-bottom: 6px; line-height: 1.5; }
+    .question .hint-ans { font-size: 12px; color: var(--muted); font-style: italic; }
+    .explain { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.4; display: none; }
+    .explain.show { display: block; }
+
+    /* STORY for 1c */
+    .story { background: #f8fafc; border-radius: 14px; padding: 18px 20px; line-height: 2.4; font-size: 14px; }
+    .story h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: 1px; color: var(--text); margin-bottom: 12px; }
+
+    /* INPUTS */
+    input[type=text], input:not([type]) {
+      padding: 6px 10px; border: 2px solid var(--border); border-radius: 8px;
+      font-size: 14px; color: var(--text); background: #fff;
+      transition: border-color 0.2s; font-family: 'Inter', sans-serif;
+      width: 140px;
     }
-    .check-btn:hover{opacity:.9;}
-    .check-row{display:flex;justify-content:flex-end;margin-top:14px;}
+    input:focus { outline: none; border-color: var(--rose); }
+    input.correct   { border-color: var(--emerald) !important; background: #f0fdf4; }
+    input.incorrect { border-color: #ef4444 !important; background: #fef2f2; }
 
-    .part-feedback{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.6;display:none;}
-    .part-feedback.show{display:block;}
-    .part-feedback.ok{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;}
-    .part-feedback.partial{background:#fffbeb;color:#92400e;border:1px solid #fde68a;}
+    /* FEEDBACK */
+    .feedback { margin-top: 14px; padding: 12px 16px; border-radius: 12px; font-size: 13px; line-height: 1.6; display: none; }
+    .feedback.show { display: block; }
+    .feedback.ok  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .feedback.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 
-    .submit-section{background:var(--card);border-radius:var(--radius);border:1.5px solid var(--border);padding:20px;text-align:center;}
-    .score-display{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--rose);margin-bottom:4px;}
-    .score-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
-    .submit-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--rose),var(--orange));color:#fff;font-size:15px;font-weight:700;padding:14px 32px;border-radius:12px;border:none;cursor:pointer;transition:opacity 0.2s;font-family:'Plus Jakarta Sans',sans-serif;}
-    .submit-btn:hover{opacity:0.9;}
-    .submit-btn:disabled{opacity:0.5;cursor:not-allowed;}
-    .status-msg{margin-top:12px;padding:12px 16px;border-radius:10px;font-size:13px;font-weight:600;display:none;}
-    .status-msg.show{display:block;}
-    .status-msg.ok{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;}
-    .status-msg.err{background:#fef2f2;color:#991b1b;border:1px solid #fecaca;}
+    /* CHECK BUTTON */
+    .check-btn { background: linear-gradient(135deg, var(--rose), var(--orange)); color: #fff; border: none; border-radius: 10px; padding: 9px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.2s; }
+    .check-btn:hover { opacity: 0.88; }
 
-    .nav-pill{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0f172a;border-radius:100px;padding:12px 24px;display:flex;gap:4px;box-shadow:0 8px 32px rgba(15,23,42,0.3);z-index:900;white-space:nowrap;}
-    .nav-pill a{color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;text-decoration:none;padding:6px 14px;border-radius:100px;transition:all 0.2s;}
-    .nav-pill a:hover,.nav-pill a.active{background:var(--rose);color:#fff;}
+    /* SUBMIT SECTION */
+    .submit-section { background: var(--card); border-radius: 18px; border: 1.5px solid var(--border); padding: 24px; text-align: center; margin-top: 24px; }
+    .submit-score { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; color: var(--rose); margin-bottom: 4px; }
+    .submit-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .submit-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--rose), var(--orange)); color: #fff; font-size: 15px; font-weight: 700; padding: 14px 32px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.2s; }
+    .submit-btn:hover { opacity: 0.9; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .status-msg { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; }
+    .status-msg.show { display: block; }
+    .status-msg.ok  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .status-msg.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 
-    @media (max-width:480px){ .columns{grid-template-columns:1fr;} }
+    .section-header { display: flex; align-items: center; justify-content: space-between; }
+
+    @media (max-width: 600px) {
+      .col-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -108,7 +118,7 @@
   <div class="top-bar-inner">
     <a href="homework.html" class="back-btn">← Назад</a>
     <div class="hw-title">HW 1 — OMG! Where's my passport?</div>
-    <div class="hw-badge">A2</div>
+    <div class="hw-badge">Past Simple</div>
   </div>
 </div>
 
@@ -121,369 +131,418 @@
 
 <div class="page">
 
-  <!-- GRAMMAR HINT -->
-  <div class="hint-block hint-grammar">
-    <strong>📐 Грамматика урока: Past Simple (regular & irregular)</strong>
-    <strong>+</strong> I arrived. We booked a flat. They went home.<br>
-    <strong>−</strong> I didn't arrive. We didn't book. They didn't go. <span style="opacity:.7">(но: I wasn't / We weren't)</span><br>
-    <strong>?</strong> Did you arrive? Where did they go?<br><br>
-    💡 После <code>didn't</code> и в вопросах после <code>did</code> глагол всегда в начальной форме: <code>didn't buy</code>, <code>did you go</code> — без -ed!
+  <div class="hint-block">
+    <h4>📐 Past Simple — напоминалка</h4>
+    <p>
+      <b>Regular verbs:</b> добавляем <code>-ed</code> → <i>arrive → arrived, book → booked</i><br>
+      <b>Irregular verbs:</b> особая форма V2 → <i>take → took, go → went, buy → bought</i><br>
+      <b>Отрицание (−):</b> <code>didn't + V1</code> → <i>didn't buy</i> (не <i>didn't bought!</i>)<br>
+      <b>Вопрос (?):</b> <code>Did + subject + V1?</code> → <i>Did they arrive?</i>
+    </p>
   </div>
 
-  <!-- PART A -->
-  <div class="part-card" id="part-1a">
-    <div class="part-header">
-      <div class="part-num a">A</div>
+  <!-- ── EXERCISE 1A ── -->
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num a">1a</div>
       <div>
-        <div class="part-title">Распредели глаголы</div>
-        <div class="part-desc">Впиши Past Simple в правильную колонку</div>
+        <div class="ex-title">Распредели глаголы по группам</div>
+        <div class="ex-desc">Впиши Past Simple в правильную колонку</div>
       </div>
+      <button class="check-btn" style="margin-left:auto" onclick="check1a()">Проверить</button>
     </div>
-    <div class="part-body">
-      <div class="word-bank">argue, begin, arrive, ask, buy, can, choose, eat, feel, invite, rent, say, stay, study</div>
-      <div class="columns">
+    <div class="ex-body">
+      <div class="word-bank"><b>Глаголы:</b> argue, begin, arrive, ask, buy, can, choose, eat, feel, invite, rent, say, stay, study</div>
+      <div class="col-grid">
         <div>
-          <div class="col-title">Regular</div>
-          <div id="regular-list" class="input-list"></div>
+          <h3>Regular (-ed)</h3>
+          <div class="input-stack" id="regular-list"></div>
         </div>
         <div>
-          <div class="col-title">Irregular</div>
-          <div id="irregular-list" class="input-list"></div>
+          <h3>Irregular (особая форма)</h3>
+          <div class="input-stack" id="irregular-list"></div>
         </div>
       </div>
-      <div class="check-row"><button class="check-btn" onclick="check1a()">✓ Проверить</button></div>
-      <div class="part-feedback" id="fb-1a"></div>
+      <div class="feedback" id="fb-1a"></div>
     </div>
   </div>
 
-  <!-- PART B -->
-  <div class="part-card" id="part-1b">
-    <div class="part-header">
-      <div class="part-num b">B</div>
+  <!-- ── EXERCISE 1B ── -->
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num b">1b</div>
       <div>
-        <div class="part-title">Перепиши предложения с отрицанием</div>
-        <div class="part-desc">Используй didn't / wasn't / weren't</div>
+        <div class="ex-title">Перепиши предложения с отрицанием</div>
+        <div class="ex-desc">Измени смысл на противоположный, используя didn't / weren't</div>
       </div>
+      <button class="check-btn" style="margin-left:auto" onclick="check1b()">Проверить</button>
     </div>
-    <div class="part-body" id="exercise-1b"></div>
-    <div class="part-body" style="padding-top:0">
-      <div class="check-row"><button class="check-btn" onclick="check1b()">✓ Проверить</button></div>
-      <div class="part-feedback" id="fb-1b"></div>
+    <div class="ex-body">
+      <div id="exercise-1b"></div>
+      <div class="feedback" id="fb-1b"></div>
     </div>
   </div>
 
-  <!-- PART C -->
-  <div class="part-card" id="part-1c">
-    <div class="part-header">
-      <div class="part-num c">C</div>
+  <!-- ── EXERCISE 1C ── -->
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num c">1c</div>
       <div>
-        <div class="part-title">Заполни текст Past Simple</div>
-        <div class="part-desc">Слова: arrive, ask, book, cannot, decide, go ×2, look, take, want</div>
+        <div class="ex-title">Заполни текст глаголами в Past Simple</div>
+        <div class="ex-desc">Слова для вставки: arrive, ask, book, can't, decide, go ×2, look, take, want</div>
       </div>
+      <button class="check-btn" style="margin-left:auto" onclick="check1c()">Проверить</button>
     </div>
-    <div class="part-body">
-      <div class="story-card">
-        <h4>The holiday that wasn't</h4>
+    <div class="ex-body">
+      <div class="story">
+        <h3>THE HOLIDAY THAT WASN'T</h3>
         <p>
-          Four years ago, we <input type="text" class="answer-input" data-id="c1" size="6" /> to go away for the weekend.
-          We <input type="text" class="answer-input" data-id="c2" size="6" /> to go to Portugal, so we <input type="text" class="answer-input" data-id="c3" size="6" />
-          a beautiful apartment online. A week later, we <input type="text" class="answer-input" data-id="c4" size="6" />
-          a taxi to the airport. We <input type="text" class="answer-input" data-id="c5" size="6" /> at the airport at two o'clock,
-          and we <input type="text" class="answer-input" data-id="c6" size="6" /> to check-in. The woman at the desk
-          <input type="text" class="answer-input" data-id="c7" size="6" /> us for our passports. We <input type="text" class="answer-input" data-id="c8" size="6" />
-          in our bags and in our coat pockets, but we <input type="text" class="answer-input" data-id="c9" size="6" /> find them. So we
-          <input type="text" class="answer-input" data-id="c10" size="6" /> home again!
+          Four years ago, we <input data-id="c1" size="9"/> to go away for the weekend.
+          We <input data-id="c2" size="7"/> to go to Portugal, so we <input data-id="c3" size="7"/>
+          a beautiful apartment online. A week later, we <input data-id="c4" size="5"/>
+          a taxi to the airport. We <input data-id="c5" size="8"/> at the airport at two o'clock,
+          and we <input data-id="c6" size="5"/> to check-in. The woman at the desk
+          <input data-id="c7" size="5"/> us for our passports. We <input data-id="c8" size="7"/>
+          in our bags and in our coat pockets, but we <input data-id="c9" size="9"/>
+          find them. So we <input data-id="c10" size="5"/> home again!
         </p>
       </div>
-      <div class="check-row"><button class="check-btn" onclick="check1c()">✓ Проверить</button></div>
-      <div class="part-feedback" id="fb-1c"></div>
+      <div class="feedback" id="fb-1c"></div>
     </div>
   </div>
 
-  <!-- PART D -->
-  <div class="part-card" id="part-1d">
-    <div class="part-header">
-      <div class="part-num d">D</div>
+  <!-- ── EXERCISE 1D ── -->
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num d">1d</div>
       <div>
-        <div class="part-title">Заполни вопросы</div>
-        <div class="part-desc">Did + subject + начальная форма глагола</div>
+        <div class="ex-title">Задай вопросы к тексту</div>
+        <div class="ex-desc">Вставь недостающую часть вопроса в Past Simple</div>
       </div>
+      <button class="check-btn" style="margin-left:auto" onclick="check1d()">Проверить</button>
     </div>
-    <div class="part-body" id="exercise-1d"></div>
-    <div class="part-body" style="padding-top:0">
-      <div class="check-row"><button class="check-btn" onclick="check1d()">✓ Проверить</button></div>
-      <div class="part-feedback" id="fb-1d"></div>
+    <div class="ex-body">
+      <div id="exercise-1d"></div>
+      <div class="feedback" id="fb-1d"></div>
     </div>
   </div>
 
-  <!-- SUBMIT -->
-  <div class="submit-section" id="submitSection">
-    <div class="score-display" id="scoreDisplay">Результат: — / 28</div>
-    <div class="score-sub">Заполни все части, затем отправь задание</div>
-    <button class="submit-btn" id="submitBtn" onclick="submitHW()">
-      📤 Отправить преподавателю
-    </button>
+  <!-- ── SUBMIT ── -->
+  <div class="submit-section">
+    <div class="submit-score" id="submitScore">Проверь все упражнения</div>
+    <div class="submit-sub">Нажми «Проверить» в каждом блоке, затем отправь работу</div>
+    <button class="submit-btn" id="submitBtn" onclick="submitAll()">📤 Отправить преподавателю</button>
     <div class="status-msg" id="statusMsg"></div>
   </div>
 
 </div>
 
-<div class="nav-pill">
-  <a href="index.html">🏠 Home</a>
-  <a href="homework.html" class="active">📝 HW</a>
-  <a href="grammar.html">📐 Grammar</a>
-  <a href="vocabulary.html">💥 Vocab</a>
-</div>
-
 <script>
-  const SUPABASE_URL='https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1/';
-  const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
-  const BOT_TOKEN='8780310968:AAE2nZnb0ENFPbYDZ0W8cmDF-JpDaqix-SE';
-  const CHAT_ID='1003908088903';
-  const STUDENT_ID='olya';
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const SB_URL = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
+const TG_BOT = '8780310968:AAE2nZnb0ENFPbYDZ0W8cmDF-JpDaqix-SE';
+const TG_CHAT = '1003908088903';
+const STUDENT = 'olya';
 
-  const normalize = (s) => (s || "")
-    .toLowerCase()
-    .trim()
-    .replace(/[’']/g, "'")
-    .replace(/[.,!?]/g, "")
-    .replace(/\s+/g, " ");
-  const oneOf = (answers) => answers.map(normalize);
+function sbH(){ return { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=minimal' }; }
 
-  const data1a = {
-    regular: ["argued", "arrived", "asked", "invited", "rented", "stayed", "studied"],
-    irregular: ["began", "bought", "could", "chose", "ate", "felt", "said"]
-  };
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const norm = s => (s||'').toLowerCase().trim().replace(/['']/g,"'").replace(/[.,!?]/g,'').replace(/\s+/g,' ');
 
-  const data1b = [
-    { prompt: "They bought some postcards.", prefix: "They", suffix: "any souvenirs.",
-      answers: ["didn't buy", "did not buy"],
-      explain: "После didn't используется начальная форма глагола: didn't buy, не didn't bought." },
-    { prompt: "The people were unfriendly.", prefix: "The people", suffix: "very helpful.",
-      answers: ["weren't", "were not"],
-      explain: "Глагол be в Past Simple образует отрицание без did: were → weren't." },
-    { prompt: "I swam in the sea.", prefix: "I", suffix: "in the swimming pool.",
-      answers: ["didn't swim", "did not swim"],
-      explain: "После didn't возвращаем глагол в начальную форму: swim." },
-    { prompt: "We rented a flat.", prefix: "We", suffix: "a car.",
-      answers: ["didn't rent", "did not rent"],
-      explain: "Regular verb rent в отрицании: didn't + rent." },
-    { prompt: "He spent a month in Bangkok.", prefix: "He", suffix: "a week there.",
-      answers: ["didn't spend", "did not spend"],
-      explain: "Irregular verb spent в отрицании возвращается в форму spend." }
-  ];
+const data1a = {
+  regular:   ['argued','arrived','asked','invited','rented','stayed','studied'],
+  irregular: ['began','bought','could','chose','ate','felt','said']
+};
 
-  const data1c = {
-    c1: ["decided"], c2: ["wanted"], c3: ["booked"], c4: ["took"], c5: ["arrived"],
-    c6: ["asked"], c7: ["asked"], c8: ["looked"], c9: ["couldn't", "could not"], c10: ["went"]
-  };
-  const explain1c = {
-    c1: "decide → decided: regular verb, добавляем -ed.",
-    c2: "want → wanted: regular verb.",
-    c3: "book → booked: regular verb.",
-    c4: "take → took: irregular verb.",
-    c5: "arrive → arrived: regular verb, убираем silent -e и добавляем -d.",
-    c6: "ask → asked: regular verb.",
-    c7: "ask → asked: женщина попросила паспорта.",
-    c8: "look → looked: regular verb.",
-    c9: "cannot → couldn't: Past Simple от can/cannot.",
-    c10: "go → went: irregular verb."
-  };
+const data1b = [
+  { prompt:'They bought some postcards.', prefix:'They', suffix:'any souvenirs.', answers:["didn't buy","did not buy"], explain:"После didn't — начальная форма глагола: didn't buy (не didn't bought!)" },
+  { prompt:'The people were unfriendly.', prefix:'The people', suffix:'very helpful.', answers:["weren't","were not"], explain:"Глагол be в Past Simple: were → weren't (без did!)" },
+  { prompt:'I swam in the sea.', prefix:'I', suffix:'in the swimming pool.', answers:["didn't swim","did not swim"], explain:"После didn't возвращаем базовую форму: didn't swim" },
+  { prompt:'We rented a flat.', prefix:'We', suffix:'a car.', answers:["didn't rent","did not rent"], explain:"Regular verb: didn't + rent" },
+  { prompt:'He spent a month in Bangkok.', prefix:'He', suffix:'a week there.', answers:["didn't spend","did not spend"], explain:"Irregular verb spent → базовая форма spend: didn't spend" }
+];
 
-  const data1d = [
-    { q: "When ___ to go away for the weekend?", a: "Four years ago.", answers: ["did they decide"],
-      explain: "В вопросе Past Simple: did + subject + base verb." },
-    { q: "Where ___ to go?", a: "Portugal.", answers: ["did they want"],
-      explain: "После did используем want, а не wanted." },
-    { q: "How ___ the apartment?", a: "They booked it online.", answers: ["did they book"],
-      explain: "Вопрос к действию: How did they book...?" },
-    { q: "What time ___ at the airport?", a: "At two o'clock.", answers: ["did they arrive"],
-      explain: "Did + they + arrive." },
-    { q: "What ___ at check-in ask for?", a: "The woman asked for their passports.", answers: ["did the woman", "did the woman at the desk"],
-      explain: "Нужно поставить did перед подлежащим: What did the woman... ask for?" },
-    { q: "Where ___ in the end?", a: "They went home.", answers: ["did they go"],
-      explain: "go в вопросе стоит в начальной форме после did." }
-  ];
+const data1c_answers = { c1:['decided'], c2:['wanted'], c3:['booked'], c4:['took'], c5:['arrived'], c6:['asked'], c7:['asked'], c8:['looked'], c9:["couldn't","could not"], c10:['went'] };
+const data1c_explain = { c1:'decide → decided (regular)', c2:'want → wanted (regular)', c3:'book → booked (regular)', c4:'take → took (irregular)', c5:'arrive → arrived (regular, -e + d)', c6:'ask → asked (regular)', c7:'ask → asked (женщина попросила паспорт)', c8:'look → looked (regular)', c9:"cannot → couldn't (Past Simple от can)", c10:'go → went (irregular)' };
+const data1c_story = [ 'decided','wanted','booked','took','arrived','asked','asked','looked',"couldn't",'went' ];
 
-  const TOTAL_FIELDS = 14 /* 1a */ + data1b.length /* 1b */ + Object.keys(data1c).length /* 1c */ + data1d.length /* 1d */;
-  let partScores = { a:null, b:null, c:null, d:null };
+const data1d = [
+  { q:'When ___ to go away for the weekend?', a:'Four years ago.', answers:['did they decide'], explain:'did + they + base verb (decide)' },
+  { q:'Where ___ to go?', a:'Portugal.', answers:['did they want'], explain:'did + they + want (не wanted!)' },
+  { q:'How ___ the apartment?', a:'They booked it online.', answers:['did they book'], explain:'How did they book...?' },
+  { q:"What time ___ at the airport?", a:'At two o\'clock.', answers:['did they arrive'], explain:'did + they + arrive' },
+  { q:"What ___ at check-in ask for?", a:"The woman asked for their passports.", answers:['did the woman','did the woman at the desk'], explain:'What did the woman... ask for?' },
+  { q:'Where ___ in the end?', a:'They went home.', answers:['did they go'], explain:'did + they + go (не went!)' }
+];
 
-  function makeInputs(){
-    const regular = document.getElementById("regular-list");
-    const irregular = document.getElementById("irregular-list");
-    for (let i = 0; i < 7; i++) {
-      regular.insertAdjacentHTML("beforeend", `<input type="text" class="answer-input" data-group="regular" placeholder="${i+1}" />`);
-      irregular.insertAdjacentHTML("beforeend", `<input type="text" class="answer-input" data-group="irregular" placeholder="${i+1}" />`);
-    }
+// ─── STATE ────────────────────────────────────────────────────────────────────
+const checked = { '1a': false, '1b': false, '1c': false, '1d': false };
+const scores  = { '1a': null, '1b': null, '1c': null, '1d': null };
 
-    const b = document.getElementById("exercise-1b");
-    data1b.forEach((item, i) => {
-      b.insertAdjacentHTML("beforeend", `
-        <div class="question">
-          <div class="q-text"><span class="q-num">${i+2}</span>${item.prompt}</div>
-          <div class="sentence-row">${item.prefix} <input type="text" class="answer-input small-input" data-id="b${i}" /> ${item.suffix}</div>
-          <div class="explain-box" id="exp-b${i}"></div>
-        </div>
-      `);
-    });
-
-    const d = document.getElementById("exercise-1d");
-    data1d.forEach((item, i) => {
-      d.insertAdjacentHTML("beforeend", `
-        <div class="question">
-          <div class="q-text"><span class="q-num">${i+1}</span>${item.q.replace("___", `<input type="text" class="answer-input small-input" data-id="d${i}" style="display:inline-block;width:140px;" />`)}</div>
-          <div class="explain-box" style="color:var(--muted);font-style:italic;">${item.a}</div>
-          <div class="explain-box" id="exp-d${i}"></div>
-        </div>
-      `);
-    });
+// ─── BUILD UI ─────────────────────────────────────────────────────────────────
+function buildUI(){
+  // 1a inputs
+  const rList = document.getElementById('regular-list');
+  const iList = document.getElementById('irregular-list');
+  for(let i=0;i<7;i++){
+    rList.insertAdjacentHTML('beforeend',`<input data-group="regular" placeholder="${i+1}" />`);
+    iList.insertAdjacentHTML('beforeend',`<input data-group="irregular" placeholder="${i+1}" />`);
   }
-
-  function mark(input, ok){
-    input.classList.toggle("is-correct", ok);
-    input.classList.toggle("is-wrong", !ok);
-  }
-
-  function showFeedback(id, state, text){
-    const fb = document.getElementById(`fb-${id}`);
-    fb.className = `part-feedback show ${state}`;
-    fb.innerHTML = text;
-  }
-
-  function check1a(){
-    let total = 0, correct = 0;
-    ["regular", "irregular"].forEach(group => {
-      const expected = new Set(data1a[group]);
-      const inputs = [...document.querySelectorAll(`input[data-group="${group}"]`)];
-      const values = inputs.map(i => normalize(i.value)).filter(Boolean);
-      inputs.forEach(input => {
-        total++;
-        const v = normalize(input.value);
-        const ok = expected.has(v) && values.filter(x => x === v).length === 1;
-        if (ok) correct++;
-        mark(input, ok);
-      });
-    });
-    const answer = `<b>Ответы:</b><br>
-      Regular: ${data1a.regular.join(", ")}.<br>
-      Irregular: ${data1a.irregular.join(", ")}.<br>
-      Regular verbs обычно получают -ed/-d/-ied, а irregular verbs нужно запомнить.`;
-    partScores.a = correct;
-    showFeedback("1a", correct === total ? "ok" : "partial", `Правильно: ${correct}/${total}.<br>${answer}`);
-    updateProgress(); updateScore();
-  }
-
-  function check1b(){
-    let correct = 0;
-    data1b.forEach((item, i) => {
-      const input = document.querySelector(`input[data-id="b${i}"]`);
-      const ok = oneOf(item.answers).includes(normalize(input.value));
-      mark(input, ok);
-      if (ok) correct++;
-      document.getElementById(`exp-b${i}`).textContent = item.explain;
-    });
-    partScores.b = correct;
-    showFeedback("1b", correct === data1b.length ? "ok" : "partial", `Правильно: ${correct}/${data1b.length}. Проверь подсказки под предложениями.`);
-    updateProgress(); updateScore();
-  }
-
-  function check1c(){
-    let correct = 0;
-    Object.entries(data1c).forEach(([id, answers]) => {
-      const input = document.querySelector(`input[data-id="${id}"]`);
-      const ok = oneOf(answers).includes(normalize(input.value));
-      mark(input, ok);
-      if (ok) correct++;
-    });
-    const explanations = Object.entries(explain1c).map(([id, text]) => `${id.slice(1)}. ${text}`).join("<br>");
-    partScores.c = correct;
-    showFeedback("1c", correct === Object.keys(data1c).length ? "ok" : "partial", `Правильно: ${correct}/10.<br>${explanations}`);
-    updateProgress(); updateScore();
-  }
-
-  function check1d(){
-    let correct = 0;
-    data1d.forEach((item, i) => {
-      const input = document.querySelector(`input[data-id="d${i}"]`);
-      const ok = oneOf(item.answers).includes(normalize(input.value));
-      mark(input, ok);
-      if (ok) correct++;
-      document.getElementById(`exp-d${i}`).textContent = item.explain;
-    });
-    partScores.d = correct;
-    showFeedback("1d", correct === data1d.length ? "ok" : "partial", `Правильно: ${correct}/${data1d.length}. В вопросах Past Simple чаще всего используем did + subject + base verb.`);
-    updateProgress(); updateScore();
-  }
-
-  function updateScore(){
-    const checked = Object.values(partScores).filter(v => v !== null);
-    if (!checked.length) { document.getElementById('scoreDisplay').textContent = `Результат: — / ${TOTAL_FIELDS}`; return; }
-    const sum = checked.reduce((a,b)=>a+b,0);
-    document.getElementById('scoreDisplay').textContent = `Результат: ${sum} / ${TOTAL_FIELDS}`;
-  }
-
-  function updateProgress(){
-    const allInputs = [...document.querySelectorAll('.answer-input')];
-    const filled = allInputs.filter(i => i.value.trim()).length;
-    const pct = Math.round((filled / allInputs.length) * 100);
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressPct').textContent = pct + '%';
-  }
-
-  document.addEventListener('input', (e) => {
-    if (e.target.classList && e.target.classList.contains('answer-input')) updateProgress();
+  // 1b
+  const b = document.getElementById('exercise-1b');
+  data1b.forEach((item,i)=>{
+    b.insertAdjacentHTML('beforeend',`
+      <div class="question">
+        <p><b>${i+2}.</b> ${item.prompt}</p>
+        <p>${item.prefix} <input data-id="b${i}" size="14"/> ${item.suffix}</p>
+        <div class="explain" id="exp-b${i}"></div>
+      </div>`);
   });
+  // 1d
+  const d = document.getElementById('exercise-1d');
+  data1d.forEach((item,i)=>{
+    d.insertAdjacentHTML('beforeend',`
+      <div class="question">
+        <p><b>${i+1}.</b> ${item.q.replace('___',`<input data-id="d${i}" size="16"/>`)}</p>
+        <p class="hint-ans">Ответ: ${item.a}</p>
+        <div class="explain" id="exp-d${i}"></div>
+      </div>`);
+  });
+}
 
-  async function submitHW(){
-    const btn=document.getElementById('submitBtn');
-    const msg=document.getElementById('statusMsg');
-    btn.disabled=true;
-    btn.textContent='⏳ Отправляю…';
+function markInput(inp, ok){ inp.classList.toggle('correct', ok); inp.classList.toggle('incorrect', !ok); }
+function showFB(id, ok, html){ const fb=document.getElementById('fb-'+id); fb.className='feedback show '+(ok?'ok':'err'); fb.innerHTML=html; }
 
-    const checked = Object.values(partScores).filter(v => v !== null);
-    const sum = checked.reduce((a,b)=>a+b,0);
-    const score = sum+'/'+TOTAL_FIELDS;
+// ─── CHECK FUNCTIONS ──────────────────────────────────────────────────────────
+function check1a(){
+  let total=0, ok=0;
+  ['regular','irregular'].forEach(group=>{
+    const expected=new Set(data1a[group]);
+    const inputs=[...document.querySelectorAll(`input[data-group="${group}"]`)];
+    const vals=inputs.map(i=>norm(i.value)).filter(Boolean);
+    inputs.forEach(inp=>{ total++; const good=expected.has(norm(inp.value))&&vals.filter(v=>v===norm(inp.value)).length===1; if(good)ok++; markInput(inp,good); });
+  });
+  scores['1a']={ok,total};checked['1a']=true;
+  showFB('1a', ok===total, `<b>Правильно: ${ok}/${total}</b><br>Regular: ${data1a.regular.join(', ')}<br>Irregular: ${data1a.irregular.join(', ')}`);
+  updateProgress();
+}
 
-    const partA = ['Regular: '+[...document.querySelectorAll('input[data-group="regular"]')].map(i=>i.value||'—').join(', '),
-                   'Irregular: '+[...document.querySelectorAll('input[data-group="irregular"]')].map(i=>i.value||'—').join(', ')].join('\n');
+function check1b(){
+  let ok=0;
+  const errors=[];
+  data1b.forEach((item,i)=>{
+    const inp=document.querySelector(`input[data-id="b${i}"]`);
+    const good=[...item.answers.map(norm)].includes(norm(inp.value));
+    markInput(inp,good); if(good) ok++; else errors.push(i);
+    const exp=document.getElementById(`exp-b${i}`);
+    exp.textContent=item.explain; exp.className='explain show';
+  });
+  scores['1b']={ok,total:data1b.length,errors};checked['1b']=true;
+  showFB('1b', ok===data1b.length, `<b>Правильно: ${ok}/${data1b.length}</b> — объяснения появились под каждым предложением.`);
+  updateProgress();
+}
 
-    const partB = data1b.map((item,i)=>`${item.prefix} ${document.querySelector(`input[data-id="b${i}"]`).value||'—'} ${item.suffix}`).join('\n');
+function check1c(){
+  let ok=0;
+  const errors=[];
+  Object.entries(data1c_answers).forEach(([id,ans])=>{
+    const inp=document.querySelector(`input[data-id="${id}"]`);
+    const good=ans.map(norm).includes(norm(inp.value));
+    markInput(inp,good); if(good) ok++; else errors.push(id);
+  });
+  scores['1c']={ok,total:10,errors};checked['1c']=true;
+  const exp=Object.entries(data1c_explain).map(([id,t])=>`${id.slice(1)}. ${t}`).join('<br>');
+  showFB('1c', ok===10, `<b>Правильно: ${ok}/10</b><br>${exp}`);
+  updateProgress();
+}
 
-    const partC = Object.keys(data1c).map(id=>`${id}: ${document.querySelector(`input[data-id="${id}"]`).value||'—'}`).join('\n');
+function check1d(){
+  let ok=0;
+  const errors=[];
+  data1d.forEach((item,i)=>{
+    const inp=document.querySelector(`input[data-id="d${i}"]`);
+    const good=item.answers.map(norm).includes(norm(inp.value));
+    markInput(inp,good); if(good) ok++; else errors.push(i);
+    const exp=document.getElementById(`exp-d${i}`);
+    exp.textContent=item.explain; exp.className='explain show';
+  });
+  scores['1d']={ok,total:data1d.length,errors};checked['1d']=true;
+  showFB('1d', ok===data1d.length, `<b>Правильно: ${ok}/${data1d.length}</b> — структура вопроса: did + subject + base verb.`);
+  updateProgress();
+}
 
-    const partD = data1d.map((item,i)=>`${item.q.replace('___', document.querySelector(`input[data-id="d${i}"]`).value||'—')}`).join('\n');
+// ─── PROGRESS BAR ─────────────────────────────────────────────────────────────
+function updateProgress(){
+  const done=Object.values(checked).filter(Boolean).length;
+  const pct=Math.round(done/4*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+'%';
+  // update score display
+  const all=Object.values(scores).filter(s=>s!==null);
+  if(all.length){
+    const totalOk=all.reduce((a,s)=>a+s.ok,0);
+    const totalAll=all.reduce((a,s)=>a+s.total,0);
+    document.getElementById('submitScore').textContent=`Итог: ${totalOk} / ${totalAll} верно`;
+  }
+}
 
-    const now=new Date().toLocaleString('ru-RU',{timeZone:'Europe/Moscow'});
+// ─── BUILD TELEGRAM MESSAGE ───────────────────────────────────────────────────
+function buildTelegramMessage(){
+  const now=new Date().toLocaleString('ru-RU',{timeZone:'Europe/Moscow'});
+  const allScores=Object.values(scores).filter(s=>s!==null);
+  const totalOk=allScores.reduce((a,s)=>a+s.ok,0);
+  const totalAll=allScores.reduce((a,s)=>a+s.total,0);
 
-    const tgText=`📝 *Homework 1 · Olya*\n📅 ${now}\n\n*Результат: ${score}*\n\n*Part A — Regular/Irregular:*\n${partA}\n\n*Part B — Negatives:*\n${partB}\n\n*Part C — Story gap-fill:*\n${partC}\n\n*Part D — Questions:*\n${partD}`;
+  let msg=`📝 *Homework 1 — Olya*\n📅 ${now}\n\n`;
+  msg+=`✅ *Итоговый результат: ${totalOk}/${totalAll}*\n`;
+  msg+=`━━━━━━━━━━━━━━━━━━━\n\n`;
 
-    try{
-      const sbResp=await fetch(SUPABASE_URL+'homework_results',{
-        method:'POST',
-        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify({student_id:STUDENT_ID,hw_id:'hw1',score,part_a:partA+'\n\n'+partB,part_c:partC+'\n\n'+partD})
-      });
-    }catch(e){}
+  // 1A
+  if(scores['1a']){
+    const s=scores['1a'];
+    msg+=`*1a. Распределение глаголов — ${s.ok}/${s.total}*\n`;
+    msg+=`📋 Задание: распределить глаголы по группам (regular / irregular)\n`;
+    msg+=`_Слова: argue, begin, arrive, ask, buy, can, choose, eat, feel, invite, rent, say, stay, study_\n`;
 
-    try{
-      await fetch('https://api.telegram.org/bot'+BOT_TOKEN+'/sendMessage',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({chat_id:CHAT_ID,text:tgText,parse_mode:'Markdown'})
-      });
-    }catch(e){}
+    const regInputs=[...document.querySelectorAll('input[data-group="regular"]')].map(i=>i.value.trim()).filter(Boolean);
+    const irrInputs=[...document.querySelectorAll('input[data-group="irregular"]')].map(i=>i.value.trim()).filter(Boolean);
+    const regExpected=new Set(data1a.regular);
+    const irrExpected=new Set(data1a.irregular);
 
-    localStorage.setItem('olya_hw1_score',score);
-
-    msg.className='status-msg show ok';
-    msg.textContent='✅ Сохранено в облаке ☁️ и отправлено преподавателю!';
-    btn.textContent='✅ Отправлено!';
-
-    setTimeout(()=>{ window.location.href='homework.html'; },2000);
+    const regErrors=regInputs.filter(v=>!regExpected.has(norm(v)));
+    const irrErrors=irrInputs.filter(v=>!irrExpected.has(norm(v)));
+    if(regErrors.length) msg+=`❌ Regular (ошибки): ${regErrors.join(', ')}\n✅ Правильные Regular: ${data1a.regular.join(', ')}\n`;
+    if(irrErrors.length) msg+=`❌ Irregular (ошибки): ${irrErrors.join(', ')}\n✅ Правильные Irregular: ${data1a.irregular.join(', ')}\n`;
+    if(!regErrors.length && !irrErrors.length) msg+=`✅ Всё верно!\n`;
+    msg+='\n';
   }
 
-  makeInputs();
-  updateProgress();
+  // 1B
+  if(scores['1b']){
+    const s=scores['1b'];
+    msg+=`*1b. Отрицание в Past Simple — ${s.ok}/${s.total}*\n`;
+    msg+=`📋 Задание: переписать предложения с отрицанием\n`;
+    data1b.forEach((item,i)=>{
+      const inp=document.querySelector(`input[data-id="b${i}"]`);
+      const val=inp.value.trim();
+      const good=item.answers.map(norm).includes(norm(val));
+      if(!good){
+        msg+=`\n❌ Упр. ${i+2}: "${item.prefix} ___ ${item.suffix}"\n`;
+        msg+=`   Ученик написал: "${val}"\n`;
+        msg+=`   ✅ Правильно: "${item.prefix} ${item.answers[0]} ${item.suffix}"\n`;
+        msg+=`   💡 ${item.explain}\n`;
+      }
+    });
+    if(s.ok===s.total) msg+=`✅ Всё верно!\n`;
+    msg+='\n';
+  }
+
+  // 1C
+  if(scores['1c']){
+    const s=scores['1c'];
+    msg+=`*1c. Текст "The Holiday That Wasn't" — ${s.ok}/${s.total}*\n`;
+    msg+=`📋 Задание: вставить глаголы в Past Simple\n`;
+    msg+=`_Текст: "Four years ago, we _decided_ to go away... We _wanted_..."_\n`;
+    let hasErrors=false;
+    Object.entries(data1c_answers).forEach(([id,ans])=>{
+      const inp=document.querySelector(`input[data-id="${id}"]`);
+      const val=inp.value.trim();
+      const good=ans.map(norm).includes(norm(val));
+      if(!good){
+        hasErrors=true;
+        const num=id.slice(1);
+        msg+=`\n❌ Пропуск ${num}: ученик написал "${val}"\n`;
+        msg+=`   ✅ Правильно: "${ans[0]}"\n`;
+        msg+=`   💡 ${data1c_explain[id]}\n`;
+      }
+    });
+    if(!hasErrors) msg+=`✅ Всё верно!\n`;
+    msg+='\n';
+  }
+
+  // 1D
+  if(scores['1d']){
+    const s=scores['1d'];
+    msg+=`*1d. Вопросы к тексту — ${s.ok}/${s.total}*\n`;
+    msg+=`📋 Задание: вставить вопросительную часть в Past Simple\n`;
+    data1d.forEach((item,i)=>{
+      const inp=document.querySelector(`input[data-id="d${i}"]`);
+      const val=inp.value.trim();
+      const good=item.answers.map(norm).includes(norm(val));
+      if(!good){
+        msg+=`\n❌ Вопрос ${i+1}: "${item.q}"\n`;
+        msg+=`   Ученик написал: "${val}"\n`;
+        msg+=`   ✅ Правильно: "${item.answers[0]}"\n`;
+        msg+=`   💡 ${item.explain}\n`;
+      }
+    });
+    if(s.ok===s.total) msg+=`✅ Всё верно!\n`;
+    msg+='\n';
+  }
+
+  msg+=`━━━━━━━━━━━━━━━━━━━\n`;
+  msg+=`📎 Открыть ДЗ: /hw1.html`;
+  return msg;
+}
+
+// ─── SUBMIT ───────────────────────────────────────────────────────────────────
+async function submitAll(){
+  const btn=document.getElementById('submitBtn');
+  const statusEl=document.getElementById('statusMsg');
+  btn.disabled=true; btn.textContent='⏳ Отправляю…';
+
+  const allScores=Object.values(scores).filter(s=>s!==null);
+  const totalOk=allScores.reduce((a,s)=>a+s.ok,0);
+  const totalAll=allScores.reduce((a,s)=>a+s.total,0);
+  const scoreStr=`${totalOk}/${totalAll}`;
+
+  // Supabase UPSERT (POST + merge-duplicates)
+  let sbOk=false;
+  try{
+    const payload={
+      student: STUDENT,
+      hw_id: 'hw1',
+      score: scoreStr,
+      score_1a: scores['1a'] ? `${scores['1a'].ok}/${scores['1a'].total}` : null,
+      score_1b: scores['1b'] ? `${scores['1b'].ok}/${scores['1b'].total}` : null,
+      score_1c: scores['1c'] ? `${scores['1c'].ok}/${scores['1c'].total}` : null,
+      score_1d: scores['1d'] ? `${scores['1d'].ok}/${scores['1d'].total}` : null,
+      submitted_at: new Date().toISOString()
+    };
+    const r=await fetch(`${SB_URL}/homework_results`,{
+      method:'POST',
+      headers: sbH(),
+      body: JSON.stringify(payload)
+    });
+    sbOk = r.ok || r.status===201 || r.status===200;
+  } catch(e){ console.warn('Supabase error', e); }
+
+  // Telegram — детальный отчёт с ошибками
+  let tgOk=false;
+  try{
+    const tgMsg=buildTelegramMessage();
+    const r=await fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ chat_id: TG_CHAT, text: tgMsg, parse_mode:'Markdown' })
+    });
+    tgOk = r.ok;
+  } catch(e){ console.warn('Telegram error', e); }
+
+  // LocalStorage (offline fallback)
+  localStorage.setItem('olya_hw1_done', '1');
+  localStorage.setItem('olya_hw1_score', scoreStr);
+
+  statusEl.className='status-msg show ok';
+  statusEl.innerHTML=`✅ Готово! Результат сохранён${sbOk?' в облаке ☁️':''}${tgOk?' и отправлен преподавателю 📩':''}.`;
+  btn.textContent='✅ Отправлено!';
+
+  setTimeout(()=>{ window.location.href='homework.html'; }, 2500);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+buildUI();
 </script>
 </body>
 </html>
