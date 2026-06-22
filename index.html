@@ -9,124 +9,136 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --rose: #f43f5e; --orange: #fb923c; --amber: #f59e0b;
-      --rose-light: #fce7f3; --rose-mid: #fb7185;
+      --emerald: #10b981; --blue: #3b82f6; --indigo: #4f46e5;
       --bg: #f1f5f9; --card: #ffffff; --text: #0f172a;
-      --muted: #64748b; --border: #e2e8f0; --radius: 20px;
+      --muted: #64748b; --border: #e2e8f0;
     }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 100px; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 40px; }
 
     /* HERO */
     .hero {
       background: linear-gradient(135deg, #f43f5e 0%, #fb923c 50%, #f59e0b 100%);
-      padding: 48px 24px 56px; position: relative; overflow: hidden;
+      padding: 48px 24px 80px;
+      position: relative;
     }
     .hero::before {
       content: ''; position: absolute; top: -60px; right: -60px;
       width: 240px; height: 240px; border-radius: 50%;
       background: rgba(255,255,255,0.08); pointer-events: none;
     }
-    .hero::after {
-      content: ''; position: absolute; bottom: 40px; left: -40px;
-      width: 160px; height: 160px; border-radius: 50%;
-      background: rgba(255,255,255,0.06); pointer-events: none;
-    }
-    .hero-wave { position: absolute; bottom: -1px; left: 0; right: 0; line-height: 0; pointer-events: none; z-index: 0; }
+    .hero-wave { position: absolute; bottom: -1px; left: 0; right: 0; line-height: 0; pointer-events: none; }
     .hero-wave svg { display: block; width: 100%; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35);
-      color: #fff; font-size: 12px; font-weight: 700;
-      padding: 5px 14px; border-radius: 100px; margin-bottom: 20px;
-      letter-spacing: 0.5px;
+    .hero-inner { max-width: 860px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
+    .hero h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(28px,5vw,42px); font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .hero p  { color: rgba(255,255,255,0.82); font-size: 15px; }
+    .level-badge {
+      background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.35);
+      color: #fff; padding: 10px 22px; border-radius: 100px;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px;
+      white-space: nowrap; flex-shrink: 0; margin-top: 4px;
     }
-    .hero h1 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: clamp(30px, 6vw, 48px); font-weight: 800;
-      color: #fff; letter-spacing: -0.5px; margin-bottom: 6px;
-    }
-    .hero-sub { color: rgba(255,255,255,0.8); font-size: 15px; margin-bottom: 24px; }
-    .hero-quote {
-      background: rgba(255,255,255,0.15); border-left: 3px solid rgba(255,255,255,0.6);
-      border-radius: 0 12px 12px 0; padding: 12px 16px; max-width: 420px;
-      color: rgba(255,255,255,0.9); font-size: 14px; font-style: italic; line-height: 1.6;
-    }
-    .hero-quote span { display: block; font-size: 12px; font-style: normal; font-weight: 600; margin-top: 6px; opacity: 0.75; }
 
-    /* LAYOUT */
-    .page { max-width: 700px; margin: 0 auto; padding: 0 20px; }
+    /* PAGE WRAPPER */
+    .page { max-width: 860px; margin: 0 auto; padding: 0 20px; }
 
-    /* STATS ROW */
-    .stats-row { display: flex; gap: 12px; margin-top: 24px; margin-bottom: 32px; flex-wrap: wrap; position: relative; z-index: 2; }
+    /* STATS */
+    .stats-row { display: flex; gap: 12px; margin-top: 24px; margin-bottom: 32px; flex-wrap: wrap; }
     .stat-chip {
       background: var(--card); border-radius: 16px; border: 1.5px solid var(--border);
       padding: 16px 20px; flex: 1; min-width: 90px; text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
     }
-    .stat-chip:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
     .stat-chip .sc-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 26px; font-weight: 800; }
     .stat-chip .sc-lbl { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
-    .stat-chip.lessons .sc-num { color: var(--rose); }
+    .stat-chip.hw    .sc-num { color: var(--rose); }
     .stat-chip.words .sc-num { color: var(--orange); }
-    .stat-chip.streak .sc-num { color: var(--amber); }
+    .stat-chip.level .sc-num { color: var(--emerald); font-size: 18px; }
+
+    /* VERB FLASHER */
+    .verb-flasher {
+      background: var(--card); border-radius: 18px; border: 1.5px solid var(--border);
+      padding: 18px 24px; margin-bottom: 30px; display: flex; align-items: center; gap: 18px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      border-left: 4px solid var(--orange);
+    }
+    .vf-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); white-space: nowrap; }
+    .vf-content { flex: 1; }
+    .vf-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .vf-v1  { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 800; color: var(--rose); }
+    .vf-arr { font-size: 16px; color: #cbd5e1; }
+    .vf-v2  { font-size: 18px; font-weight: 700; color: #334155; }
+    .vf-v3  { font-size: 18px; font-weight: 700; color: var(--blue); }
+    .vf-ru  { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .vf-btn {
+      background: linear-gradient(135deg, var(--rose), var(--orange));
+      color: #fff; border: none; border-radius: 50%;
+      width: 36px; height: 36px; font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      transition: opacity 0.2s;
+    }
+    .vf-btn:hover { opacity: 0.85; }
 
     /* SECTION TITLE */
     .section-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin: 28px 0 14px; }
 
-    /* PROGRESS CARD */
-    .progress-card {
-      background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
-      padding: 20px 22px; margin-bottom: 14px;
-    }
-    .pc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .pc-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; }
-    .pc-pct { font-size: 13px; font-weight: 700; color: var(--rose); }
-    .progress-bar-bg { background: var(--bg); border-radius: 100px; height: 8px; overflow: hidden; }
-    .progress-bar-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--rose), var(--orange)); transition: width 1s ease; }
-    .pc-sub { font-size: 12px; color: var(--muted); margin-top: 8px; }
-
     /* NAV CARDS */
-    .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 32px; }
     .nav-card {
-      background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
-      padding: 20px; text-decoration: none; color: inherit;
+      background: var(--card); border-radius: 20px; border: 1.5px solid var(--border);
+      padding: 22px; text-decoration: none; color: inherit;
       display: flex; flex-direction: column; gap: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
       transition: all 0.2s;
     }
-    .nav-card:hover { border-color: var(--rose-mid); box-shadow: 0 8px 28px rgba(244,63,94,0.12); transform: translateY(-2px); }
-    .nav-card .nc-icon { font-size: 28px; }
-    .nav-card .nc-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; }
-    .nav-card .nc-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
-    .nav-card .nc-arrow { font-size: 18px; color: var(--rose); align-self: flex-end; margin-top: auto; }
+    .nav-card:hover { border-color: var(--rose); box-shadow: 0 8px 28px rgba(244,63,94,0.12); transform: translateY(-2px); }
+    .nc-icon  { font-size: 26px; }
+    .nc-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; }
+    .nc-desc  { font-size: 12px; color: var(--muted); line-height: 1.4; }
+    .nc-arrow { font-size: 18px; color: var(--rose); align-self: flex-end; margin-top: auto; }
 
-    /* FLOATING NAV */
-    .nav-pill {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: #0f172a; border-radius: 100px; padding: 12px 20px;
-      display: flex; gap: 4px; box-shadow: 0 8px 32px rgba(15,23,42,0.3);
-      z-index: 900; white-space: nowrap;
+    /* KNOWLEDGE BASE */
+    .kb { background: var(--card); border-radius: 20px; border: 1.5px solid var(--border); padding: 28px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+
+    .rule-block { background: #f8fafc; padding: 20px; border-radius: 16px; margin-bottom: 20px; }
+    .rule-block.tenses   { border-left: 5px solid var(--indigo); }
+    .rule-block.structure{ border-left: 5px solid var(--emerald); }
+    .rule-block.verbs    { border-left: 5px solid var(--orange); margin-bottom: 0; }
+    .rule-block h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+
+    .rule-table-wrap { width: 100%; overflow-x: auto; }
+    .rule-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 500px; }
+    .rule-table th, .rule-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .rule-table th { background: rgba(0,0,0,0.02); color: var(--muted); font-weight: 600; font-size: 12px; }
+
+    .formula { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .fi { background: #fff; padding: 7px 12px; border-radius: 8px; font-weight: 600; font-size: 12px; border: 1px solid var(--border); }
+    .fi.s { border-color: #f87171; color: #ef4444; }
+    .fi.v { border-color: #60a5fa; color: #3b82f6; }
+    .fi.o { border-color: #34d399; color: #10b981; }
+    .fi.m { border-color: #fbbf24; color: #d97706; }
+    .fi.p { border-color: #a78bfa; color: #7c3aed; }
+    .fi.t { border-color: #f472b6; color: #db2777; }
+
+    @media (max-width: 600px) {
+      .nav-grid { grid-template-columns: 1fr; }
+      .stats-row { flex-wrap: wrap; }
+      .verb-flasher { flex-direction: column; gap: 10px; }
     }
-    .nav-pill a {
-      color: rgba(255,255,255,0.55); font-size: 12px; font-weight: 600;
-      text-decoration: none; padding: 6px 14px; border-radius: 100px; transition: all 0.2s;
-    }
-    .nav-pill a:hover, .nav-pill a.active { background: var(--rose); color: #fff; }
   </style>
 </head>
 <body>
 
 <div class="hero">
-  <div class="page" style="position:relative;z-index:1">
-    <div class="hero-badge">🎨 Artist · AI Explorer · A2</div>
-    <h1>Olya's English Space ✨</h1>
-    <p class="hero-sub">Твоё личное пространство для изучения английского</p>
-    <div class="hero-quote">
-      "An artist who speaks English speaks to the whole world."
-      <span>— Your tutor</span>
+  <div class="hero-inner">
+    <div>
+      <h1>Welcome back, Olya! ✨</h1>
+      <p>Твой интерактивный английский уголок. Время учиться!</p>
     </div>
+    <div class="level-badge">Pre-Intermediate (A2)</div>
   </div>
   <div class="hero-wave">
-    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      <path d="M0,60 C360,0 1080,0 1440,60 L1440,60 L0,60 Z" fill="#f1f5f9"/>
+    <svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#f1f5f9"/>
     </svg>
   </div>
 </div>
@@ -134,57 +146,48 @@
 <div class="page">
 
   <div class="stats-row">
-    <div class="stat-chip lessons">
-      <div class="sc-num" id="statLessons">0</div>
-      <div class="sc-lbl">Уроков ✅</div>
+    <div class="stat-chip hw">
+      <div class="sc-num" id="statHW">0</div>
+      <div class="sc-lbl">Домашних заданий</div>
     </div>
     <div class="stat-chip words">
       <div class="sc-num" id="statWords">0</div>
-      <div class="sc-lbl">Слов 💥</div>
+      <div class="sc-lbl">Слов выучено</div>
     </div>
-    <div class="stat-chip streak">
-      <div class="sc-num" id="statStreak">A2</div>
-      <div class="sc-lbl">Уровень 🎯</div>
+    <div class="stat-chip level">
+      <div class="sc-num">A2</div>
+      <div class="sc-lbl">Уровень</div>
     </div>
   </div>
 
-  <div class="section-title">📊 Прогресс</div>
-
-  <div class="progress-card">
-    <div class="pc-header">
-      <span class="pc-label">📝 Домашние задания</span>
-      <span class="pc-pct" id="hwPct">0%</span>
+  <!-- VERB OF THE DAY -->
+  <div class="verb-flasher">
+    <div class="vf-label">⚡ Глагол<br>дня</div>
+    <div class="vf-content">
+      <div class="vf-row">
+        <span class="vf-v1" id="vfV1"></span>
+        <span class="vf-arr">→</span>
+        <span class="vf-v2" id="vfV2"></span>
+        <span class="vf-arr">→</span>
+        <span class="vf-v3" id="vfV3"></span>
+      </div>
+      <div class="vf-ru" id="vfRu"></div>
     </div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" id="hwBar" style="width:0%"></div>
-    </div>
-    <div class="pc-sub" id="hwSub">Начни первое домашнее задание →</div>
+    <button class="vf-btn" onclick="nextVerb()" title="Следующий">→</button>
   </div>
 
-  <div class="progress-card">
-    <div class="pc-header">
-      <span class="pc-label">💥 Словарный запас</span>
-      <span class="pc-pct" id="vocabPct">0%</span>
-    </div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" id="vocabBar" style="width:0%"></div>
-    </div>
-    <div class="pc-sub" id="vocabSub">Учи слова каждый день по 10 минут</div>
-  </div>
-
-  <div class="section-title">🧭 Разделы</div>
-
+  <div class="section-title">🚀 Разделы</div>
   <div class="nav-grid">
     <a href="homework.html" class="nav-card">
       <div class="nc-icon">📝</div>
       <div class="nc-title">Домашние задания</div>
-      <div class="nc-desc">Выполняй задания и отслеживай прогресс</div>
+      <div class="nc-desc">Past Simple — Regular & Irregular</div>
       <div class="nc-arrow">→</div>
     </a>
     <a href="vocabulary.html" class="nav-card">
       <div class="nc-icon">💥</div>
       <div class="nc-title">Словарь</div>
-      <div class="nc-desc">Карточки, тесты и твои слова</div>
+      <div class="nc-desc">Карточки, тест и все слова урока</div>
       <div class="nc-arrow">→</div>
     </a>
     <a href="grammar.html" class="nav-card">
@@ -193,73 +196,173 @@
       <div class="nc-desc">Правила, таблицы и мини-тесты</div>
       <div class="nc-arrow">→</div>
     </a>
-    <a href="#" class="nav-card" style="opacity:0.5;pointer-events:none;">
-      <div class="nc-icon">🔒</div>
-      <div class="nc-title">Скоро</div>
-      <div class="nc-desc">Новые разделы появятся позже</div>
+    <a href="irregular-verbs.html" class="nav-card">
+      <div class="nc-icon">⚡</div>
+      <div class="nc-title">Неправильные глаголы</div>
+      <div class="nc-desc">Карточки и тест по 30 глаголам</div>
       <div class="nc-arrow">→</div>
     </a>
   </div>
 
-</div>
+  <div class="section-title">📚 База знаний (A2)</div>
+  <div class="kb">
 
-<div class="nav-pill">
-  <a href="index.html" class="active">🏠 Home</a>
-  <a href="homework.html">📝 HW</a>
-  <a href="grammar.html">📐 Grammar</a>
-  <a href="vocabulary.html">💥 Vocab</a>
+    <div class="rule-block tenses">
+      <h3>⚡ Времена и конструкции — тонкости A2</h3>
+      <div class="rule-table-wrap">
+        <table class="rule-table">
+          <thead><tr><th style="width:25%">Время / Конструкция</th><th style="width:40%">Зачем нужно? (Нюансы)</th><th style="width:35%">Пример</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><b>Present Continuous</b><br><small style="color:#2ec4b6"><i>(Будущее время)</i></small></td>
+              <td>Для <b>100% запланированных</b> дел и договорённостей.<br><small>🗓️ <i>tonight, this weekend</i></small></td>
+              <td>I <b>am meeting</b> my friends at 7 PM tonight.<br><small><i>(Уже созвонились и договорились)</i></small></td>
+            </tr>
+            <tr>
+              <td><b>Future Simple (Will)</b></td>
+              <td>Для <b>спонтанных решений</b>, обещаний или предсказаний.<br><small>🔮 <i>I think, maybe, I promise</i></small></td>
+              <td>— It's cold here.<br>— I <b>will close</b> the window!<br><small><i>(Решил прямо сейчас)</i></small></td>
+            </tr>
+            <tr>
+              <td><b>to be going to</b></td>
+              <td>Для <b>намерений и планов</b> (точного времени ещё нет).<br><small>🎯 <i>next year, in the future</i></small></td>
+              <td>We <b>are going to buy</b> a new car.<br><small><i>(Планируем, копим деньги)</i></small></td>
+            </tr>
+            <tr>
+              <td><b>Past Continuous</b></td>
+              <td>Длительный <b>процесс в момент прошлого</b> (часто прерывается Past Simple).<br><small>⏱️ <i>at 5 o'clock, while</i></small></td>
+              <td>I <b>was watching</b> a movie when you called.<br><small><i>(Был в процессе просмотра)</i></small></td>
+            </tr>
+            <tr>
+              <td><b>Present Perfect</b></td>
+              <td>Важен <b>результат или жизненный опыт сейчас</b>.<br><small>🍿 <i>already, yet, ever, never, just</i></small></td>
+              <td>I <b>have already seen</b> this film.<br><small><i>(Знаю сюжет, не интересно)</i></small></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="rule-block structure">
+      <h3>🧩 Структура предложения — Формула SVOMPT</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Соблюдай строгий порядок слов в длинных предложениях:</p>
+      <div class="formula">
+        <div class="fi s">1. Кто / Что (Subject)</div>
+        <div class="fi v">2. Действие (Verb)</div>
+        <div class="fi o">3. Кого / Что (Object)</div>
+        <div class="fi m">4. Как (Manner)</div>
+        <div class="fi p">5. Где (Place)</div>
+        <div class="fi t">6. Когда (Time)</div>
+      </div>
+      <p style="font-size:13px;margin-top:12px;"><i>Пример: <b>We</b> rented a car easily in London last week.</i></p>
+    </div>
+
+    <div class="rule-block verbs">
+      <h3>📊 Неправильные глаголы — Топ-30 (A2)</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">V3 (Past Participle) нужна для Present Perfect. Учи все три формы вместе.</p>
+      <div class="rule-table-wrap">
+        <table class="rule-table">
+          <thead><tr><th>V1 (Infinitive)</th><th>V2 (Past Simple)</th><th>V3 (Past Participle)</th><th>Перевод</th></tr></thead>
+          <tbody>
+            <tr><td><b>be</b></td><td>was / were</td><td>been</td><td>быть, являться</td></tr>
+            <tr><td><b>bring</b></td><td>brought</td><td>brought</td><td>приносить</td></tr>
+            <tr><td><b>buy</b></td><td>bought</td><td>bought</td><td>покупать</td></tr>
+            <tr><td><b>can</b></td><td>could</td><td>been able to</td><td>мочь, уметь</td></tr>
+            <tr><td><b>choose</b></td><td>chose</td><td>chosen</td><td>выбирать</td></tr>
+            <tr><td><b>come</b></td><td>came</td><td>come</td><td>приходить, приезжать</td></tr>
+            <tr><td><b>do</b></td><td>did</td><td>done</td><td>делать</td></tr>
+            <tr><td><b>drink</b></td><td>drank</td><td>drunk</td><td>пить</td></tr>
+            <tr><td><b>drive</b></td><td>drove</td><td>driven</td><td>водить (машину)</td></tr>
+            <tr><td><b>eat</b></td><td>ate</td><td>eaten</td><td>есть, кушать</td></tr>
+            <tr><td><b>find</b></td><td>found</td><td>found</td><td>находить</td></tr>
+            <tr><td><b>fly</b></td><td>flew</td><td>flown</td><td>летать</td></tr>
+            <tr><td><b>get</b></td><td>got</td><td>got</td><td>получать, становиться</td></tr>
+            <tr><td><b>give</b></td><td>gave</td><td>given</td><td>давать</td></tr>
+            <tr><td><b>go</b></td><td>went</td><td>gone / been</td><td>идти, ехать</td></tr>
+            <tr><td><b>have</b></td><td>had</td><td>had</td><td>иметь</td></tr>
+            <tr><td><b>know</b></td><td>knew</td><td>known</td><td>знать</td></tr>
+            <tr><td><b>leave</b></td><td>left</td><td>left</td><td>покидать, оставлять</td></tr>
+            <tr><td><b>make</b></td><td>made</td><td>made</td><td>делать, создавать</td></tr>
+            <tr><td><b>meet</b></td><td>met</td><td>met</td><td>встречать, знакомиться</td></tr>
+            <tr><td><b>read</b></td><td>read (red)</td><td>read (red)</td><td>читать</td></tr>
+            <tr><td><b>run</b></td><td>ran</td><td>run</td><td>бежать</td></tr>
+            <tr><td><b>say</b></td><td>said</td><td>said</td><td>сказать, говорить</td></tr>
+            <tr><td><b>see</b></td><td>saw</td><td>seen</td><td>видеть</td></tr>
+            <tr><td><b>send</b></td><td>sent</td><td>sent</td><td>отправлять</td></tr>
+            <tr><td><b>speak</b></td><td>spoke</td><td>spoken</td><td>говорить (на языке)</td></tr>
+            <tr><td><b>spend</b></td><td>spent</td><td>spent</td><td>тратить (время/деньги)</td></tr>
+            <tr><td><b>take</b></td><td>took</td><td>taken</td><td>брать, брать с собой</td></tr>
+            <tr><td><b>think</b></td><td>thought</td><td>thought</td><td>думать</td></tr>
+            <tr><td><b>understand</b></td><td>understood</td><td>understood</td><td>понимать</td></tr>
+            <tr><td><b>write</b></td><td>wrote</td><td>written</td><td>писать</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
-  const SUPABASE_URL = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1/';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
-  const STUDENT_ID = 'olya';
+const VERBS=[
+  {v1:"be",v2:"was / were",v3:"been",ru:"быть, являться"},
+  {v1:"bring",v2:"brought",v3:"brought",ru:"приносить"},
+  {v1:"buy",v2:"bought",v3:"bought",ru:"покупать"},
+  {v1:"can",v2:"could",v3:"been able to",ru:"мочь, уметь"},
+  {v1:"choose",v2:"chose",v3:"chosen",ru:"выбирать"},
+  {v1:"come",v2:"came",v3:"come",ru:"приходить, приезжать"},
+  {v1:"do",v2:"did",v3:"done",ru:"делать"},
+  {v1:"drink",v2:"drank",v3:"drunk",ru:"пить"},
+  {v1:"drive",v2:"drove",v3:"driven",ru:"водить (машину)"},
+  {v1:"eat",v2:"ate",v3:"eaten",ru:"есть, кушать"},
+  {v1:"find",v2:"found",v3:"found",ru:"находить"},
+  {v1:"fly",v2:"flew",v3:"flown",ru:"летать"},
+  {v1:"get",v2:"got",v3:"got",ru:"получать, становиться"},
+  {v1:"give",v2:"gave",v3:"given",ru:"давать"},
+  {v1:"go",v2:"went",v3:"gone / been",ru:"идти, ехать"},
+  {v1:"have",v2:"had",v3:"had",ru:"иметь"},
+  {v1:"know",v2:"knew",v3:"known",ru:"знать"},
+  {v1:"leave",v2:"left",v3:"left",ru:"покидать, оставлять"},
+  {v1:"make",v2:"made",v3:"made",ru:"делать, создавать"},
+  {v1:"meet",v2:"met",v3:"met",ru:"встречать, знакомиться"},
+  {v1:"read",v2:"read (red)",v3:"read (red)",ru:"читать"},
+  {v1:"run",v2:"ran",v3:"run",ru:"бежать"},
+  {v1:"say",v2:"said",v3:"said",ru:"сказать, говорить"},
+  {v1:"see",v2:"saw",v3:"seen",ru:"видеть"},
+  {v1:"send",v2:"sent",v3:"sent",ru:"отправлять"},
+  {v1:"speak",v2:"spoke",v3:"spoken",ru:"говорить (на языке)"},
+  {v1:"spend",v2:"spent",v3:"spent",ru:"тратить (время/деньги)"},
+  {v1:"take",v2:"took",v3:"taken",ru:"брать, брать с собой"},
+  {v1:"think",v2:"thought",v3:"thought",ru:"думать"},
+  {v1:"understand",v2:"understood",v3:"understood",ru:"понимать"},
+  {v1:"write",v2:"wrote",v3:"written",ru:"писать"},
+];
 
-  function sbHeaders() {
-    return { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' };
+// One verb per day, manual next allowed
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+let vidx = (function(){
+  if(localStorage.getItem('olya_verb_date')!==todayStr()){
+    const i=Math.floor(Math.random()*VERBS.length);
+    localStorage.setItem('olya_verb_idx',i);
+    localStorage.setItem('olya_verb_date',todayStr());
+    return i;
   }
+  return parseInt(localStorage.getItem('olya_verb_idx')||0);
+})();
+function showV(v){ document.getElementById('vfV1').textContent=v.v1; document.getElementById('vfV2').textContent=v.v2; document.getElementById('vfV3').textContent=v.v3; document.getElementById('vfRu').textContent=v.ru; }
+function nextVerb(){ vidx=(vidx+1)%VERBS.length; localStorage.setItem('olya_verb_idx',vidx); showV(VERBS[vidx]); }
+showV(VERBS[vidx]);
 
-  function renderStats() {
-    const hw1 = localStorage.getItem('olya_hw1_score');
-    const done = hw1 ? 1 : 0;
-    const total = 1;
-    const pct = Math.round((done / total) * 100);
-
-    document.getElementById('statLessons').textContent = done;
-    document.getElementById('hwPct').textContent = pct + '%';
-    document.getElementById('hwBar').style.width = pct + '%';
-    if (done > 0) document.getElementById('hwSub').textContent = done + ' из ' + total + ' выполнено · Результат: ' + hw1;
-
-    // vocab count from localStorage
-    let knownCount = 0;
-    const VOCAB_SETS = ['art-basics','ai-tools','daily-travel','creative-expressions','bali-travel','holiday-story'];
-    VOCAB_SETS.forEach(sid => {
-      const raw = localStorage.getItem('olya_vocab_' + sid);
-      if (raw) { try { knownCount += Object.values(JSON.parse(raw)).filter(Boolean).length; } catch(e){} }
-    });
-    document.getElementById('statWords').textContent = knownCount;
-    const totalWords = 57;
-    const vPct = Math.min(100, Math.round((knownCount / totalWords) * 100));
-    document.getElementById('vocabPct').textContent = vPct + '%';
-    document.getElementById('vocabBar').style.width = vPct + '%';
-    if (knownCount > 0) document.getElementById('vocabSub').textContent = 'Знаешь ' + knownCount + ' слов из ' + totalWords;
-  }
-
-  async function syncFromSupabase() {
-    try {
-      const r = await fetch(SUPABASE_URL + 'homework_results?student_id=eq.' + STUDENT_ID + '&select=hw_id,score', { headers: sbHeaders() });
-      if (!r.ok) return;
-      const rows = await r.json();
-      rows.forEach(row => {
-        const key = 'olya_' + row.hw_id + '_score';
-        if (!localStorage.getItem(key) && row.score) localStorage.setItem(key, row.score);
-      });
-      renderStats();
-    } catch(e) { /* offline — ignore */ }
-  }
-
-  renderStats();
-  syncFromSupabase();
+// Stats
+(function(){
+  let hw=0;
+  for(let i=1;i<=20;i++) if(localStorage.getItem('olya_hw'+i+'_done')) hw++;
+  document.getElementById('statHW').textContent=hw;
+  try{
+    const p=JSON.parse(localStorage.getItem('olya_vocab_known')||'{}');
+    document.getElementById('statWords').textContent=Object.values(p).filter(Boolean).length;
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
