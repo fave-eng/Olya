@@ -261,7 +261,7 @@
       <div class="nc-desc">Past Simple — Regular & Irregular</div>
       <div class="nc-arrow">→</div>
     </a>
-    <a href="vocabulary.html" class="nav-card">
+    <a href="vocabulary-hub.html" class="nav-card">
       <div class="nc-icon">💥</div>
       <div class="nc-title">Словарь</div>
       <div class="nc-desc">Карточки, тест и все слова урока</div>
@@ -459,12 +459,16 @@ showV(VERBS[vidx]);
   const hwSub=document.getElementById('motHWsub');
   if(hwSub) hwSub.textContent = hw>0 ? (hwMessages[Math.min(hw-1,4)]||'Продолжай в том же духе! 🎨') : 'Каждое ДЗ — шаг к свободной речи';
 
-  // ── Vocab count (from vocabulary.html localStorage key) ──
+  // ── Vocab count — читаем из всех тем (новая архитектура) ──
   try{
-    const p=JSON.parse(localStorage.getItem('olya_vocab_known')||'{}');
-    const wCount=Object.values(p).filter(Boolean).length;
-    document.getElementById('motWords').textContent=wCount;
-    const wSub=document.getElementById('motWordsSub');
+    const VOCAB_SETS = ['unit2a-nouns','unit2a-verbs']; // добавляй новые темы сюда
+    let wCount = 0;
+    VOCAB_SETS.forEach(sid => {
+      const raw = localStorage.getItem('olya_vocab_' + sid);
+      if(raw) wCount += Object.values(JSON.parse(raw)).filter(Boolean).length;
+    });
+    document.getElementById('motWords').textContent = wCount;
+    const wSub = document.getElementById('motWordsSub');
     if(wSub) wSub.textContent = wCount===0?'Художник описывает мир словами':wCount<5?'Хорошее начало! 🎨':wCount<10?'Уже можешь описать своё искусство!':'Богатый словарь — богатый мир! 🌏';
   }catch(e){}
 
@@ -481,7 +485,7 @@ showV(VERBS[vidx]);
   if(motLvl){
     try{
       const totalDone=hw;
-      const wCount2=Object.values(JSON.parse(localStorage.getItem('olya_vocab_known')||'{}')).filter(Boolean).length;
+      const VOCAB_SETS2=['unit2a-nouns','unit2a-verbs']; let wCount2=0; VOCAB_SETS2.forEach(sid=>{try{const r=localStorage.getItem('olya_vocab_'+sid);if(r)wCount2+=Object.values(JSON.parse(r)).filter(Boolean).length;}catch(e){}});
       if(totalDone>=3 && wCount2>=10) motLvl.textContent='A2+';
       else motLvl.textContent='A2';
     }catch(e){ motLvl.textContent='A2'; }
@@ -493,7 +497,7 @@ showV(VERBS[vidx]);
   <a href="index.html" class="active"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
   <a href="homework.html"><span class="nav-icon">📝</span><span class="nav-label">HW</span></a>
   <a href="grammar.html"><span class="nav-icon">📐</span><span class="nav-label">Grammar</span></a>
-  <a href="vocabulary.html"><span class="nav-icon">💥</span><span class="nav-label">Vocab</span></a>
+  <a href="vocabulary-hub.html"><span class="nav-icon">💥</span><span class="nav-label">Vocab</span></a>
   <a href="irregular-verbs.html"><span class="nav-icon">⚡</span><span class="nav-label">Verbs</span></a>
 </div>
 </body>
