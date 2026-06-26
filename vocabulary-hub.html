@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary Hub — Olya's English Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose:#f43f5e; --orange:#fb923c; --amber:#f59e0b;
+      --emerald:#10b981; --blue:#3b82f6;
+      --bg:#f1f5f9; --card:#fff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0;
+    }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:100px; }
+
+    .hero { background:linear-gradient(135deg,#f43f5e,#fb923c,#f59e0b); padding:40px 24px 80px; position:relative; }
+    .hero-wave { position:absolute; bottom:-1px; left:0; right:0; line-height:0; pointer-events:none; }
+    .hero-wave svg { display:block; width:100%; }
+    .hero-back { display:inline-flex; align-items:center; gap:6px; color:rgba(255,255,255,.8); font-size:13px; font-weight:600; text-decoration:none; margin-bottom:20px; transition:color .2s; }
+    .hero-back:hover { color:#fff; }
+    .hero h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(26px,5vw,38px); font-weight:800; color:#fff; margin-bottom:6px; }
+    .hero p  { color:rgba(255,255,255,.82); font-size:15px; }
+    .hero-stats { display:flex; gap:28px; margin-top:16px; }
+    .hs { color:rgba(255,255,255,.88); font-size:13px; }
+    .hs strong { display:block; font-family:'Plus Jakarta Sans',sans-serif; font-size:28px; font-weight:800; color:#fff; line-height:1; }
+
+    .page { max-width:760px; margin:0 auto; padding:28px 20px 0; }
+    .section-label { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin:0 0 14px; }
+
+    /* TOPIC CARDS */
+    .topic-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:32px; }
+    .topic-card {
+      background:var(--card); border-radius:20px; border:1.5px solid var(--border);
+      padding:22px; text-decoration:none; color:inherit;
+      display:flex; flex-direction:column; gap:6px;
+      box-shadow:0 4px 16px rgba(0,0,0,0.05);
+      transition:all .2s; position:relative; overflow:hidden;
+    }
+    .topic-card::before {
+      content:''; position:absolute; top:-20px; right:-20px;
+      width:80px; height:80px; border-radius:50%;
+      background:rgba(244,63,94,0.06); pointer-events:none;
+    }
+    .topic-card:hover { border-color:var(--rose); box-shadow:0 8px 28px rgba(244,63,94,.12); transform:translateY(-2px); }
+    .tc-icon  { font-size:28px; }
+    .tc-lesson{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); }
+    .tc-name  { font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; }
+    .tc-count { font-size:12px; color:var(--muted); }
+    .tc-bar-bg{ height:5px; background:var(--bg); border-radius:100px; overflow:hidden; margin-top:4px; }
+    .tc-bar-fill { height:100%; background:linear-gradient(90deg,var(--rose),var(--orange)); border-radius:100px; transition:width .5s; }
+    .tc-pct { font-size:11px; font-weight:700; color:var(--rose); }
+    .tc-arrow { font-size:18px; color:var(--rose); align-self:flex-end; margin-top:auto; }
+
+    /* TOTAL PROGRESS */
+    .total-card {
+      background:linear-gradient(135deg,#1e293b,#0f172a);
+      border-radius:20px; padding:22px 26px; margin-bottom:28px;
+      display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+    }
+    .total-icon { font-size:36px; flex-shrink:0; }
+    .total-info { flex:1; min-width:0; }
+    .total-label { font-size:12px; color:rgba(255,255,255,.55); font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+    .total-bar-bg { height:8px; background:rgba(255,255,255,.12); border-radius:100px; overflow:hidden; margin-bottom:6px; }
+    .total-bar-fill { height:100%; background:linear-gradient(90deg,var(--rose),var(--orange)); border-radius:100px; transition:width .8s ease; }
+    .total-nums { font-size:13px; color:rgba(255,255,255,.7); }
+    .total-nums strong { color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:800; }
+
+    /* FLOATING NAV */
+    .nav-pill { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#0f172a; border-radius:100px; padding:8px 10px; display:flex; gap:4px; box-shadow:0 8px 32px rgba(15,23,42,.35); z-index:999; white-space:nowrap; }
+    .nav-pill a { display:flex; align-items:center; gap:6px; color:rgba(255,255,255,.55); font-size:13px; font-weight:600; text-decoration:none; padding:8px 16px; border-radius:100px; transition:all .2s; }
+    .nav-pill a .nav-icon { font-size:16px; }
+    .nav-pill a:hover { color:rgba(255,255,255,.9); background:rgba(255,255,255,.08); }
+    .nav-pill a.active { background:var(--rose); color:#fff; }
+    @media (max-width:480px) { .nav-pill a span.nav-label { display:none; } .nav-pill a { padding:8px 12px; } }
+    @media (max-width:500px) { .topic-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div style="max-width:760px;margin:0 auto;position:relative;z-index:1">
+    <a href="index.html" class="hero-back">← На главную</a>
+    <h1>💥 Vocabulary Hub</h1>
+    <p>Все темы лексики в одном месте</p>
+    <div class="hero-stats">
+      <div class="hs"><strong id="heroKnown">0</strong>Знаю всего</div>
+      <div class="hs"><strong id="heroTotal">0</strong>Слов всего</div>
+      <div class="hs"><strong id="heroPct">0%</strong>Прогресс</div>
+    </div>
+  </div>
+  <div class="hero-wave"><svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#f1f5f9"/></svg></div>
+</div>
+
+<div class="page">
+
+  <div class="total-card">
+    <div class="total-icon">📊</div>
+    <div class="total-info">
+      <div class="total-label">Общий прогресс по всем темам</div>
+      <div class="total-bar-bg"><div class="total-bar-fill" id="totalBar" style="width:0%"></div></div>
+      <div class="total-nums"><strong id="totalKnown">0</strong> из <strong id="totalCount">0</strong> слов выучено</div>
+    </div>
+  </div>
+
+  <div class="section-label">📚 Темы лексики</div>
+  <div class="topic-grid" id="topicGrid"></div>
+
+</div>
+
+<div class="nav-pill">
+  <a href="index.html"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="homework.html"><span class="nav-icon">📝</span><span class="nav-label">HW</span></a>
+  <a href="grammar.html"><span class="nav-icon">📐</span><span class="nav-label">Grammar</span></a>
+  <a href="vocabulary-hub.html" class="active"><span class="nav-icon">💥</span><span class="nav-label">Vocab</span></a>
+  <a href="irregular-verbs.html"><span class="nav-icon">⚡</span><span class="nav-label">Verbs</span></a>
+</div>
+
+<script>
+// All vocab sets — add new ones here as they appear
+const SETS = [
+  { id:'unit2a-nouns',   file:'vocab-unit2a-nouns.html',   icon:'📖', lesson:'Unit 2A', name:'Слова урока', total:17 },
+  { id:'unit2a-verbs',   file:'vocab-unit2a-verbs.html',   icon:'⚡', lesson:'Unit 2A', name:'Глаголы (regular)', total:10 },
+];
+
+// Read progress from localStorage for each set
+function getKnown(setId){
+  try {
+    const raw = localStorage.getItem('olya_vocab_'+setId);
+    if(!raw) return 0;
+    return Object.values(JSON.parse(raw)).filter(Boolean).length;
+  } catch(e){ return 0; }
+}
+
+function renderHub(){
+  let totalKnown=0, totalAll=0;
+
+  const grid = document.getElementById('topicGrid');
+  grid.innerHTML = SETS.map(set => {
+    const known = getKnown(set.id);
+    const pct   = Math.round(known / set.total * 100);
+    totalKnown += known;
+    totalAll   += set.total;
+    return `
+      <a href="${set.file}" class="topic-card">
+        <div class="tc-icon">${set.icon}</div>
+        <div class="tc-lesson">${set.lesson}</div>
+        <div class="tc-name">${set.name}</div>
+        <div class="tc-count">${known} / ${set.total} слов</div>
+        <div class="tc-bar-bg"><div class="tc-bar-fill" style="width:${pct}%"></div></div>
+        <div class="tc-pct">${pct}%</div>
+        <div class="tc-arrow">→</div>
+      </a>`;
+  }).join('');
+
+  const pct = totalAll ? Math.round(totalKnown/totalAll*100) : 0;
+  document.getElementById('heroKnown').textContent  = totalKnown;
+  document.getElementById('heroTotal').textContent  = totalAll;
+  document.getElementById('heroPct').textContent    = pct+'%';
+  document.getElementById('totalKnown').textContent = totalKnown;
+  document.getElementById('totalCount').textContent = totalAll;
+  document.getElementById('totalBar').style.width   = pct+'%';
+}
+
+renderHub();
+</script>
+</body>
+</html>

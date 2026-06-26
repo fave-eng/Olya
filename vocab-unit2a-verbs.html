@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unit 2A — Regular Verbs — Olya's English Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --rose:#f43f5e; --orange:#fb923c; --amber:#f59e0b;
+  --emerald:#10b981; --blue:#3b82f6;
+  --bg:#f1f5f9; --card:#fff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0;
+}
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:100px; }
+
+/* HERO */
+.hero { background:linear-gradient(135deg,#f43f5e,#fb923c,#f59e0b); padding:40px 24px 100px; position:relative; }
+.hero-wave { position:absolute; bottom:-1px; left:0; right:0; line-height:0; pointer-events:none; }
+.hero-wave svg { display:block; width:100%; }
+.hero-back { display:inline-flex; align-items:center; gap:6px; color:rgba(255,255,255,.8); font-size:13px; font-weight:600; text-decoration:none; margin-bottom:20px; transition:color .2s; }
+.hero-back:hover { color:#fff; }
+.hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.3); color:#fff; font-size:12px; font-weight:600; padding:5px 14px; border-radius:100px; margin-bottom:14px; }
+.hero h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(22px,5vw,34px); font-weight:800; color:#fff; margin-bottom:4px; }
+.hero p  { color:rgba(255,255,255,.82); font-size:14px; margin-bottom:16px; }
+.hero-stats { display:flex; gap:24px; }
+.hs { color:rgba(255,255,255,.88); font-size:13px; }
+.hs strong { display:block; font-family:'Plus Jakarta Sans',sans-serif; font-size:26px; font-weight:800; color:#fff; line-height:1; }
+
+/* PAGE */
+.page { max-width:700px; margin:0 auto; padding:0 20px; }
+
+/* STATS CHIPS */
+.stats-row { display:flex; gap:12px; margin-top:24px; margin-bottom:28px; }
+.stat-chip { background:var(--card); border-radius:16px; border:1.5px solid var(--border); padding:16px 20px; flex:1; text-align:center; box-shadow:0 4px 14px rgba(0,0,0,.07); }
+.sc-num { font-family:'Plus Jakarta Sans',sans-serif; font-size:26px; font-weight:800; }
+.sc-lbl { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+.sc-known .sc-num { color:var(--emerald); }
+.sc-total .sc-num { color:var(--orange); }
+.sc-pct   .sc-num { color:var(--rose); }
+
+/* TABS */
+.tabs-wrap { background:var(--card); border-radius:18px; border:1.5px solid var(--border); overflow:hidden; margin-bottom:20px; }
+.tabs { display:flex; padding:6px; gap:4px; border-bottom:1px solid var(--border); }
+.tab-btn { flex:1; padding:10px; border:none; background:none; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; color:var(--muted); transition:all .2s; font-family:'Inter',sans-serif; }
+.tab-btn.active { background:linear-gradient(135deg,var(--rose),var(--orange)); color:#fff; }
+.tab-pane { display:none; padding:20px; }
+.tab-pane.active { display:block; }
+
+/* DICTIONARY */
+.dict-table { width:100%; border-collapse:collapse; font-size:14px; }
+.dict-table th { padding:9px 12px; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); border-bottom:1px solid var(--border); }
+.dict-table td { padding:9px 12px; border-bottom:1px solid var(--border); }
+.dict-table tr:last-child td { border-bottom:none; }
+.dict-table .en-word { font-weight:700; font-size:15px; }
+.dict-table .v2-word { font-size:12px; color:var(--rose); font-weight:600; margin-top:2px; }
+.dict-table .ru-word { color:var(--muted); }
+.dict-table .ex-word { font-size:12px; color:#94a3b8; font-style:italic; margin-top:2px; }
+.known-dot { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+.known-dot.known { background:var(--emerald); }
+
+/* FLASHCARD */
+.fc-counter { text-align:center; font-size:13px; color:var(--muted); margin-bottom:12px; }
+.flashcard-wrap { perspective:800px; height:200px; cursor:pointer; margin-bottom:18px; }
+.flashcard { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .45s; }
+.flashcard.flipped { transform:rotateY(180deg); }
+.card-face { position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:18px; border:1.5px solid var(--border); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; }
+.card-front { background:linear-gradient(135deg,#fff,#fff8f8); }
+.card-back  { background:linear-gradient(135deg,#f0fdf4,#fff); transform:rotateY(180deg); }
+.card-word  { font-family:'Plus Jakarta Sans',sans-serif; font-size:30px; font-weight:800; margin-bottom:6px; }
+.card-v2    { font-size:14px; font-weight:700; color:var(--rose); margin-bottom:4px; }
+.card-tap   { font-size:12px; color:var(--muted); }
+.card-trans { font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:700; color:var(--emerald); margin-bottom:6px; }
+.card-ex    { font-size:12px; color:var(--muted); font-style:italic; line-height:1.5; }
+.fc-btns { display:flex; gap:10px; }
+.fc-btn { flex:1; padding:12px; border:none; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; transition:all .15s; }
+.fc-btn.know { background:#d1fae5; color:#065f46; }
+.fc-btn.know:hover { background:#a7f3d0; }
+.fc-btn.hard { background:#fce7f3; color:#9d174d; }
+.fc-btn.hard:hover { background:#fbcfe8; }
+.fc-done { text-align:center; padding:30px; }
+.fc-done-emoji { font-size:40px; margin-bottom:8px; }
+.fc-done-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:20px; font-weight:800; margin-bottom:6px; }
+.fc-done-sub { font-size:13px; color:var(--muted); margin-bottom:18px; }
+
+/* QUIZ */
+.quiz-pb-bg { height:5px; background:var(--bg); border-radius:100px; overflow:hidden; margin-bottom:12px; }
+.quiz-pb-fill { height:100%; background:linear-gradient(90deg,var(--rose),var(--orange)); border-radius:100px; transition:width .4s; }
+.quiz-counter { font-size:12px; color:var(--muted); text-align:right; margin-bottom:10px; }
+.quiz-word { font-family:'Plus Jakarta Sans',sans-serif; font-size:30px; font-weight:800; text-align:center; margin-bottom:14px; }
+.quiz-hint { font-size:12px; color:var(--muted); text-align:center; margin-bottom:12px; }
+.quiz-opts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+.quiz-opt { padding:12px; border-radius:10px; border:1.5px solid var(--border); cursor:pointer; font-size:13px; font-weight:600; text-align:center; transition:all .15s; font-family:'Plus Jakarta Sans',sans-serif; }
+.quiz-opt:hover { border-color:var(--rose); background:#fff8f8; }
+.quiz-opt.correct { border-color:var(--emerald)!important; background:#f0fdf4!important; pointer-events:none; }
+.quiz-opt.wrong   { border-color:#ef4444!important; background:#fef2f2!important; pointer-events:none; }
+.quiz-opt.reveal  { border-color:var(--emerald)!important; background:#f0fdf4!important; pointer-events:none; }
+.quiz-score { font-size:13px; color:var(--muted); text-align:center; }
+.quiz-done { text-align:center; padding:24px; }
+.quiz-done-score { font-family:'Plus Jakarta Sans',sans-serif; font-size:44px; font-weight:800; color:var(--rose); margin-bottom:6px; }
+.quiz-done-msg  { font-size:14px; color:var(--muted); margin-bottom:18px; }
+
+.btn { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg,var(--rose),var(--orange)); color:#fff; border:none; border-radius:12px; padding:10px 24px; font-size:14px; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; }
+
+/* NAV */
+.nav-pill { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#0f172a; border-radius:100px; padding:8px 10px; display:flex; gap:4px; box-shadow:0 8px 32px rgba(15,23,42,.35); z-index:999; white-space:nowrap; }
+.nav-pill a { display:flex; align-items:center; gap:6px; color:rgba(255,255,255,.55); font-size:13px; font-weight:600; text-decoration:none; padding:8px 16px; border-radius:100px; transition:all .2s; }
+.nav-pill a .nav-icon { font-size:16px; }
+.nav-pill a:hover { color:rgba(255,255,255,.9); background:rgba(255,255,255,.08); }
+.nav-pill a.active { background:var(--rose); color:#fff; }
+@media (max-width:480px) { .nav-pill a span.nav-label { display:none; } .nav-pill a { padding:8px 12px; } }
+@media (max-width:500px) { .quiz-opts { grid-template-columns:1fr; } }
+
+  </style>
+</head>
+<body>
+<script>
+const SET_ID    = "unit2a-verbs";
+const SET_TITLE = "Unit 2A — Regular Verbs";
+const SET_ICON  = "✅";
+const SET_DESC  = "10 правильных глаголов урока. Past Simple: просто добавь -ed";
+const WORDS = [
+  { en:"climb",   ru:["взбираться","подниматься"],  ex:"She climbed to the top of the hill.",    v2:"climbed" },
+  { en:"want",    ru:["хотеть"],                     ex:"He wanted to stay longer.",              v2:"wanted" },
+  { en:"decide",  ru:["решать","принять решение"],   ex:"They decided to go home.",               v2:"decided" },
+  { en:"start",   ru:["начинать","начать"],          ex:"The journey started at 6 am.",           v2:"started" },
+  { en:"arrive",  ru:["прибывать","приехать"],       ex:"We arrived at the airport early.",       v2:"arrived" },
+  { en:"book",    ru:["бронировать"],                ex:"I booked a hotel online.",               v2:"booked" },
+  { en:"check",   ru:["проверять"],                  ex:"She checked her bag for the passport.",  v2:"checked" },
+  { en:"look",    ru:["смотреть","искать"],          ex:"We looked everywhere for the tickets.",  v2:"looked" },
+  { en:"wait",    ru:["ждать"],                      ex:"They waited for two hours.",             v2:"waited" },
+  { en:"travel",  ru:["путешествовать"],             ex:"She travelled to Bali last summer.",     v2:"travelled" },
+];
+</script>
+<script>
+// vocab-engine.js — shared engine for all vocabulary pages
+// Requires SET_ID, SET_TITLE, SET_ICON, SET_DESC, WORDS to be defined in page <script> before this file
+
+const SB_URL  = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
+const STUDENT = 'olya';
+const LS_KEY  = 'olya_vocab_' + SET_ID;
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let knownMap = {};
+
+function loadLocal(){ try { knownMap = JSON.parse(localStorage.getItem(LS_KEY)||'{}'); } catch(e){ knownMap = {}; } }
+function saveLocal(){ localStorage.setItem(LS_KEY, JSON.stringify(knownMap)); }
+
+function setKnown(idx, val){
+  knownMap[idx] = val;
+  saveLocal();
+  saveToSupabase();
+  updateStats();
+  renderDict();
+}
+
+function countKnown(){ return Object.values(knownMap).filter(Boolean).length; }
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+function norm(s){ return (s||'').toLowerCase().trim().replace(/[ёе]/g,'е').replace(/\s+/g,' '); }
+
+async function saveToSupabase(){
+  const knownWords = WORDS.filter((_,i) => knownMap[i]).map(w => w.en);
+  try {
+    await fetch(`${SB_URL}/vocab_progress`, {
+      method: 'POST',
+      headers: { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify({ student:STUDENT, set_id:SET_ID, known_count:knownWords.length, known_words:knownWords.join(','), updated_at:new Date().toISOString() })
+    });
+  } catch(e){}
+}
+
+async function loadFromSupabase(){
+  try {
+    const r = await fetch(`${SB_URL}/vocab_progress?student=eq.${STUDENT}&set_id=eq.${SET_ID}&select=known_words`, {
+      headers: { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY }
+    });
+    if(!r.ok) return;
+    const rows = await r.json();
+    if(rows.length && rows[0].known_words){
+      rows[0].known_words.split(',').forEach(en => {
+        const idx = WORDS.findIndex(w => w.en === en.trim());
+        if(idx >= 0) knownMap[idx] = true;
+      });
+      saveLocal();
+      updateStats();
+      renderDict();
+    }
+  } catch(e){}
+}
+
+function updateStats(){
+  const k = countKnown();
+  const pct = Math.round(k / WORDS.length * 100);
+  const el = id => document.getElementById(id);
+  if(el('statKnown')) el('statKnown').textContent = k;
+  if(el('statPct'))   el('statPct').textContent   = pct+'%';
+  if(el('heroKnown')) el('heroKnown').textContent  = k;
+  if(el('heroPct'))   el('heroPct').textContent    = pct+'%';
+}
+
+// ─── BUILD PAGE ───────────────────────────────────────────────────────────────
+function buildPage(){
+  document.title = SET_TITLE + ' — Olya\'s English Space';
+
+  const hasV2 = WORDS.some(w => w.v2);
+
+  document.body.innerHTML = `
+    <div class="hero">
+      <div style="max-width:700px;margin:0 auto;position:relative;z-index:1">
+        <a href="vocabulary-hub.html" class="hero-back">← Все темы</a>
+        <div class="hero-badge">${SET_ICON} ${SET_TITLE}</div>
+        <h1>${SET_TITLE}</h1>
+        <p>${SET_DESC}</p>
+        <div class="hero-stats">
+          <div class="hs"><strong id="heroKnown">0</strong>Знаю</div>
+          <div class="hs"><strong>${WORDS.length}</strong>Всего</div>
+          <div class="hs"><strong id="heroPct">0%</strong>Прогресс</div>
+        </div>
+      </div>
+      <div class="hero-wave"><svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#f1f5f9"/></svg></div>
+    </div>
+
+    <div class="page">
+      <div class="stats-row">
+        <div class="stat-chip sc-known"><div class="sc-num" id="statKnown">0</div><div class="sc-lbl">Знаю</div></div>
+        <div class="stat-chip sc-total"><div class="sc-num">${WORDS.length}</div><div class="sc-lbl">Всего слов</div></div>
+        <div class="stat-chip sc-pct"><div class="sc-num" id="statPct">0%</div><div class="sc-lbl">Прогресс</div></div>
+      </div>
+
+      <div class="tabs-wrap">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('dict')">📋 Словарь</button>
+          <button class="tab-btn" onclick="switchTab('cards')">🃏 Карточки</button>
+          <button class="tab-btn" onclick="switchTab('quiz')">🎯 Тест</button>
+        </div>
+        <div class="tab-pane active" id="tab-dict"></div>
+        <div class="tab-pane"        id="tab-cards"></div>
+        <div class="tab-pane"        id="tab-quiz"></div>
+      </div>
+    </div>
+
+    <div class="nav-pill">
+      <a href="index.html"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+      <a href="homework.html"><span class="nav-icon">📝</span><span class="nav-label">HW</span></a>
+      <a href="grammar.html"><span class="nav-icon">📐</span><span class="nav-label">Grammar</span></a>
+      <a href="vocabulary-hub.html" class="active"><span class="nav-icon">💥</span><span class="nav-label">Vocab</span></a>
+      <a href="irregular-verbs.html"><span class="nav-icon">⚡</span><span class="nav-label">Verbs</span></a>
+    </div>
+  `;
+
+  renderDict();
+  updateStats();
+}
+
+// ─── DICTIONARY ───────────────────────────────────────────────────────────────
+function renderDict(){
+  const hasV2 = WORDS.some(w => w.v2);
+  document.getElementById('tab-dict').innerHTML = `
+    <table class="dict-table">
+      <thead><tr>
+        <th></th>
+        <th>English</th>
+        ${hasV2 ? '<th>Past Simple</th>' : ''}
+        <th>Русский</th>
+      </tr></thead>
+      <tbody>${WORDS.map((w,i)=>`
+        <tr>
+          <td><span class="known-dot${knownMap[i]?' known':''}"></span></td>
+          <td>
+            <div class="en-word">${w.en}</div>
+            ${w.ex ? '<div class="ex-word">'+w.ex+'</div>' : ''}
+          </td>
+          ${hasV2 ? '<td><div class="v2-word">'+(w.v2||'—')+'</div></td>' : ''}
+          <td class="ru-word">${w.ru.join(', ')}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(id){
+  ['dict','cards','quiz'].forEach((t,i)=>{
+    document.querySelectorAll('.tab-btn')[i].className = 'tab-btn'+(t===id?' active':'');
+    document.getElementById('tab-'+t).className = 'tab-pane'+(t===id?' active':'');
+  });
+  if(id==='cards') initCards();
+  if(id==='quiz')  initQuiz();
+}
+
+// ─── FLASHCARDS ───────────────────────────────────────────────────────────────
+let fcWords=[], fcIdx=0;
+
+function initCards(){
+  fcWords = shuffle(WORDS.map((w,i)=>({...w,idx:i})));
+  fcIdx = 0;
+  showCard();
+}
+
+function showCard(){
+  const cont = document.getElementById('tab-cards');
+  if(fcIdx >= fcWords.length){
+    cont.innerHTML = `<div class="fc-done">
+      <div class="fc-done-emoji">🎉</div>
+      <div class="fc-done-title">Все карточки пройдены!</div>
+      <div class="fc-done-sub">Знаю: ${countKnown()} из ${WORDS.length} слов</div>
+      <button class="btn" onclick="initCards()">🔄 Снова</button>
+    </div>`;
+    return;
+  }
+  const w = fcWords[fcIdx];
+  cont.innerHTML = `
+    <div class="fc-counter">${fcIdx+1} / ${fcWords.length}</div>
+    <div class="flashcard-wrap" onclick="this.querySelector('.flashcard').classList.toggle('flipped')">
+      <div class="flashcard">
+        <div class="card-face card-front">
+          <div class="card-word">${w.en}</div>
+          ${w.v2 ? '<div class="card-v2">Past Simple: '+w.v2+'</div>' : ''}
+          <div class="card-tap">👆 нажми чтобы увидеть перевод</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-trans">${w.ru.join(', ')}</div>
+          ${w.ex ? '<div class="card-ex">"'+w.ex+'"</div>' : ''}
+        </div>
+      </div>
+    </div>
+    <div class="fc-btns">
+      <button class="fc-btn hard" onclick="markCard(${w.idx},false)">😅 Трудно</button>
+      <button class="fc-btn know" onclick="markCard(${w.idx},true)">✅ Знаю!</button>
+    </div>`;
+}
+
+function markCard(idx, val){
+  setKnown(idx, val);
+  fcIdx++;
+  showCard();
+}
+
+// ─── QUIZ ─────────────────────────────────────────────────────────────────────
+let qWords=[], qIdx=0, qCorrect=0, qAnswered=false;
+
+function initQuiz(){
+  qWords = shuffle([...WORDS.map((w,i)=>({...w,idx:i}))]);
+  qIdx=0; qCorrect=0; qAnswered=false;
+  showQuestion();
+}
+
+function showQuestion(){
+  const cont = document.getElementById('tab-quiz');
+  if(qIdx >= qWords.length){
+    const pct = Math.round(qCorrect/qWords.length*100);
+    // batch save results
+    qWords.forEach((w,i) => {
+      // mark as known only if answered correctly (tracked in quiz)
+    });
+    cont.innerHTML = `<div class="quiz-done">
+      <div class="quiz-done-score">${qCorrect}/${qWords.length}</div>
+      <div class="quiz-done-msg">${pct>=80?'🎉 Отлично! Слова усвоены!':pct>=50?'👍 Хорошо! Продолжай!':'💪 Повтори карточки и попробуй снова'}</div>
+      <button class="btn" onclick="initQuiz()">🔄 Пройти снова</button>
+    </div>`;
+    return;
+  }
+  const w = qWords[qIdx];
+  const others = shuffle(WORDS.filter(x=>x.en!==w.en)).slice(0,3);
+  const opts   = shuffle([w,...others]);
+  const pct    = Math.round(qIdx/qWords.length*100);
+  qAnswered = false;
+
+  cont.innerHTML = `
+    <div class="quiz-pb-bg"><div class="quiz-pb-fill" style="width:${pct}%"></div></div>
+    <div class="quiz-counter">${qIdx+1} / ${qWords.length} · Счёт: ${qCorrect}</div>
+    <div class="quiz-word">${w.en}</div>
+    ${w.v2 ? '<div class="quiz-hint">Past Simple: '+w.v2+'</div>' : ''}
+    <div class="quiz-opts">${opts.map(o=>`
+      <div class="quiz-opt" onclick="answerQuiz(this,'${o.en}','${w.en}',${w.idx})">${o.ru.join(' / ')}</div>
+    `).join('')}</div>
+    <div class="quiz-score"></div>`;
+}
+
+function answerQuiz(el, chosen, correct, idx){
+  if(qAnswered) return;
+  qAnswered = true;
+  const isOk = chosen === correct;
+  el.classList.add(isOk ? 'correct' : 'wrong');
+  if(!isOk){
+    const cw = WORDS.find(w=>w.en===correct);
+    [...el.parentNode.children].forEach(c=>{
+      if(c.textContent.trim() === cw.ru.join(' / ').trim()) c.classList.add('reveal');
+    });
+  }
+  setKnown(idx, isOk);
+  if(isOk) qCorrect++;
+  setTimeout(()=>{ qIdx++; showQuestion(); }, isOk ? 600 : 1400);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadLocal();
+buildPage();
+loadFromSupabase();
+
+</script>
+</body>
+</html>
