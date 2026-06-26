@@ -68,6 +68,34 @@
     .test-result.pass{background:#f0fdf4;color:#166534;}
     .test-result.fail{background:#fef2f2;color:#991b1b;}
     .retry-btn{margin-top:6px;background:var(--rose);color:#fff;border:none;border-radius:8px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;}
+
+    /* ─── FLOATING NAV ─── */
+    .nav-pill {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #0f172a;
+      border-radius: 100px;
+      padding: 8px 10px;
+      display: flex; gap: 4px;
+      box-shadow: 0 8px 32px rgba(15,23,42,0.35);
+      z-index: 999;
+      white-space: nowrap;
+    }
+    .nav-pill a {
+      display: flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.55);
+      font-size: 13px; font-weight: 600;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 100px;
+      transition: all 0.2s;
+    }
+    .nav-pill a .nav-icon { font-size: 16px; }
+    .nav-pill a:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.08); }
+    .nav-pill a.active { background: var(--rose); color: #fff; }
+    @media (max-width: 480px) {
+      .nav-pill a span.nav-label { display: none; }
+      .nav-pill a { padding: 8px 12px; }
+    }
   </style>
 </head>
 <body>
@@ -301,5 +329,13 @@ function retryTest(id){
   document.getElementById('res-'+id).className='test-result';
 }
 </script>
+
+<div class="nav-pill">
+  <a href="index.html"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="homework.html"><span class="nav-icon">📝</span><span class="nav-label">HW</span></a>
+  <a href="grammar.html" class="active"><span class="nav-icon">📐</span><span class="nav-label">Grammar</span></a>
+  <a href="vocabulary.html"><span class="nav-icon">💥</span><span class="nav-label">Vocab</span></a>
+  <a href="irregular-verbs.html"><span class="nav-icon">⚡</span><span class="nav-label">Verbs</span></a>
+</div>
 </body>
 </html>
