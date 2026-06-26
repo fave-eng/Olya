@@ -126,9 +126,17 @@ const SETS = [
 // Read progress from localStorage for each set
 function getKnown(setId){
   try {
+    // Try new key first: olya_vocab_unit2a-nouns
     const raw = localStorage.getItem('olya_vocab_'+setId);
-    if(!raw) return 0;
-    return Object.values(JSON.parse(raw)).filter(Boolean).length;
+    if(raw){
+      return Object.values(JSON.parse(raw)).filter(Boolean).length;
+    }
+    // Fallback: old key olya_vocab_known (for backwards compat)
+    if(setId==='unit2a-nouns'){
+      const old = localStorage.getItem('olya_vocab_known');
+      if(old) return Object.values(JSON.parse(old)).filter(Boolean).length;
+    }
+    return 0;
   } catch(e){ return 0; }
 }
 
