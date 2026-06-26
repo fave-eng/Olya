@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HW 2 — Olya's English Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose: #f43f5e; --orange: #fb923c; --amber: #f59e0b;
+      --emerald: #10b981; --blue: #3b82f6; --indigo: #4f46e5;
+      --bg: #f1f5f9; --card: #fff; --text: #0f172a;
+      --muted: #64748b; --border: #e2e8f0;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
+
+    /* TOP BAR */
+    .top-bar { background: linear-gradient(135deg, #f43f5e, #fb923c); position: sticky; top: 0; z-index: 100; }
+    .top-bar-inner { max-width: 760px; margin: 0 auto; padding: 16px 20px; display: flex; align-items: center; gap: 14px; }
+    .back-btn { color: rgba(255,255,255,.85); text-decoration: none; font-size: 13px; font-weight: 600; white-space: nowrap; }
+    .hw-title  { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 800; color: #fff; flex: 1; }
+    .hw-badge  { background: rgba(255,255,255,.22); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; }
+
+    /* PROGRESS STRIP */
+    .progress-strip { background: var(--card); border-bottom: 1px solid var(--border); }
+    .ps-inner { max-width: 760px; margin: 0 auto; padding: 10px 20px; }
+    .ps-label { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 5px; display: flex; justify-content: space-between; }
+    .ps-bar   { height: 6px; background: var(--bg); border-radius: 100px; overflow: hidden; }
+    .ps-fill  { height: 100%; background: linear-gradient(90deg, var(--rose), var(--orange)); border-radius: 100px; transition: width .5s ease; width: 0%; }
+
+    .page { max-width: 760px; margin: 0 auto; padding: 24px 20px 0; }
+
+    /* EXPLANATION BLOCK */
+    .explanation {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-radius: 20px; padding: 24px 26px; margin-bottom: 24px; color: #fff;
+    }
+    .expl-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .expl-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .expl-cell { background: rgba(255,255,255,.08); border-radius: 12px; padding: 12px 14px; }
+    .expl-cell-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,.5); margin-bottom: 6px; }
+    .expl-cell-val   { font-size: 13px; font-weight: 600; color: #fff; line-height: 1.5; }
+    .expl-cell.plus  .expl-cell-label { color: #6ee7b7; }
+    .expl-cell.minus .expl-cell-label { color: #fca5a5; }
+    .expl-cell.quest .expl-cell-label { color: #93c5fd; }
+    .expl-warn { background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.4); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #fde68a; line-height: 1.6; }
+    .expl-warn strong { color: #fbbf24; }
+
+    /* VERB TABLE MINI */
+    .verb-table-wrap { background: rgba(255,255,255,.06); border-radius: 12px; padding: 14px; margin-top: 14px; overflow-x: auto; }
+    .verb-mini { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .verb-mini th { padding: 6px 10px; text-align: left; color: rgba(255,255,255,.5); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .verb-mini td { padding: 6px 10px; color: #fff; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .verb-mini td:first-child { color: #fb923c; font-weight: 700; }
+    .verb-mini td:nth-child(2) { color: #6ee7b7; }
+    .verb-mini tr:last-child td { border-bottom: none; }
+    .irr-badge { display: inline-block; font-size: 10px; background: rgba(244,63,94,.3); color: #fca5a5; padding: 1px 6px; border-radius: 4px; margin-left: 4px; }
+    .reg-badge { display: inline-block; font-size: 10px; background: rgba(16,185,129,.2); color: #6ee7b7; padding: 1px 6px; border-radius: 4px; margin-left: 4px; }
+
+    /* EX CARD */
+    .ex-card { background: var(--card); border-radius: 18px; border: 1.5px solid var(--border); margin-bottom: 18px; overflow: hidden; }
+    .ex-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; }
+    .ex-num { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; color: #fff; margin-top: 1px; }
+    .ex-num.a { background: linear-gradient(135deg, #f43f5e, #fb923c); }
+    .ex-num.b { background: linear-gradient(135deg, #3b82f6, #6366f1); }
+    .ex-num.c { background: linear-gradient(135deg, #10b981, #059669); }
+    .ex-head-text { flex: 1; }
+    .ex-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .ex-desc  { font-size: 12px; color: var(--muted); line-height: 1.4; }
+    .check-btn { background: linear-gradient(135deg, var(--rose), var(--orange)); color: #fff; border: none; border-radius: 10px; padding: 8px 16px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif; flex-shrink: 0; }
+    .check-btn:hover { opacity: .88; }
+    .ex-body { padding: 18px 20px; }
+
+    /* EXERCISE A — sort into columns */
+    .sort-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .sort-col h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid var(--border); }
+    .sort-col.irr h3 { border-color: var(--rose); color: var(--rose); }
+    .sort-col.reg h3 { border-color: var(--emerald); color: var(--emerald); }
+    .input-stack { display: flex; flex-direction: column; gap: 6px; }
+    .input-row { display: flex; align-items: center; gap: 8px; }
+    .input-row-label { font-size: 13px; color: var(--muted); min-width: 58px; font-style: italic; }
+
+    /* EXERCISE B — fill blanks in sentences */
+    .sentence-list { display: flex; flex-direction: column; gap: 10px; }
+    .sentence-item { background: #f8fafc; border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.8; }
+    .sentence-item .s-num { font-weight: 700; color: var(--rose); margin-right: 6px; }
+    .hint-word { font-size: 11px; color: var(--muted); font-style: italic; }
+    .explain-line { font-size: 12px; color: var(--muted); margin-top: 6px; display: none; line-height: 1.4; }
+    .explain-line.show { display: block; }
+
+    /* EXERCISE C — story */
+    .story-box { background: #f8fafc; border-radius: 14px; padding: 20px; line-height: 2.4; font-size: 14px; }
+    .story-box h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; margin-bottom: 14px; letter-spacing: 1px; }
+    .word-bank { background: #eff6ff; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.7; }
+    .word-bank b { color: var(--text); }
+
+    /* INPUTS */
+    input[type=text], input:not([type]) {
+      padding: 5px 10px; border: 2px solid var(--border); border-radius: 8px;
+      font-size: 14px; color: var(--text); background: #fff;
+      transition: border-color .2s; font-family: 'Inter', sans-serif;
+    }
+    input:focus { outline: none; border-color: var(--rose); }
+    input.correct   { border-color: var(--emerald) !important; background: #f0fdf4; }
+    input.incorrect { border-color: #ef4444 !important; background: #fef2f2; }
+    input:disabled  { cursor: not-allowed; opacity: .85; }
+
+    /* FEEDBACK */
+    .feedback { margin-top: 14px; padding: 12px 16px; border-radius: 12px; font-size: 13px; line-height: 1.7; display: none; }
+    .feedback.show { display: block; }
+    .feedback.ok  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .feedback.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+    /* SUBMIT */
+    .submit-section { background: var(--card); border-radius: 18px; border: 1.5px solid var(--border); padding: 24px; text-align: center; margin-top: 24px; }
+    .submit-score { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; color: var(--rose); margin-bottom: 4px; }
+    .submit-sub   { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .submit-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--rose), var(--orange));
+      color: #fff; font-size: 15px; font-weight: 700;
+      padding: 14px 32px; border-radius: 12px; border: none;
+      cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity .2s;
+    }
+    .submit-btn:hover { opacity: .9; }
+    .submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .status-msg { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; }
+    .status-msg.show { display: block; }
+    .status-msg.ok  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .status-msg.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+    @media (max-width: 560px) {
+      .expl-grid  { grid-template-columns: 1fr; }
+      .sort-grid  { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <a href="homework.html" class="back-btn">← Назад</a>
+    <div class="hw-title">HW 2 — Past Simple: Irregular Verbs</div>
+    <div class="hw-badge">A2</div>
+  </div>
+</div>
+
+<div class="progress-strip">
+  <div class="ps-inner">
+    <div class="ps-label"><span>Прогресс выполнения</span><span id="progressPct">0%</span></div>
+    <div class="ps-bar"><div class="ps-fill" id="progressFill"></div></div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ── EXPLANATION ── -->
+  <div class="explanation">
+    <div class="expl-title">📐 Past Simple — объяснение темы</div>
+
+    <div class="expl-grid">
+      <div class="expl-cell plus">
+        <div class="expl-cell-label">➕ Утверждение</div>
+        <div class="expl-cell-val">
+          Regular: V1 + <b>ed</b><br>
+          <i>climb → climb<b>ed</b></i><br><br>
+          Irregular: особая V2<br>
+          <i>go → <b>went</b></i>
+        </div>
+      </div>
+      <div class="expl-cell minus">
+        <div class="expl-cell-label">➖ Отрицание</div>
+        <div class="expl-cell-val">
+          didn't + <b>V1</b><br>
+          (всегда базовая!)<br><br>
+          <i>didn't <b>go</b></i><br>
+          <i>❌ didn't went</i>
+        </div>
+      </div>
+      <div class="expl-cell quest">
+        <div class="expl-cell-label">❓ Вопрос</div>
+        <div class="expl-cell-val">
+          Did + subject + <b>V1</b><br>
+          (всегда базовая!)<br><br>
+          <i>Did she <b>go</b>?</i><br>
+          <i>❌ Did she went?</i>
+        </div>
+      </div>
+    </div>
+
+    <div class="expl-warn">
+      <strong>⚠ Главное правило:</strong> после <b>didn't</b> и <b>did</b> в вопросе — всегда V1 (базовая форма глагола).<br>
+      Форма V2 используется <b>только в утвердительном предложении</b> без вспомогательного глагола.
+    </div>
+
+    <div class="verb-table-wrap">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.5);margin-bottom:10px;">Глаголы этого урока</div>
+      <table class="verb-mini">
+        <thead><tr><th>V1</th><th>V2 (Past Simple)</th><th>Перевод</th><th>Тип</th></tr></thead>
+        <tbody>
+          <tr><td>go</td><td>went</td><td>идти, ехать</td><td><span class="irr-badge">irregular</span></td></tr>
+          <tr><td>climb</td><td>climbed</td><td>взбираться</td><td><span class="reg-badge">regular</span></td></tr>
+          <tr><td>be</td><td>was / were</td><td>быть</td><td><span class="irr-badge">irregular</span></td></tr>
+          <tr><td>take</td><td>took</td><td>брать, взять</td><td><span class="irr-badge">irregular</span></td></tr>
+          <tr><td>have</td><td>had</td><td>иметь</td><td><span class="irr-badge">irregular</span></td></tr>
+          <tr><td>can</td><td>could</td><td>мочь, уметь</td><td><span class="irr-badge">irregular</span></td></tr>
+          <tr><td>sit</td><td>sat</td><td>сидеть</td><td><span class="irr-badge">irregular</span></td></tr>
+          <tr><td>get</td><td>got</td><td>получать, добраться</td><td><span class="irr-badge">irregular</span></td></tr>
+          <tr><td>want</td><td>wanted</td><td>хотеть</td><td><span class="reg-badge">regular</span></td></tr>
+          <tr><td>think</td><td>thought</td><td>думать</td><td><span class="irr-badge">irregular</span></td></tr>
+          <tr><td>decide</td><td>decided</td><td>решать</td><td><span class="reg-badge">regular</span></td></tr>
+          <tr><td>say</td><td>said</td><td>сказать</td><td><span class="irr-badge">irregular</span></td></tr>
+          <tr><td>spend</td><td>spent</td><td>тратить (время)</td><td><span class="irr-badge">irregular</span></td></tr>
+          <tr><td>start</td><td>started</td><td>начинать</td><td><span class="reg-badge">regular</span></td></tr>
+          <tr><td>feel</td><td>felt</td><td>чувствовать</td><td><span class="irr-badge">irregular</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── EXERCISE A: Sort regular / irregular ── -->
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num a">A</div>
+      <div class="ex-head-text">
+        <div class="ex-title">Напиши Past Simple и распредели по группам</div>
+        <div class="ex-desc">Regular глаголы получают -ed. Irregular — особая форма (смотри таблицу выше). Глаголы: go, climb, be, take, have, can, sit, get, want, think, decide, say, spend, start, feel</div>
+      </div>
+      <button class="check-btn" onclick="checkA()">Проверить</button>
+    </div>
+    <div class="ex-body">
+      <div class="sort-grid">
+        <div class="sort-col irr">
+          <h3>⚡ Irregular (особая форма)</h3>
+          <div class="input-stack" id="irr-list"></div>
+        </div>
+        <div class="sort-col reg">
+          <h3>✅ Regular (-ed)</h3>
+          <div class="input-stack" id="reg-list"></div>
+        </div>
+      </div>
+      <div class="feedback" id="fb-a"></div>
+    </div>
+  </div>
+
+  <!-- ── EXERCISE B: Fill in sentences ── -->
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num b">B</div>
+      <div class="ex-head-text">
+        <div class="ex-title">Вставь глагол в правильной форме Past Simple</div>
+        <div class="ex-desc">В скобках — базовая форма (V1). Реши: нужна ли V2 (утверждение) или V1 (после didn't / did)?</div>
+      </div>
+      <button class="check-btn" onclick="checkB()">Проверить</button>
+    </div>
+    <div class="ex-body">
+      <div class="sentence-list" id="sentence-list"></div>
+      <div class="feedback" id="fb-b"></div>
+    </div>
+  </div>
+
+  <!-- ── EXERCISE C: Story fill-in ── -->
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num c">C</div>
+      <div class="ex-head-text">
+        <div class="ex-title">Заполни рассказ об Оле и её поездке на Бали</div>
+        <div class="ex-desc">Вставь глаголы в Past Simple. Подсказки в скобках — базовая форма.</div>
+      </div>
+      <button class="check-btn" onclick="checkC()">Проверить</button>
+    </div>
+    <div class="ex-body">
+      <div class="story-box">
+        <h3>OLY'S TRIP TO BALI</h3>
+        <p>
+          Last summer, Olya <input data-id="c1" size="7" placeholder="(decide)"/> to visit Bali with her twin sister.
+          They <input data-id="c2" size="5" placeholder="(go)"/> by plane — it <input data-id="c3" size="4" placeholder="(be)"/> a long flight, but they <input data-id="c4" size="5" placeholder="(feel)"/> very excited.
+          When they <input data-id="c5" size="5" placeholder="(get)"/> to the hotel, Olya <input data-id="c6" size="5" placeholder="(take)"/> lots of photos.
+          The next day, they <input data-id="c7" size="7" placeholder="(climb)"/> up to a beautiful rice terrace.
+          Olya <input data-id="c8" size="4" placeholder="(sit)"/> there for an hour and <input data-id="c9" size="7" placeholder="(think)"/> about her art.
+          She <input data-id="c10" size="5" placeholder="(spend)"/> three amazing weeks in Bali.
+          At the end, she <input data-id="c11" size="5" placeholder="(say)"/> to her sister: "I <input data-id="c12" size="5" placeholder="(want)"/> to come back every year!"
+        </p>
+      </div>
+      <div class="feedback" id="fb-c"></div>
+    </div>
+  </div>
+
+  <!-- ── SUBMIT ── -->
+  <div class="submit-section">
+    <div class="submit-score" id="submitScore">Проверь все упражнения</div>
+    <div class="submit-sub">Нажми «Проверить» в каждом блоке, затем отправь работу</div>
+    <button class="submit-btn" id="submitBtn" onclick="submitAll()">📤 Отправить преподавателю</button>
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const SB_URL  = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
+const TG_BOT  = '8780310968:AAE2nZnb0ENFPbYDZ0W8cmDF-JpDaqix-SE';
+const TG_CHAT = '-1003908088903';
+const STUDENT = 'olya';
+const HW_ID   = 'hw2';
+
+function sbH(){ return { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates,return=minimal' }; }
+const norm = s => (s||'').toLowerCase().trim().replace(/\s+/g,' ');
+
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const IRR_VERBS = [
+  { v1:'go',     v2:'went',       ru:'идти, ехать' },
+  { v1:'be',     v2:'was / were', ru:'быть' },
+  { v1:'take',   v2:'took',       ru:'брать' },
+  { v1:'have',   v2:'had',        ru:'иметь' },
+  { v1:'can',    v2:'could',      ru:'мочь' },
+  { v1:'sit',    v2:'sat',        ru:'сидеть' },
+  { v1:'get',    v2:'got',        ru:'получать' },
+  { v1:'think',  v2:'thought',    ru:'думать' },
+  { v1:'say',    v2:'said',       ru:'сказать' },
+  { v1:'spend',  v2:'spent',      ru:'тратить' },
+  { v1:'feel',   v2:'felt',       ru:'чувствовать' },
+];
+const REG_VERBS = [
+  { v1:'climb',  v2:'climbed',  ru:'взбираться' },
+  { v1:'want',   v2:'wanted',   ru:'хотеть' },
+  { v1:'decide', v2:'decided',  ru:'решать' },
+  { v1:'start',  v2:'started',  ru:'начинать' },
+];
+
+// Exercise B — 8 sentences
+const SENTENCES = [
+  { before:'Last summer, she', verb:'go', after:'to Bali by plane.', answers:['went'], form:'+', explain:'Утверждение → V2: go → went (irregular)' },
+  { before:'They', verb:'not / climb', after:'very high — just a small hill.', answers:["didn't climb","did not climb"], form:'−', explain:'Отрицание → didn\'t + V1: didn\'t climb (не climbed!)' },
+  { before:'She', verb:'feel', after:'so excited at the airport.', answers:['felt'], form:'+', explain:'Утверждение → V2: feel → felt (irregular)' },
+  { before:'', verb:'they / have', after:'a good time?', answers:['did they have'], form:'?', explain:'Вопрос → Did + they + V1: Did they have? (не had!)' },
+  { before:'He', verb:'not / want', after:'to leave Bali.', answers:["didn't want","did not want"], form:'−', explain:'Отрицание → didn\'t + V1: didn\'t want (regular, но V1!)' },
+  { before:'She', verb:'take', after:'hundreds of photos.', answers:['took'], form:'+', explain:'Утверждение → V2: take → took (irregular)' },
+  { before:'They', verb:'spend', after:'three weeks there.', answers:['spent'], form:'+', explain:'Утверждение → V2: spend → spent (irregular)' },
+  { before:'', verb:'she / think', after:'about coming back?', answers:['did she think'], form:'?', explain:'Вопрос → Did + she + V1: Did she think? (не thought!)' },
+];
+
+// Exercise C answers
+const C_ANS = {
+  c1:['decided'], c2:['went'], c3:['was'], c4:['felt'],
+  c5:['got'], c6:['took'], c7:['climbed'], c8:['sat'],
+  c9:['thought'], c10:['spent'], c11:['said'], c12:['wanted']
+};
+const C_EXPLAIN = {
+  c1:'decide → decided (regular: +d)',
+  c2:'go → went (irregular!)',
+  c3:'be → was (она одна → was)',
+  c4:'feel → felt (irregular!)',
+  c5:'get → got (irregular!)',
+  c6:'take → took (irregular!)',
+  c7:'climb → climbed (regular: +ed)',
+  c8:'sit → sat (irregular!)',
+  c9:'think → thought (irregular!)',
+  c10:'spend → spent (irregular!)',
+  c11:'say → said (irregular!)',
+  c12:'want → wanted (regular: +ed)',
+};
+
+// ─── SCORES ───────────────────────────────────────────────────────────────────
+const scores  = { a:null, b:null, c:null };
+const checked = { a:false, b:false, c:false };
+
+// ─── BUILD UI ─────────────────────────────────────────────────────────────────
+function buildUI(){
+  // Exercise A
+  const irrList = document.getElementById('irr-list');
+  const regList = document.getElementById('reg-list');
+  IRR_VERBS.forEach((v,i) => {
+    irrList.insertAdjacentHTML('beforeend', `
+      <div class="input-row">
+        <span class="input-row-label">${v.v1}</span>
+        <input data-group="irr" data-idx="${i}" data-v1="${v.v1}" size="10" placeholder="V2..."/>
+      </div>`);
+  });
+  REG_VERBS.forEach((v,i) => {
+    regList.insertAdjacentHTML('beforeend', `
+      <div class="input-row">
+        <span class="input-row-label">${v.v1}</span>
+        <input data-group="reg" data-idx="${i}" data-v1="${v.v1}" size="10" placeholder="-ed..."/>
+      </div>`);
+  });
+
+  // Exercise B
+  const sList = document.getElementById('sentence-list');
+  SENTENCES.forEach((s,i) => {
+    const formBadge = s.form === '+' ? `<span style="color:var(--emerald);font-weight:700">+</span>`
+                    : s.form === '−' ? `<span style="color:#ef4444;font-weight:700">−</span>`
+                    : `<span style="color:var(--blue);font-weight:700">?</span>`;
+    sList.insertAdjacentHTML('beforeend', `
+      <div class="sentence-item">
+        <span class="s-num">${i+1}.</span>
+        ${formBadge}
+        ${s.before ? s.before + ' ' : ''}
+        <input data-id="b${i}" size="${s.answers[0].length + 2}" />
+        ${s.after}
+        <span class="hint-word">(${s.verb})</span>
+        <div class="explain-line" id="exp-b${i}"></div>
+      </div>`);
+  });
+}
+
+function markInput(inp, ok){ inp.classList.toggle('correct', ok); inp.classList.toggle('incorrect', !ok); }
+function showFB(id, ok, html){ const fb=document.getElementById('fb-'+id); fb.className='feedback show '+(ok?'ok':'err'); fb.innerHTML=html; }
+
+// ─── CHECK A ──────────────────────────────────────────────────────────────────
+function checkA(){
+  let ok=0, total=0;
+  const irrExpected = new Set(IRR_VERBS.map(v=>v.v2.split(' / ')).flat().map(norm));
+  const regExpected = new Set(REG_VERBS.map(v=>norm(v.v2)));
+
+  document.querySelectorAll('input[data-group="irr"]').forEach(inp => {
+    total++;
+    const v1 = inp.dataset.v1;
+    const verb = IRR_VERBS.find(v=>v.v1===v1);
+    const accepted = verb.v2.split(' / ').map(norm);
+    const good = accepted.includes(norm(inp.value));
+    markInput(inp, good);
+    if(good) ok++;
+  });
+  document.querySelectorAll('input[data-group="reg"]').forEach(inp => {
+    total++;
+    const v1 = inp.dataset.v1;
+    const verb = REG_VERBS.find(v=>v.v1===v1);
+    const good = norm(inp.value) === norm(verb.v2);
+    markInput(inp, good);
+    if(good) ok++;
+  });
+
+  scores.a = {ok, total};
+  checked.a = true;
+
+  const irrAnswers = IRR_VERBS.map(v=>`${v.v1} → <b>${v.v2}</b>`).join(', ');
+  const regAnswers = REG_VERBS.map(v=>`${v.v1} → <b>${v.v2}</b>`).join(', ');
+  showFB('a', ok===total, `<b>Правильно: ${ok}/${total}</b><br>Irregular: ${irrAnswers}<br>Regular: ${regAnswers}`);
+  updateProgress();
+}
+
+// ─── CHECK B ──────────────────────────────────────────────────────────────────
+function checkB(){
+  let ok=0;
+  SENTENCES.forEach((s,i) => {
+    const inp = document.querySelector(`input[data-id="b${i}"]`);
+    const good = s.answers.map(norm).includes(norm(inp.value));
+    markInput(inp, good);
+    if(good) ok++;
+    const exp = document.getElementById(`exp-b${i}`);
+    exp.className = 'explain-line show';
+    exp.innerHTML = (good ? '✅ ' : '❌ Правильно: <b>'+s.answers[0]+'</b> — ') + s.explain;
+  });
+  scores.b = {ok, total:SENTENCES.length};
+  checked.b = true;
+  showFB('b', ok===SENTENCES.length, `<b>Правильно: ${ok}/${SENTENCES.length}</b> — объяснения появились под каждым предложением.`);
+  updateProgress();
+}
+
+// ─── CHECK C ──────────────────────────────────────────────────────────────────
+function checkC(){
+  let ok=0;
+  Object.entries(C_ANS).forEach(([id,ans]) => {
+    const inp = document.querySelector(`input[data-id="${id}"]`);
+    const good = ans.map(norm).includes(norm(inp.value));
+    markInput(inp, good);
+    if(good) ok++;
+  });
+  scores.c = {ok, total:Object.keys(C_ANS).length};
+  checked.c = true;
+
+  const expLines = Object.entries(C_EXPLAIN).map(([id,t],i)=>`${i+1}. ${t}`).join('<br>');
+  showFB('c', ok===scores.c.total, `<b>Правильно: ${ok}/${scores.c.total}</b><br>${expLines}`);
+  updateProgress();
+}
+
+// ─── PROGRESS ─────────────────────────────────────────────────────────────────
+function updateProgress(){
+  const done = Object.values(checked).filter(Boolean).length;
+  const pct  = Math.round(done/3*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressPct').textContent  = pct+'%';
+  const all = Object.values(scores).filter(s=>s!==null);
+  if(all.length){
+    const totalOk  = all.reduce((a,s)=>a+s.ok,0);
+    const totalAll = all.reduce((a,s)=>a+s.total,0);
+    document.getElementById('submitScore').textContent = `Итог: ${totalOk} / ${totalAll} верно`;
+  }
+}
+
+// ─── LOCK after submission ─────────────────────────────────────────────────────
+function lockAll(){
+  document.querySelectorAll('input').forEach(inp=>{ inp.disabled=true; });
+  document.querySelectorAll('.check-btn').forEach(b=>b.style.display='none');
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true; btn.textContent='✅ Уже отправлено';
+  btn.style.background='#d1fae5'; btn.style.color='#065f46';
+}
+
+function saveAnswers(scoreStr){
+  const answers = { score:scoreStr, submitted_at:new Date().toISOString(), scores, inputs:{} };
+  document.querySelectorAll('input[data-id], input[data-group]').forEach(inp=>{
+    const key = inp.dataset.id || ('g_'+inp.dataset.group+'_'+inp.dataset.v1);
+    answers.inputs[key] = inp.value;
+  });
+  localStorage.setItem('olya_hw2_done', '1');
+  localStorage.setItem('olya_hw2_score', scoreStr);
+  localStorage.setItem('olya_hw2_answers', JSON.stringify(answers));
+}
+
+function restoreIfSubmitted(){
+  if(!localStorage.getItem('olya_hw2_done')) return;
+  const raw = localStorage.getItem('olya_hw2_answers');
+  if(!raw) return;
+  try{
+    const saved = JSON.parse(raw);
+    Object.entries(saved.inputs||{}).forEach(([key,val])=>{
+      if(key.startsWith('g_')){
+        const parts=key.split('_'); // g, group, v1
+        const group=parts[1], v1=parts[2];
+        const inp=document.querySelector(`input[data-group="${group}"][data-v1="${v1}"]`);
+        if(inp){ inp.value=val; inp.classList.add('correct'); }
+      } else {
+        const inp=document.querySelector(`input[data-id="${key}"]`);
+        if(inp){ inp.value=val; inp.classList.add('correct'); }
+      }
+    });
+    if(saved.scores) Object.assign(scores, saved.scores);
+    const dt = saved.submitted_at ? new Date(saved.submitted_at).toLocaleString('ru-RU') : '';
+    const statusEl = document.getElementById('statusMsg');
+    statusEl.className='status-msg show ok';
+    statusEl.innerHTML = `✅ Домашняя работа уже отправлена${dt?' ('+dt+')':''}. Результат: ${saved.score}`;
+    lockAll();
+    updateProgress();
+  }catch(e){}
+}
+
+// ─── TELEGRAM MESSAGE ──────────────────────────────────────────────────────────
+function buildTelegramMessage(){
+  const now = new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
+  const allS = Object.values(scores).filter(s=>s!==null);
+  const totalOk  = allS.reduce((a,s)=>a+s.ok,0);
+  const totalAll = allS.reduce((a,s)=>a+s.total,0);
+
+  let msg = `📝 *Homework 2 — Olya*\n`;
+  msg += `📅 ${now}\n`;
+  msg += `📚 Тема: Past Simple — Regular & Irregular Verbs\n\n`;
+  msg += `✅ *Итог: ${totalOk}/${totalAll}*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━\n\n`;
+
+  // Exercise A
+  if(scores.a){
+    msg += `*A. V2 формы и сортировка — ${scores.a.ok}/${scores.a.total}*\n`;
+    msg += `📋 Задание: написать V2 и распределить по группам (irregular / regular)\n`;
+    let errA = false;
+    // Irregular
+    document.querySelectorAll('input[data-group="irr"]').forEach(inp=>{
+      const v1=inp.dataset.v1;
+      const verb=IRR_VERBS.find(v=>v.v1===v1);
+      const accepted=verb.v2.split(' / ').map(norm);
+      const good=accepted.includes(norm(inp.value));
+      if(!good){ msg+=`❌ ${v1} → написала: "${inp.value}" ✅ Правильно: ${verb.v2} (${verb.ru})\n`; errA=true; }
+    });
+    // Regular
+    document.querySelectorAll('input[data-group="reg"]').forEach(inp=>{
+      const v1=inp.dataset.v1;
+      const verb=REG_VERBS.find(v=>v.v1===v1);
+      const good=norm(inp.value)===norm(verb.v2);
+      if(!good){ msg+=`❌ ${v1} → написала: "${inp.value}" ✅ Правильно: ${verb.v2} (${verb.ru})\n`; errA=true; }
+    });
+    if(!errA) msg+=`✅ Все формы написаны верно!\n`;
+    msg+='\n';
+  }
+
+  // Exercise B
+  if(scores.b){
+    msg += `*B. Вставить глагол в правильной форме — ${scores.b.ok}/${scores.b.total}*\n`;
+    msg += `📋 Задание: V2 (утверждение) или V1 после didn't/did (вопрос/отрицание)\n`;
+    let errB = false;
+    SENTENCES.forEach((s,i)=>{
+      const inp=document.querySelector(`input[data-id="b${i}"]`);
+      const good=s.answers.map(norm).includes(norm(inp.value));
+      if(!good){
+        errB=true;
+        msg+=`\n❌ Предложение ${i+1}: "${s.before?s.before+' ':''}___ ${s.after}"\n`;
+        msg+=`   Форма: ${s.form==='+'?'утверждение':s.form==='−'?'отрицание':'вопрос'} (${s.verb})\n`;
+        msg+=`   Написала: "${inp.value}"\n`;
+        msg+=`   ✅ Правильно: "${s.answers[0]}"\n`;
+        msg+=`   💡 ${s.explain}\n`;
+      }
+    });
+    if(!errB) msg+=`✅ Все предложения верны!\n`;
+    msg+='\n';
+  }
+
+  // Exercise C
+  if(scores.c){
+    msg += `*C. Рассказ про Олю и Бали — ${scores.c.ok}/${scores.c.total}*\n`;
+    msg += `📋 Задание: вставить глаголы в Past Simple в рассказ\n`;
+    let errC = false;
+    Object.entries(C_ANS).forEach(([id,ans])=>{
+      const inp=document.querySelector(`input[data-id="${id}"]`);
+      const good=ans.map(norm).includes(norm(inp.value));
+      if(!good){
+        errC=true;
+        const num=parseInt(id.slice(1));
+        msg+=`❌ Пропуск ${num} (${Object.keys(C_EXPLAIN)[num-1]}): написала "${inp.value}" → ✅ "${ans[0]}" — ${C_EXPLAIN[id]}\n`;
+      }
+    });
+    if(!errC) msg+=`✅ Рассказ заполнен верно!\n`;
+    msg+='\n';
+  }
+
+  msg += `━━━━━━━━━━━━━━━━━━━`;
+  return msg;
+}
+
+// ─── SUBMIT ───────────────────────────────────────────────────────────────────
+async function submitAll(){
+  const btn=document.getElementById('submitBtn');
+  const statusEl=document.getElementById('statusMsg');
+  btn.disabled=true; btn.textContent='⏳ Отправляю…';
+
+  const allS=Object.values(scores).filter(s=>s!==null);
+  const totalOk=allS.reduce((a,s)=>a+s.ok,0);
+  const totalAll=allS.reduce((a,s)=>a+s.total,0);
+  const scoreStr=`${totalOk}/${totalAll}`;
+
+  // Save locally first — always works
+  saveAnswers(scoreStr);
+
+  // Supabase + Telegram in PARALLEL
+  const sbPromise = fetch(`${SB_URL}/homework_results`,{
+    method:'POST', headers:sbH(),
+    body:JSON.stringify({
+      student:STUDENT, hw_id:HW_ID, score:scoreStr,
+      score_1a:scores.a?`${scores.a.ok}/${scores.a.total}`:null,
+      score_1b:scores.b?`${scores.b.ok}/${scores.b.total}`:null,
+      score_1c:scores.c?`${scores.c.ok}/${scores.c.total}`:null,
+      submitted_at:new Date().toISOString()
+    })
+  }).then(r=>r.ok||r.status===201).catch(()=>false);
+
+  const tgPromise = fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage`,{
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ chat_id:TG_CHAT, text:buildTelegramMessage(), parse_mode:'Markdown' })
+  }).then(r=>r.ok).catch(()=>false);
+
+  const [sbOk, tgOk] = await Promise.allSettled([sbPromise, tgPromise])
+    .then(results => results.map(r => r.status==='fulfilled' ? r.value : false));
+
+  statusEl.className='status-msg show ok';
+  statusEl.innerHTML=`✅ Отправлено! Результат: ${scoreStr}${sbOk?' ☁️':''}${tgOk?' 📩 учитель уведомлён':' ⚠️ проверь соединение'}.`;
+
+  lockAll();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+buildUI();
+restoreIfSubmitted();
+</script>
+</body>
+</html>
