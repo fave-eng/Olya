@@ -87,7 +87,7 @@
 
   <div class="stats-row">
     <div class="stat-chip done"><div class="sc-num" id="statDone">0</div><div class="sc-lbl">Выполнено</div></div>
-    <div class="stat-chip total"><div class="sc-num">1</div><div class="sc-lbl">Всего</div></div>
+    <div class="stat-chip total"><div class="sc-num">2</div><div class="sc-lbl">Всего</div></div>
     <div class="stat-chip pct"><div class="sc-num" id="statPct">0%</div><div class="sc-lbl">Прогресс</div></div>
   </div>
 
@@ -116,11 +116,32 @@
     </div>
   </div>
 
+  <div class="lesson-card active" id="card-hw2">
+    <a href="hw2.html" style="text-decoration:none;color:inherit;">
+      <div class="lc-main">
+        <div class="lc-num active-num" id="num-hw2">2</div>
+        <div class="lc-info">
+          <div class="lc-lesson-label">Homework 2</div>
+          <div class="lc-title">Past Simple: Irregular Verbs</div>
+          <div class="lc-meta">
+            <span class="lc-status-pill pill-current" id="pill-hw2">📝 Выполнить</span>
+            <span class="lc-score" id="score-hw2"></span>
+          </div>
+        </div>
+        <div class="lc-arrow">→</div>
+      </div>
+    </a>
+    <div class="lc-vocab-strip">
+      <div class="lvs-left">⚡ <span>Глаголы:</span> go, take, feel, sit, get, think, say, spend...</div>
+      <a href="irregular-verbs.html" class="lvs-link">Тренировать <span>→</span></a>
+    </div>
+  </div>
+
   <div class="section-title">🔒 Предстоящие</div>
 
   <div class="lesson-card locked">
     <div class="lc-main">
-      <div class="lc-num locked-num">2</div>
+      <div class="lc-num locked-num">3</div>
       <div class="lc-info">
         <div class="lc-lesson-label">Homework 2</div>
         <div class="lc-title">Coming soon…</div>
@@ -145,28 +166,40 @@
 </div>
 
 <script>
-function render(){
-  const done = !!localStorage.getItem('olya_hw1_done');
-  const num  = document.getElementById('num-hw1');
-  const pill = document.getElementById('pill-hw1');
-  const sc   = document.getElementById('score-hw1');
-
+function renderCard(hwNum){
+  const done  = !!localStorage.getItem('olya_hw'+hwNum+'_done');
+  const score = localStorage.getItem('olya_hw'+hwNum+'_score');
+  const num   = document.getElementById('num-hw'+hwNum);
+  const pill  = document.getElementById('pill-hw'+hwNum);
+  const sc    = document.getElementById('score-hw'+hwNum);
+  if(!num) return done;
   if(done){
-    num.className = 'lc-num done-num'; num.textContent = '✓';
+    num.className  = 'lc-num done-num'; num.textContent  = '✓';
     pill.className = 'lc-status-pill pill-done'; pill.textContent = '✅ Сдано';
-    const s = localStorage.getItem('olya_hw1_score');
-    if(s) sc.textContent = 'Результат: ' + s;
-    document.getElementById('sec-done').style.display = '';
-    document.getElementById('sec-current').style.display = 'none';
+    if(score && sc) sc.textContent = 'Результат: ' + score;
   } else {
-    num.className = 'lc-num active-num'; num.textContent = '1';
+    num.className  = 'lc-num active-num'; num.textContent  = hwNum;
     pill.className = 'lc-status-pill pill-current'; pill.textContent = '📝 Выполнить';
   }
-  const d = done ? 1 : 0;
+  return done;
+}
+
+function render(){
+  const d1 = renderCard(1);
+  const d2 = renderCard(2);
+  const d  = (d1?1:0) + (d2?1:0);
+  const total = 2;
+  const pct = Math.round(d/total*100);
+
+  if(d > 0){
+    document.getElementById('sec-done').style.display = '';
+    document.getElementById('sec-current').style.display = 'none';
+  }
+
   document.getElementById('statDone').textContent  = d;
-  document.getElementById('statPct').textContent   = d * 100 + '%';
-  document.getElementById('heroBar').style.width   = d * 100 + '%';
-  document.getElementById('heroLabel').textContent = d + ' из 1 выполнено';
+  document.getElementById('statPct').textContent   = pct + '%';
+  document.getElementById('heroBar').style.width   = pct + '%';
+  document.getElementById('heroLabel').textContent = d + ' из ' + total + ' выполнено';
 }
 render();
 </script>
