@@ -225,7 +225,7 @@
     </div>
     <div class="mot-card green">
       <span class="mot-icon">⚡</span>
-      <div class="mot-val" id="motVerbs">0/31</div>
+      <div class="mot-val" id="motVerbs">0/33</div>
       <div class="mot-label">Неправильных глаголов</div>
       <div class="mot-sub">Past Simple — ключ к рассказу о Бали</div>
     </div>
@@ -473,7 +473,7 @@ showV(VERBS[vidx]);
     const v=JSON.parse(localStorage.getItem('olya_irreg_known')||'{}');
     const vCount=Object.values(v).filter(Boolean).length;
     const motV=document.getElementById('motVerbs');
-    if(motV) motV.textContent=vCount+'/31';
+    if(motV) motV.textContent=vCount+'/33';
   }catch(e){}
 
   // ── Level badge (future: dynamically from progress) ──
