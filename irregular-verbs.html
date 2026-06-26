@@ -108,7 +108,7 @@
   <div style="max-width:760px;margin:0 auto;position:relative;z-index:1">
     <a href="index.html" class="hero-back">← На главную</a>
     <h1>⚡ Неправильные глаголы</h1>
-    <p>30 ключевых глаголов A2 · все три формы · карточки и тест</p>
+    <p><span id="heroTotalLabel">33</span> глаголов A2 · все три формы · карточки и тест</p>
     <div class="hero-stats">
       <div class="hs"><strong id="heroKnown">0</strong>Знаю</div>
       <div class="hs"><strong>33</strong>Всего</div>
@@ -182,7 +182,13 @@ async function saveCloud(){
 }
 function setKnown(i,v){ knownMap[i]=v; save(); saveCloud(); updateStats(); renderTable(); }
 function countKnown(){ return Object.values(knownMap).filter(Boolean).length; }
-function updateStats(){ const k=countKnown(),t=VERBS.length,pct=Math.round(k/t*100); document.getElementById('heroKnown').textContent=k; document.getElementById('heroPct').textContent=pct+'%'; }
+function updateStats(){
+  const k=countKnown(), t=VERBS.length, pct=Math.round(k/t*100);
+  document.getElementById('heroKnown').textContent=k;
+  document.getElementById('heroPct').textContent=pct+'%';
+  const ht=document.getElementById('heroTotal'); if(ht) ht.textContent=t;
+  const hl=document.getElementById('heroTotalLabel'); if(hl) hl.textContent=t;
+}
 function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
 
 // TABLE
