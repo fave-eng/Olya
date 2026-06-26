@@ -242,7 +242,7 @@
 const SB_URL = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
 const TG_BOT = '8780310968:AAE2nZnb0ENFPbYDZ0W8cmDF-JpDaqix-SE';
-const TG_CHAT = '1003908088903';
+const TG_CHAT = '-1003908088903';
 const STUDENT = 'olya';
 
 function sbH(){ return { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=minimal' }; }
@@ -486,6 +486,77 @@ function buildTelegramMessage(){
   return msg;
 }
 
+// ─── LOCK INPUTS after submission ─────────────────────────────────────────────
+function lockAllInputs(){
+  document.querySelectorAll('input').forEach(inp=>{
+    inp.disabled=true;
+    inp.style.cursor='not-allowed';
+    inp.style.opacity='0.85';
+  });
+  // hide all check buttons
+  document.querySelectorAll('.check-btn').forEach(b=>b.style.display='none');
+  // lock submit button
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;
+  btn.textContent='✅ Уже отправлено';
+  btn.style.background='#d1fae5';
+  btn.style.color='#065f46';
+}
+
+function saveAnswers(scoreStr){
+  const answers={
+    score: scoreStr,
+    submitted_at: new Date().toISOString(),
+    scores: scores,
+    inputs:{}
+  };
+  // save all input values
+  document.querySelectorAll('input[data-id], input[data-group]').forEach(inp=>{
+    const key=inp.dataset.id||('group_'+inp.dataset.group+'_'+inp.placeholder);
+    answers.inputs[key]=inp.value;
+  });
+  localStorage.setItem('olya_hw1_done','1');
+  localStorage.setItem('olya_hw1_score', scoreStr);
+  localStorage.setItem('olya_hw1_answers', JSON.stringify(answers));
+}
+
+function restoreIfSubmitted(){
+  const done=localStorage.getItem('olya_hw1_done');
+  if(!done) return;
+  const raw=localStorage.getItem('olya_hw1_answers');
+  if(!raw) return;
+  try{
+    const saved=JSON.parse(raw);
+    // restore input values
+    Object.entries(saved.inputs||{}).forEach(([key,val])=>{
+      // by data-id
+      const byId=document.querySelector(`input[data-id="${key}"]`);
+      if(byId){ byId.value=val; byId.classList.add('correct'); }
+    });
+    // restore group inputs
+    if(saved.inputs){
+      Object.entries(saved.inputs).forEach(([key,val])=>{
+        if(key.startsWith('group_')){
+          const parts=key.split('_'); // group, regular/irregular, placeholder
+          const group=parts[1];
+          const ph=parts[2];
+          const inp=document.querySelector(`input[data-group="${group}"][placeholder="${ph}"]`);
+          if(inp){ inp.value=val; inp.classList.add('correct'); }
+        }
+      });
+    }
+    // restore scores
+    if(saved.scores) Object.assign(scores, saved.scores);
+    // show status
+    const statusEl=document.getElementById('statusMsg');
+    const dt=saved.submitted_at ? new Date(saved.submitted_at).toLocaleString('ru-RU') : '';
+    statusEl.className='status-msg show ok';
+    statusEl.innerHTML=`✅ Домашняя работа уже отправлена${dt?' ('+dt+')':''}. Результат: ${saved.score}`;
+    // lock everything
+    lockAllInputs();
+  } catch(e){ console.warn('restore error',e); }
+}
+
 // ─── SUBMIT ───────────────────────────────────────────────────────────────────
 async function submitAll(){
   const btn=document.getElementById('submitBtn');
@@ -497,52 +568,44 @@ async function submitAll(){
   const totalAll=allScores.reduce((a,s)=>a+s.total,0);
   const scoreStr=`${totalOk}/${totalAll}`;
 
-  // Supabase UPSERT (POST + merge-duplicates)
-  let sbOk=false;
-  try{
-    const payload={
-      student: STUDENT,
-      hw_id: 'hw1',
-      score: scoreStr,
-      score_1a: scores['1a'] ? `${scores['1a'].ok}/${scores['1a'].total}` : null,
-      score_1b: scores['1b'] ? `${scores['1b'].ok}/${scores['1b'].total}` : null,
-      score_1c: scores['1c'] ? `${scores['1c'].ok}/${scores['1c'].total}` : null,
-      score_1d: scores['1d'] ? `${scores['1d'].ok}/${scores['1d'].total}` : null,
-      submitted_at: new Date().toISOString()
-    };
-    const r=await fetch(`${SB_URL}/homework_results`,{
-      method:'POST',
-      headers: sbH(),
-      body: JSON.stringify(payload)
-    });
-    sbOk = r.ok || r.status===201 || r.status===200;
-  } catch(e){ console.warn('Supabase error', e); }
+  // Save to localStorage FIRST — always succeeds
+  saveAnswers(scoreStr);
 
-  // Telegram — детальный отчёт с ошибками
-  let tgOk=false;
-  try{
-    const tgMsg=buildTelegramMessage();
-    const r=await fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ chat_id: TG_CHAT, text: tgMsg, parse_mode:'Markdown' })
-    });
-    tgOk = r.ok;
-  } catch(e){ console.warn('Telegram error', e); }
+  // Supabase + Telegram run IN PARALLEL — neither blocks the other
+  const sbPayload={
+    student: STUDENT, hw_id:'hw1', score: scoreStr,
+    score_1a: scores['1a'] ? `${scores['1a'].ok}/${scores['1a'].total}` : null,
+    score_1b: scores['1b'] ? `${scores['1b'].ok}/${scores['1b'].total}` : null,
+    score_1c: scores['1c'] ? `${scores['1c'].ok}/${scores['1c'].total}` : null,
+    score_1d: scores['1d'] ? `${scores['1d'].ok}/${scores['1d'].total}` : null,
+    submitted_at: new Date().toISOString()
+  };
 
-  // LocalStorage (offline fallback)
-  localStorage.setItem('olya_hw1_done', '1');
-  localStorage.setItem('olya_hw1_score', scoreStr);
+  const sbPromise = fetch(`${SB_URL}/homework_results`,{
+    method:'POST', headers: sbH(), body: JSON.stringify(sbPayload)
+  }).then(r=>r.ok||r.status===201).catch(()=>false);
+
+  const tgPromise = fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ chat_id: TG_CHAT, text: buildTelegramMessage(), parse_mode:'Markdown' })
+  }).then(r=>r.ok).catch(()=>false);
+
+  // Wait for both in parallel
+  const [sbOk, tgOk] = await Promise.allSettled([sbPromise, tgPromise])
+    .then(results => results.map(r => r.status==='fulfilled' ? r.value : false));
 
   statusEl.className='status-msg show ok';
-  statusEl.innerHTML=`✅ Готово! Результат сохранён${sbOk?' в облаке ☁️':''}${tgOk?' и отправлен преподавателю 📩':''}.`;
-  btn.textContent='✅ Отправлено!';
+  statusEl.innerHTML=`✅ Отправлено! Результат: ${scoreStr}${sbOk?' ☁️ сохранено':''}${tgOk?' 📩 учитель уведомлён':' ⚠️ проверь интернет'}.`;
 
-  setTimeout(()=>{ window.location.href='homework.html'; }, 2500);
+  // Lock all inputs — homework cannot be changed
+  lockAllInputs();
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 buildUI();
+// After UI is built, restore submitted state if exists
+restoreIfSubmitted();
 </script>
 </body>
 </html>
