@@ -183,6 +183,7 @@
 
 <div class="page">
 
+  <!-- ── EXPLANATION ── -->
   <div class="explanation">
     <div class="expl-title">📐 Past Simple — объяснение темы</div>
 
@@ -218,7 +219,7 @@
 
     <div class="expl-warn">
       <strong>⚠ Главное правило:</strong> после <b>didn't</b> и <b>did</b> в вопросе — всегда V1 (базовая форма глагола).<br>
-      Форма V2 используется <b>только в утвервительном предложении</b> без вспомогательного глагола.
+      Форма V2 используется <b>только в утвердительном предложении</b> без вспомогательного глагола.
     </div>
 
     <div class="verb-table-wrap">
@@ -246,396 +247,455 @@
     </div>
   </div>
 
+  <!-- ── EXERCISE A: Sort regular / irregular ── -->
   <div class="ex-card">
     <div class="ex-header">
       <div class="ex-num a">A</div>
       <div class="ex-head-text">
         <div class="ex-title">Напиши Past Simple и распредели по группам</div>
-        <div class="ex-desc">Напиши форму Past Simple (V2) глагола в соответствующей его типу колонке. Вторую колонку оставь пустой.</div>
+        <div class="ex-desc">Regular глаголы получают -ed. Irregular — особая форма (смотри таблицу выше). Глаголы: go, climb, be, take, have, can, sit, get, want, think, decide, say, spend, start, feel</div>
       </div>
       <button class="check-btn" onclick="checkA()">Проверить</button>
     </div>
     <div class="ex-body">
       <div class="sort-grid">
         <div class="sort-col irr">
-          <h3>Irregular Verbs</h3>
-          <div class="input-stack" id="stack-irr"></div>
+          <h3>⚡ Irregular (особая форма)</h3>
+          <div class="input-stack" id="irr-list"></div>
         </div>
         <div class="sort-col reg">
-          <h3>Regular Verbs</h3>
-          <div class="input-stack" id="stack-reg"></div>
+          <h3>✅ Regular (-ed)</h3>
+          <div class="input-stack" id="reg-list"></div>
         </div>
       </div>
       <div class="feedback" id="fb-a"></div>
     </div>
   </div>
 
+  <!-- ── EXERCISE B: Fill in sentences ── -->
   <div class="ex-card">
     <div class="ex-header">
       <div class="ex-num b">B</div>
       <div class="ex-head-text">
-        <div class="ex-title">Раскрой скобки в Past Simple</div>
-        <div class="ex-desc">Обращай внимание на знаки плюс (+), минус (-) и вопрос (?)</div>
+        <div class="ex-title">Вставь глагол в правильной форме Past Simple</div>
+        <div class="ex-desc">В скобках — базовая форма (V1). Реши: нужна ли V2 (утверждение) или V1 (после didn't / did)?</div>
       </div>
       <button class="check-btn" onclick="checkB()">Проверить</button>
     </div>
     <div class="ex-body">
-      <div class="sentence-list" id="list-b"></div>
+      <div class="sentence-list" id="sentence-list"></div>
       <div class="feedback" id="fb-b"></div>
     </div>
   </div>
 
+  <!-- ── EXERCISE C: Story fill-in ── -->
   <div class="ex-card">
     <div class="ex-header">
       <div class="ex-num c">C</div>
       <div class="ex-head-text">
-        <div class="ex-title">Заполни историю о неудачном походе</div>
-        <div class="ex-desc">Используй правильные формы глаголов в прошедшем времени</div>
+        <div class="ex-title">Заполни рассказ об Оле и её поездке на Бали</div>
+        <div class="ex-desc">Вставь глаголы в Past Simple. Подсказки в скобках — базовая форма.</div>
       </div>
       <button class="check-btn" onclick="checkC()">Проверить</button>
     </div>
     <div class="ex-body">
-      <div class="word-bank">
-        <b>Глаголы для вставки:</b> be, can, climb, decide, feel, get, go, have, sit, spend, start, take, think, want
-      </div>
       <div class="story-box">
-        <h3>A Bad Day in the Mountains</h3>
+        <h3>OLY'S TRIP TO BALI</h3>
         <p>
-          Last weekend, Max and Lily <input data-id="c0" size="8"> to go for a hike in the mountains. 
-          They <input data-id="c1" size="8"> to reach the top of Mount Windy. 
-          The morning <input data-id="c2" size="8"> beautiful and sunny, so they <input data-id="c3" size="8"> a taxi to the national park. 
-          They <input data-id="c4" size="8"> their journey at 8 AM. 
-          At first, everything was fine. They <input data-id="c5" size="8"> up the steep path and <input data-id="c6" size="8"> great. 
-          But at noon, the weather suddenly changed. It <input data-id="c7" size="8"> to rain heavily, and a cold wind blew. 
-          They <input data-id="c8" size="8"> a big umbrella, but it didn't help much. 
-          They <input data-id="c9" size="8"> not continue climbing because the rocks became slippery. 
-          So, they <input data-id="c10" size="8"> under a large tree and <input data-id="c11" size="8"> for two hours, waiting for the storm to stop. 
-          They <input data-id="c12" size="8"> very cold and wet. 
-          Finally, they decided to return. They <input data-id="c13" size="8"> back down and home. 
-          They <input data-id="c14" size="8"> the whole evening drinking hot tea, and Max <input data-id="c15" size="8">: "Next time, I'll check the weather forecast more carefully!"
+          Last summer, Olya <input data-id="c1" size="7" placeholder="(decide)"/> to visit Bali with her twin sister.
+          They <input data-id="c2" size="5" placeholder="(go)"/> by plane — it <input data-id="c3" size="4" placeholder="(be)"/> a long flight, but they <input data-id="c4" size="5" placeholder="(feel)"/> very excited.
+          When they <input data-id="c5" size="5" placeholder="(get)"/> to the hotel, Olya <input data-id="c6" size="5" placeholder="(take)"/> lots of photos.
+          The next day, they <input data-id="c7" size="7" placeholder="(climb)"/> up to a beautiful rice terrace.
+          Olya <input data-id="c8" size="4" placeholder="(sit)"/> there for an hour and <input data-id="c9" size="7" placeholder="(think)"/> about her art.
+          She <input data-id="c10" size="5" placeholder="(spend)"/> three amazing weeks in Bali.
+          At the end, she <input data-id="c11" size="5" placeholder="(say)"/> to her sister: "I <input data-id="c12" size="5" placeholder="(want)"/> to come back every year!"
         </p>
       </div>
       <div class="feedback" id="fb-c"></div>
     </div>
   </div>
 
+  <!-- ── SUBMIT ── -->
   <div class="submit-section">
-    <div class="submit-score" id="submitScore">Проверить все упражнения</div>
-    <div class="submit-sub">Нажми «Проверить» в каждом блоке, чтобы завершить</div>
+    <div class="submit-score" id="submitScore">Проверь все упражнения</div>
+    <div class="submit-sub">Нажми «Проверить» в каждом блоке, затем отправь работу</div>
     <button class="submit-btn" id="submitBtn" onclick="submitAll()">📤 Отправить преподавателю</button>
-    <div class="status-msg" id="statusMessage"></div>
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+  <!-- VOCAB SHORTCUT -->
+  <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+    <a href="vocab-unit2a-verbs.html" style="flex:1;min-width:140px;background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 18px;text-decoration:none;color:#0f172a;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;transition:all .2s;" onmouseover="this.style.borderColor='#f43f5e'" onmouseout="this.style.borderColor='#e2e8f0'">
+      <span style="font-size:20px">✅</span>
+      <span>Regular Verbs<br><span style="font-size:11px;color:#64748b;font-weight:400">10 глаголов -ed</span></span>
+      <span style="margin-left:auto;color:#f43f5e">→</span>
+    </a>
+    <a href="irregular-verbs.html" style="flex:1;min-width:140px;background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 18px;text-decoration:none;color:#0f172a;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;transition:all .2s;" onmouseover="this.style.borderColor='#f43f5e'" onmouseout="this.style.borderColor='#e2e8f0'">
+      <span style="font-size:20px">⚡</span>
+      <span>Irregular Verbs<br><span style="font-size:11px;color:#64748b;font-weight:400">33 глагола</span></span>
+      <span style="margin-left:auto;color:#f43f5e">→</span>
+    </a>
   </div>
 
 </div>
 
-<div class="nav-pill">
-  <a href="index.html"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
-  <a href="homework.html" class="active"><span class="nav-icon">📝</span><span class="nav-label">HW</span></a>
-  <a href="grammar.html"><span class="nav-icon">📐</span><span class="nav-label">Grammar</span></a>
-</div>
-
 <script>
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-const HW_ID = 'hw2';
-const STUDENT_NAME = 'Olya';
-const SB_URL = 'https://tefbyfxtgvkbwzttvsqs.supabase.co/rest/v1/homework_results';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlZmJ5Znh0Z3ZrYnd6dHR2c3FzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5ODU0NzgsImV4cCI6MjAzMjU2MTQ3OH0.52_m6T6VvS9g8fA-8-F723K8mUvJ-N2V7w8_f7-X794';
-const TG_BOT = '7471249910:AAGv8i8-n9L8_5L9-v1M2N3O4P5Q6R7S8T9';
-const TG_CHAT = '516524941';
+const SB_URL  = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
+const TG_BOT  = '8780310968:AAE2nZnb0ENFPbYDZ0W8cmDF-JpDaqix-SE';
+const TG_CHAT = '-1003908088903';
+const STUDENT = 'olya';
+const HW_ID   = 'hw2';
 
-// ─── DATA STRUCUTRES ──────────────────────────────────────────────────────────
-const verbsA = [
-  { v1: 'go',    type: 'irr', v2: 'went' },
-  { v1: 'climb', type: 'reg', v2: 'climbed' },
-  { v1: 'have',  type: 'irr', v2: 'had' },
-  { v1: 'can',   type: 'irr', v2: 'could' },
-  { v1: 'want',  type: 'reg', v2: 'wanted' },
-  { v1: 'think', type: 'irr', v2: 'thought' },
-  { v1: 'decide',type: 'reg', v2: 'decided' },
-  { v1: 'say',   type: 'irr', v2: 'said' },
-  { v1: 'spend', type: 'irr', v2: 'spent' },
-  { v1: 'feel',  type: 'irr', v2: 'felt' }
+function sbH(){ return { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates,return=minimal' }; }
+const norm = s => (s||'').toLowerCase().trim().replace(/\s+/g,' ');
+
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const IRR_VERBS = [
+  { v1:'go',     v2:'went',       ru:'идти, ехать' },
+  { v1:'be',     v2:'was / were', ru:'быть' },
+  { v1:'take',   v2:'took',       ru:'брать' },
+  { v1:'have',   v2:'had',        ru:'иметь' },
+  { v1:'can',    v2:'could',      ru:'мочь' },
+  { v1:'sit',    v2:'sat',        ru:'сидеть' },
+  { v1:'get',    v2:'got',        ru:'получать' },
+  { v1:'think',  v2:'thought',    ru:'думать' },
+  { v1:'say',    v2:'said',       ru:'сказать' },
+  { v1:'spend',  v2:'spent',      ru:'тратить' },
+  { v1:'feel',   v2:'felt',       ru:'чувствовать' },
+];
+const REG_VERBS = [
+  { v1:'climb',  v2:'climbed',  ru:'взбираться' },
+  { v1:'want',   v2:'wanted',   ru:'хотеть' },
+  { v1:'decide', v2:'decided',  ru:'решать' },
+  { v1:'start',  v2:'started',  ru:'начинать' },
 ];
 
-const itemsB = [
-  { q: "(+) We ______ (go) to the cinema yesterday.", a: "went", exp: "Утверждение с irregular verb -> V2 (went)" },
-  { q: "(-) She ______ (not want) to climb that tall mountain.", a: "didn't want", exp: "Отрицание -> didn't + V1 базовый (want)" },
-  { q: "(?) ______ you ______ (have) a good time at the park?", a: "did|have", exp: "Вопрос -> Did ... V1 базовый (have)", double: true },
-  { q: "(+) They ______ (decide) to stay home because of the storm.", a: "decided", exp: "Утверждение с regular verb -> V1 + ed (decided)" },
-  { q: "(-) I ______ (not can) swim across the river.", a: "couldn't", exp: "Отрицание модального can в прошедшем -> couldn't + V1 базовый" },
-  { q: "(?) ______ he ______ (think) the test was easy?", a: "did|think", exp: "Вопрос -> Did ... V1 базовый (think)", double: true },
-  { q: "(+) She ______ (feel) happy after winning the race.", a: "felt", exp: "Утверждение с irregular verb -> V2 (felt)" },
-  { q: "(-) We ______ (not spend) much money on holiday.", a: "didn't spend", exp: "Отрицание -> didn't + V1 базовый (spend)" },
-  { q: "(?) Why ______ they ______ (start) the project late?", a: "did|start", exp: "Вопрос -> Did ... V1 базовый (start)", double: true }
+// Exercise B — 8 sentences
+const SENTENCES = [
+  { before:'Last summer, she', verb:'go', after:'to Bali by plane.', answers:['went'], form:'+', explain:'Утверждение → V2: go → went (irregular)' },
+  { before:'They', verb:'not / climb', after:'very high — just a small hill.', answers:["didn't climb","did not climb"], form:'−', explain:'Отрицание → didn\'t + V1: didn\'t climb (не climbed!)' },
+  { before:'She', verb:'feel', after:'so excited at the airport.', answers:['felt'], form:'+', explain:'Утверждение → V2: feel → felt (irregular)' },
+  { before:'', verb:'they / have', after:'a good time?', answers:['did they have'], form:'?', explain:'Вопрос → Did + they + V1: Did they have? (не had!)' },
+  { before:'He', verb:'not / want', after:'to leave Bali.', answers:["didn't want","did not want"], form:'−', explain:'Отрицание → didn\'t + V1: didn\'t want (regular, но V1!)' },
+  { before:'She', verb:'take', after:'hundreds of photos.', answers:['took'], form:'+', explain:'Утверждение → V2: take → took (irregular)' },
+  { before:'They', verb:'spend', after:'three weeks there.', answers:['spent'], form:'+', explain:'Утверждение → V2: spend → spent (irregular)' },
+  { before:'', verb:'she / think', after:'about coming back?', answers:['did she think'], form:'?', explain:'Вопрос → Did + she + V1: Did she think? (не thought!)' },
 ];
 
-const storyC = [
-  'decided', 'wanted', 'was', 'took', 'started', 
-  'climbed', 'felt', 'started', 'had', 'could', 
-  'sat', 'waited', 'get', 'went', 'spent', 'said'
-];
+// Exercise C answers
+const C_ANS = {
+  c1:['decided'], c2:['went'], c3:['was'], c4:['felt'],
+  c5:['got'], c6:['took'], c7:['climbed'], c8:['sat'],
+  c9:['thought'], c10:['spent'], c11:['said'], c12:['wanted']
+};
+const C_EXPLAIN = {
+  c1:'decide → decided (regular: +d)',
+  c2:'go → went (irregular!)',
+  c3:'be → was (она одна → was)',
+  c4:'feel → felt (irregular!)',
+  c5:'get → got (irregular!)',
+  c6:'take → took (irregular!)',
+  c7:'climb → climbed (regular: +ed)',
+  c8:'sit → sat (irregular!)',
+  c9:'think → thought (irregular!)',
+  c10:'spend → spent (irregular!)',
+  c11:'say → said (irregular!)',
+  c12:'want → wanted (regular: +ed)',
+};
 
-let scores = { a: null, b: null, c: null };
+// ─── SCORES ───────────────────────────────────────────────────────────────────
+const scores  = { a:null, b:null, c:null };
+const checked = { a:false, b:false, c:false };
 
-// ─── UI BUILDERS ──────────────────────────────────────────────────────────────
-function buildUI() {
-  // Ex A
-  const irrStack = document.getElementById('stack-irr');
-  const regStack = document.getElementById('stack-reg');
-  
-  verbsA.forEach((v, idx) => {
-    const html = `
+// ─── BUILD UI ─────────────────────────────────────────────────────────────────
+function buildUI(){
+  // Exercise A
+  const irrList = document.getElementById('irr-list');
+  const regList = document.getElementById('reg-list');
+  IRR_VERBS.forEach((v,i) => {
+    irrList.insertAdjacentHTML('beforeend', `
       <div class="input-row">
-        <span class="input-row-label">${v.v1} →</span>
-        <input type="text" data-idx="${idx}" style="width:100%">
-      </div>
-    `;
-    if (v.type === 'irr') {
-      irrStack.innerHTML += html;
-    } else {
-      regStack.innerHTML += html;
-    }
+        <span class="input-row-label">${v.v1}</span>
+        <input data-group="irr" data-idx="${i}" data-v1="${v.v1}" size="10" placeholder="V2..."/>
+      </div>`);
+  });
+  REG_VERBS.forEach((v,i) => {
+    regList.insertAdjacentHTML('beforeend', `
+      <div class="input-row">
+        <span class="input-row-label">${v.v1}</span>
+        <input data-group="reg" data-idx="${i}" data-v1="${v.v1}" size="10" placeholder="-ed..."/>
+      </div>`);
   });
 
-  // Ex B
-  const listB = document.getElementById('list-b');
-  itemsB.forEach((item, idx) => {
-    let inputHtml = '';
-    if (item.double) {
-      inputHtml = `<input type="text" data-id="b_${idx}_0" style="width:70px"> ... <input type="text" data-id="b_${idx}_1" style="width:100px">`;
-    } else {
-      inputHtml = `<input type="text" data-id="b_${idx}" style="width:130px">`;
-    }
-    listB.innerHTML += `
+  // Exercise B
+  const sList = document.getElementById('sentence-list');
+  SENTENCES.forEach((s,i) => {
+    const formBadge = s.form === '+' ? `<span style="color:var(--emerald);font-weight:700">+</span>`
+                    : s.form === '−' ? `<span style="color:#ef4444;font-weight:700">−</span>`
+                    : `<span style="color:var(--blue);font-weight:700">?</span>`;
+    sList.insertAdjacentHTML('beforeend', `
       <div class="sentence-item">
-        <span class="s-num">${idx+1}.</span> ${item.q.replace('______', '___')}
-        <div style="margin-top:6px; font-weight:500;">✍ Впиши: ${inputHtml}</div>
-        <div class="explain-line" id="exp-b-${idx}">💡 ${item.exp}</div>
-      </div>
-    `;
-  });
-
-  document.querySelectorAll('input').forEach(input => {
-    input.addEventListener('input', updateProgress);
+        <span class="s-num">${i+1}.</span>
+        ${formBadge}
+        ${s.before ? s.before + ' ' : ''}
+        <input data-id="b${i}" size="${s.answers[0].length + 2}" />
+        ${s.after}
+        <span class="hint-word">(${s.verb})</span>
+        <div class="explain-line" id="exp-b${i}"></div>
+      </div>`);
   });
 }
 
-function updateProgress() {
-  const totalInputs = document.querySelectorAll('input[data-idx], input[data-id]').length;
-  let filled = 0;
-  document.querySelectorAll('input[data-idx], input[data-id]').forEach(i => {
-    if (i.value.trim() !== '') filled++;
+function markInput(inp, ok){ inp.classList.toggle('correct', ok); inp.classList.toggle('incorrect', !ok); }
+function showFB(id, ok, html){ const fb=document.getElementById('fb-'+id); fb.className='feedback show '+(ok?'ok':'err'); fb.innerHTML=html; }
+
+// ─── CHECK A ──────────────────────────────────────────────────────────────────
+function checkA(){
+  let ok=0, total=0;
+  const irrExpected = new Set(IRR_VERBS.map(v=>v.v2.split(' / ')).flat().map(norm));
+  const regExpected = new Set(REG_VERBS.map(v=>norm(v.v2)));
+
+  document.querySelectorAll('input[data-group="irr"]').forEach(inp => {
+    total++;
+    const v1 = inp.dataset.v1;
+    const verb = IRR_VERBS.find(v=>v.v1===v1);
+    const accepted = verb.v2.split(' / ').map(norm);
+    const good = accepted.includes(norm(inp.value));
+    markInput(inp, good);
+    if(good) ok++;
   });
-  const pct = Math.round((filled / totalInputs) * 100);
-  document.getElementById('progressPct').innerText = pct + '%';
-  document.getElementById('progressFill').style.width = pct + '%';
-}
-
-function clean(str) {
-  return str.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[’‘`]/g, "'");
-}
-
-// ─── CHECKERS ─────────────────────────────────────────────────────────────────
-function checkA() {
-  let ok = 0, total = verbsA.length;
-  const fb = document.getElementById('fb-a');
-
-  document.querySelectorAll('input[data-idx]').forEach(input => {
-    const idx = parseInt(input.getAttribute('data-idx'));
-    const item = verbsA[idx];
-    if (clean(input.value) === clean(item.v2)) {
-      input.className = 'correct'; ok++;
-    } else {
-      input.className = 'incorrect';
-    }
+  document.querySelectorAll('input[data-group="reg"]').forEach(inp => {
+    total++;
+    const v1 = inp.dataset.v1;
+    const verb = REG_VERBS.find(v=>v.v1===v1);
+    const good = norm(inp.value) === norm(verb.v2);
+    markInput(inp, good);
+    if(good) ok++;
   });
 
-  scores.a = { ok, total };
-  fb.className = 'feedback show ' + (ok === total ? 'ok' : 'err');
-  fb.innerHTML = `Блок А: <b>${ok}/${total}</b>. ${ok === total ? 'Идеально выполнено!' : 'Проверь правописание неправильных форм.'}`;
-  updateTotalScore();
+  scores.a = {ok, total};
+  checked.a = true;
+
+  const irrAnswers = IRR_VERBS.map(v=>`${v.v1} → <b>${v.v2}</b>`).join(', ');
+  const regAnswers = REG_VERBS.map(v=>`${v.v1} → <b>${v.v2}</b>`).join(', ');
+  showFB('a', ok===total, `<b>Правильно: ${ok}/${total}</b><br>Irregular: ${irrAnswers}<br>Regular: ${regAnswers}`);
+  updateProgress();
 }
 
-function checkB() {
-  let ok = 0, total = 0;
-  const fb = document.getElementById('fb-b');
-
-  itemsB.forEach((item, idx) => {
-    let currentRowOk = true;
-    if (item.double) {
-      total += 2;
-      const parts = item.a.split('|');
-      const inp0 = document.querySelector(`input[data-id="b_${idx}_0"]`);
-      const inp1 = document.querySelector(`input[data-id="b_${idx}_1"]`);
-      
-      if (clean(inp0.value) === clean(parts[0])) { inp0.className = 'correct'; ok++; } else { inp0.className = 'incorrect'; currentRowOk = false; }
-      if (clean(inp1.value) === clean(parts[1])) { inp1.className = 'correct'; ok++; } else { inp1.className = 'incorrect'; currentRowOk = false; }
-    } else {
-      total += 1;
-      const inp = document.querySelector(`input[data-id="b_${idx}"]`);
-      if (clean(inp.value) === clean(item.a)) { inp.className = 'correct'; ok++; } else { inp.className = 'incorrect'; currentRowOk = false; }
-    }
-    document.getElementById(`exp-b-${idx}`).classList.add('show');
+// ─── CHECK B ──────────────────────────────────────────────────────────────────
+function checkB(){
+  let ok=0;
+  SENTENCES.forEach((s,i) => {
+    const inp = document.querySelector(`input[data-id="b${i}"]`);
+    const good = s.answers.map(norm).includes(norm(inp.value));
+    markInput(inp, good);
+    if(good) ok++;
+    const exp = document.getElementById(`exp-b${i}`);
+    exp.className = 'explain-line show';
+    exp.innerHTML = (good ? '✅ ' : '❌ Правильно: <b>'+s.answers[0]+'</b> — ') + s.explain;
   });
-
-  scores.b = { ok, total };
-  fb.className = 'feedback show ' + (ok === total ? 'ok' : 'err');
-  fb.innerHTML = `Блок B: <b>${ok}/${total}</b>. ${ok === total ? 'Все предложения раскрыты верно!' : 'Помни: после did / didn\'t глагол возвращается в V1.'}`;
-  updateTotalScore();
+  scores.b = {ok, total:SENTENCES.length};
+  checked.b = true;
+  showFB('b', ok===SENTENCES.length, `<b>Правильно: ${ok}/${SENTENCES.length}</b> — объяснения появились под каждым предложением.`);
+  updateProgress();
 }
 
-function checkC() {
-  let ok = 0, total = storyC.length;
-  const fb = document.getElementById('fb-c');
-
-  storyC.forEach((correctAnswer, idx) => {
-    const input = document.querySelector(`input[data-id="c${idx}"]`);
-    // Обработка синонимов или условных замен (was/were)
-    let isCorrect = clean(input.value) === clean(correctAnswer);
-    if (correctAnswer === 'was' && clean(input.value) === 'was') isCorrect = true;
-    
-    if (isCorrect) {
-      input.className = 'correct'; ok++;
-    } else {
-      input.className = 'incorrect';
-    }
+// ─── CHECK C ──────────────────────────────────────────────────────────────────
+function checkC(){
+  let ok=0;
+  Object.entries(C_ANS).forEach(([id,ans]) => {
+    const inp = document.querySelector(`input[data-id="${id}"]`);
+    const good = ans.map(norm).includes(norm(inp.value));
+    markInput(inp, good);
+    if(good) ok++;
   });
+  scores.c = {ok, total:Object.keys(C_ANS).length};
+  checked.c = true;
 
-  scores.c = { ok, total };
-  fb.className = 'feedback show ' + (ok === total ? 'ok' : 'err');
-  fb.innerHTML = `Блок C: <b>${ok}/${total}</b>. ${ok === total ? 'Превосходно! История восстановлена полностью.' : 'Перечитай текст, некоторые глаголы не подходят по смыслу.'}`;
-  updateTotalScore();
+  const expLines = Object.entries(C_EXPLAIN).map(([id,t],i)=>`${i+1}. ${t}`).join('<br>');
+  showFB('c', ok===scores.c.total, `<b>Правильно: ${ok}/${scores.c.total}</b><br>${expLines}`);
+  updateProgress();
 }
 
-function updateTotalScore() {
-  let totalOk = 0, totalMax = 0, doneCount = 0;
-  Object.keys(scores).forEach(k => {
-    if (scores[k] !== null) { totalOk += scores[k].ok; totalMax += scores[k].total; doneCount++; }
-  });
-  const el = document.getElementById('submitScore');
-  if (doneCount === 3) {
-    el.innerText = `Итоговый балл: ${totalOk} из ${totalMax}`;
-  } else {
-    el.innerText = `Проверено блоков: ${doneCount} из 3`;
+// ─── PROGRESS ─────────────────────────────────────────────────────────────────
+function updateProgress(){
+  const done = Object.values(checked).filter(Boolean).length;
+  const pct  = Math.round(done/3*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressPct').textContent  = pct+'%';
+  const all = Object.values(scores).filter(s=>s!==null);
+  if(all.length){
+    const totalOk  = all.reduce((a,s)=>a+s.ok,0);
+    const totalAll = all.reduce((a,s)=>a+s.total,0);
+    document.getElementById('submitScore').textContent = `Итог: ${totalOk} / ${totalAll} верно`;
   }
 }
 
-// ─── TELEGRAM & SUBMIT ────────────────────────────────────────────────────────
-function buildTelegramMessage() {
-  let totalOk = 0, totalMax = 0;
-  Object.keys(scores).forEach(k => { if(scores[k]) { totalOk += scores[k].ok; totalMax += scores[k].total; } });
-  
-  return [
-    "🔔 Домашняя работа отправлена!",
-    "Студент: " + STUDENT_NAME,
-    "Задание: HW 2 — Past Simple: Irregular Verbs",
-    "Результаты по блокам:",
-    "• Блок A: " + (scores.a ? scores.a.ok + "/" + scores.a.total : "не проверен"),
-    "• Блок B: " + (scores.b ? scores.b.ok + "/" + scores.b.total : "не проверен"),
-    "• Блок C: " + (scores.c ? scores.c.ok + "/" + scores.c.total : "не проверен"),
-    "Итоговый общий счет: " + totalOk + "/" + totalMax
-  ].join("\n");
+// ─── LOCK after submission ─────────────────────────────────────────────────────
+function lockAll(){
+  document.querySelectorAll('input').forEach(inp=>{ inp.disabled=true; });
+  document.querySelectorAll('.check-btn').forEach(b=>b.style.display='none');
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true; btn.textContent='✅ Уже отправлено';
+  btn.style.background='#d1fae5'; btn.style.color='#065f46';
 }
 
-function lockAll() {
-  document.querySelectorAll('input').forEach(i => i.disabled = true);
-  document.querySelectorAll('.check-btn').forEach(b => b.disabled = true);
-  const btn = document.getElementById('submitBtn');
-  if(btn) { btn.disabled = true; btn.innerText = '✅ Уже отправлено'; }
+function saveAnswers(scoreStr){
+  const answers = { score:scoreStr, submitted_at:new Date().toISOString(), scores, inputs:{} };
+  document.querySelectorAll('input[data-id], input[data-group]').forEach(inp=>{
+    const key = inp.dataset.id || ('g_'+inp.dataset.group+'_'+inp.dataset.v1);
+    answers.inputs[key] = inp.value;
+  });
+  localStorage.setItem('olya_hw2_done', '1');
+  localStorage.setItem('olya_hw2_score', scoreStr);
+  localStorage.setItem('olya_hw2_answers', JSON.stringify(answers));
 }
 
-function restoreIfSubmitted() {
-  // ПРИНУДИТЕЛЬНАЯ ЗАПИСЬ И ФИКСАЦИЯ ГОТОВОГО РЕЗУЛЬТАТА 29/35
-  const fixedScore = "29/35";
-  localStorage.setItem(`submitted_${HW_ID}`, 'true');
-  localStorage.setItem(`scoreStr_${HW_ID}`, fixedScore);
-  
-  // Инициализация мок-объектов результатов для корректного сбора payload в базу данных
-  scores.a = { ok: 10, total: 10 };
-  scores.b = { ok: 10, total: 12 }; // Сумма баллов блоков подведена под 29 из 35
-  scores.c = { ok: 9, total: 13 };
+function restoreIfSubmitted(){
+  if(!localStorage.getItem('olya_hw2_done')) return;
+  const raw = localStorage.getItem('olya_hw2_answers');
+  if(!raw) return;
+  try{
+    const saved = JSON.parse(raw);
+    Object.entries(saved.inputs||{}).forEach(([key,val])=>{
+      if(key.startsWith('g_')){
+        const parts=key.split('_'); // g, group, v1
+        const group=parts[1], v1=parts[2];
+        const inp=document.querySelector(`input[data-group="${group}"][data-v1="${v1}"]`);
+        if(inp){ inp.value=val; inp.classList.add('correct'); }
+      } else {
+        const inp=document.querySelector(`input[data-id="${key}"]`);
+        if(inp){ inp.value=val; inp.classList.add('correct'); }
+      }
+    });
+    if(saved.scores) Object.assign(scores, saved.scores);
+    const dt = saved.submitted_at ? new Date(saved.submitted_at).toLocaleString('ru-RU') : '';
+    const statusEl = document.getElementById('statusMsg');
+    statusEl.className='status-msg show ok';
+    statusEl.innerHTML = `✅ Домашняя работа уже отправлена${dt?' ('+dt+')':''}. Результат: ${saved.score}`;
+    lockAll();
+    updateProgress();
+  }catch(e){}
+}
 
-  lockAll();
-  
-  const statusEl = document.getElementById('statusMessage');
-  statusEl.className = 'status-msg show ok';
-  statusEl.innerHTML = `✅ Уже отправлено! Результат: ${fixedScore}.`;
-  
-  const scoreEl = document.getElementById('submitScore');
-  if(scoreEl) scoreEl.innerText = `Работа зафиксирована: ${fixedScore}`;
-  
-  // Автоматическая фоновая отправка зафиксированного результата в базу (если ранее не отправлялся)
-  if (!localStorage.getItem(`db_synced_${HW_ID}`)) {
-    executeBackgroundUpsert(fixedScore);
+// ─── TELEGRAM MESSAGE ──────────────────────────────────────────────────────────
+function buildTelegramMessage(){
+  const now = new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
+  const allS = Object.values(scores).filter(s=>s!==null);
+  const totalOk  = allS.reduce((a,s)=>a+s.ok,0);
+  const totalAll = allS.reduce((a,s)=>a+s.total,0);
+
+  let msg = `📝 Homework 2 — Olya\n`;
+  msg += `📅 ${now}\n`;
+  msg += `Тема: Past Simple — Regular & Irregular Verbs\n\n`;
+  msg += `✅ Итог: ${totalOk}/${totalAll}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━\n\n`;
+
+  // Exercise A
+  if(scores.a){
+    msg += `A. V2 формы и сортировка — ${scores.a.ok}/${scores.a.total}\n`;
+    msg += `Задание: написать V2 и распределить по группам (irregular / regular)\n`;
+    let errA = false;
+    // Irregular
+    document.querySelectorAll('input[data-group="irr"]').forEach(inp=>{
+      const v1=inp.dataset.v1;
+      const verb=IRR_VERBS.find(v=>v.v1===v1);
+      const accepted=verb.v2.split(' / ').map(norm);
+      const good=accepted.includes(norm(inp.value));
+      if(!good){ msg+=`❌ ${v1} → написала: "${inp.value}" ✅ Правильно: ${verb.v2} (${verb.ru})\n`; errA=true; }
+    });
+    // Regular
+    document.querySelectorAll('input[data-group="reg"]').forEach(inp=>{
+      const v1=inp.dataset.v1;
+      const verb=REG_VERBS.find(v=>v.v1===v1);
+      const good=norm(inp.value)===norm(verb.v2);
+      if(!good){ msg+=`❌ ${v1} → написала: "${inp.value}" ✅ Правильно: ${verb.v2} (${verb.ru})\n`; errA=true; }
+    });
+    if(!errA) msg+=`✅ Все формы написаны верно!\n`;
+    msg+='\n';
   }
+
+  // Exercise B
+  if(scores.b){
+    msg += `B. Вставить глагол в правильной форме — ${scores.b.ok}/${scores.b.total}\n`;
+    msg += `Задание: V2 (утверждение) или V1 после didn't/did (вопрос/отрицание)\n`;
+    let errB = false;
+    SENTENCES.forEach((s,i)=>{
+      const inp=document.querySelector(`input[data-id="b${i}"]`);
+      const good=s.answers.map(norm).includes(norm(inp.value));
+      if(!good){
+        errB=true;
+        msg+=`\n❌ Предложение ${i+1}: "${s.before?s.before+' ':''}___ ${s.after}"\n`;
+        msg+=`   Форма: ${s.form==='+'?'утверждение':s.form==='−'?'отрицание':'вопрос'} (${s.verb})\n`;
+        msg+=`   Написала: "${inp.value}"\n`;
+        msg+=`   ✅ Правильно: "${s.answers[0]}"\n`;
+        msg+=`   💡 ${s.explain}\n`;
+      }
+    });
+    if(!errB) msg+=`✅ Все предложения верны!\n`;
+    msg+='\n';
+  }
+
+  // Exercise C
+  if(scores.c){
+    msg += `C. Рассказ про Олю и Бали — ${scores.c.ok}/${scores.c.total}\n`;
+    msg += `Задание: вставить глаголы в Past Simple в рассказ\n`;
+    let errC = false;
+    Object.entries(C_ANS).forEach(([id,ans])=>{
+      const inp=document.querySelector(`input[data-id="${id}"]`);
+      const good=ans.map(norm).includes(norm(inp.value));
+      if(!good){
+        errC=true;
+        const num=parseInt(id.slice(1));
+        msg+=`❌ Пропуск ${num} (${Object.keys(C_EXPLAIN)[num-1]}): написала "${inp.value}" → ✅ "${ans[0]}" — ${C_EXPLAIN[id]}\n`;
+      }
+    });
+    if(!errC) msg+=`✅ Рассказ заполнен верно!\n`;
+    msg+='\n';
+  }
+
+  msg += `━━━━━━━━━━━━━━━━━━━`;
+  return msg;
 }
 
-async function executeBackgroundUpsert(scoreStr) {
-  const payload = {
-    hw_id: HW_ID,
-    student: STUDENT_NAME,
-    score_total: scoreStr,
-    score_1a: scores.a ? `${scores.a.ok}/${scores.a.total}` : "10/10",
-    score_1b: scores.b ? `${scores.b.ok}/${scores.b.total}` : "10/12",
-    score_1c: scores.c ? `${scores.c.ok}/${scores.c.total}` : "9/13",
-    submitted_at: new Date().toISOString()
-  };
+// ─── SUBMIT ───────────────────────────────────────────────────────────────────
+async function submitAll(){
+  const btn=document.getElementById('submitBtn');
+  const statusEl=document.getElementById('statusMsg');
+  btn.disabled=true; btn.textContent='⏳ Отправляю…';
 
-  fetch(`${SB_URL}?on_conflict=student,hw_id`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SB_KEY,
-      'Authorization': `Bearer ${SB_KEY}`,
-      'Prefer': 'resolution=merge-duplicates'
-    },
-    body: JSON.stringify(payload)
-  }).then(r => {
-    if (r.ok || r.status === 201) localStorage.setItem(`db_synced_${HW_ID}`, 'true');
-  }).catch(() => {});
-}
+  const allS=Object.values(scores).filter(s=>s!==null);
+  const totalOk=allS.reduce((a,s)=>a+s.ok,0);
+  const totalAll=allS.reduce((a,s)=>a+s.total,0);
+  const scoreStr=`${totalOk}/${totalAll}`;
 
-async function submitAll() {
-  const scoreStr = "29/35";
-  const statusEl = document.getElementById('statusMessage');
-  statusEl.className = 'status-msg show';
-  statusEl.style.background = '#f1f5f9'; statusEl.style.color = '#475569';
-  statusEl.innerText = '⏳ Сохранение в базу данных...';
+  // Save locally first — always works
+  saveAnswers(scoreStr);
 
-  const payload = {
-    hw_id: HW_ID,
-    student: STUDENT_NAME,
-    score_total: scoreStr,
-    score_1a: `${scores.a.ok}/${scores.a.total}`,
-    score_1b: `${scores.b.ok}/${scores.b.total}`,
-    score_1c: `${scores.c.ok}/${scores.c.total}`,
-    submitted_at: new Date().toISOString()
-  };
+  // Supabase + Telegram in PARALLEL
+  const sbPromise = fetch(`${SB_URL}/homework_results?on_conflict=student,hw_id`,{
+    method:'POST', headers:sbH(),
+    body:JSON.stringify({
+      student:STUDENT, hw_id:HW_ID, score:scoreStr,
+      score_1a:scores.a?`${scores.a.ok}/${scores.a.total}`:null,
+      score_1b:scores.b?`${scores.b.ok}/${scores.b.total}`:null,
+      score_1c:scores.c?`${scores.c.ok}/${scores.c.total}`:null,
+      submitted_at:new Date().toISOString()
+    })
+  }).then(r=>r.ok||r.status===201).catch(()=>false);
 
-  // Метод upsert с корректной обработкой дубликатов первичных ключей
-  const sbPromise = fetch(`${SB_URL}?on_conflict=student,hw_id`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SB_KEY,
-      'Authorization': `Bearer ${SB_KEY}`,
-      'Prefer': 'resolution=merge-duplicates'
-    },
-    body: JSON.stringify(payload)
-  }).then(r => r.ok || r.status === 201).catch(() => false);
-
-  // Безопасное текстовое уведомление Telegram без parse_mode Markdown
-  const tgPromise = fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage`, {
-    method: 'POST', 
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: TG_CHAT, text: buildTelegramMessage() })
-  }).then(r => r.ok).catch(() => false);
+  const tgPromise = fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage`,{
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ chat_id:TG_CHAT, text:buildTelegramMessage() })
+  }).then(r=>r.ok).catch(()=>false);
 
   const [sbOk, tgOk] = await Promise.allSettled([sbPromise, tgPromise])
-    .then(results => results.map(r => r.status === 'fulfilled' ? r.value : false));
+    .then(results => results.map(r => r.status==='fulfilled' ? r.value : false));
 
-  statusEl.className = 'status-msg show ok';
-  statusEl.innerHTML = `✅ Отправлено! Результат: ${scoreStr}${sbOk ? ' ☁️' : ''}${tgOk ? ' 📩 учитель уведомлён' : ' ⚠️ проверь соединение'}.`;
+  statusEl.className='status-msg show ok';
+  statusEl.innerHTML=`✅ Отправлено! Результат: ${scoreStr}${sbOk?' ☁️':''}${tgOk?' 📩 учитель уведомлён':' ⚠️ проверь соединение'}.`;
 
   lockAll();
 }
@@ -644,5 +704,13 @@ async function submitAll() {
 buildUI();
 restoreIfSubmitted();
 </script>
+
+<div class="nav-pill">
+  <a href="index.html"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="homework.html" class="active"><span class="nav-icon">📝</span><span class="nav-label">HW</span></a>
+  <a href="grammar.html"><span class="nav-icon">📐</span><span class="nav-label">Grammar</span></a>
+  <a href="vocabulary-hub.html"><span class="nav-icon">💥</span><span class="nav-label">Vocab</span></a>
+  <a href="irregular-verbs.html"><span class="nav-icon">⚡</span><span class="nav-label">Verbs</span></a>
+</div>
 </body>
 </html>
