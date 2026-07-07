@@ -110,17 +110,17 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 .nav-pill a.active { background:var(--rose); color:#fff; }
 @media (max-width:480px) { .nav-pill a span.nav-label { display:none; } .nav-pill a { padding:8px 12px; } }
 @media (max-width:500px) { .quiz-opts { grid-template-columns:1fr; } }
-
   </style>
 </head>
 <body>
+
 <script>
 const SET_ID    = "holidays";
 const SET_TITLE = "Holidays — Vocabulary";
 const SET_ICON  = "🏖️";
 const SET_DESC  = "Слова и прилагательные про отпуск (к Homework 3)";
 
-// Расширенный список слов (41 позиция по материалам учебника)
+// Список слов с уточненными и развернутыми переводами для похожих синонимов
 const WORDS = [
   // --- 1. PHRASES WITH GO ---
   { en:"go camping",              ru:["ехать в поход","отправиться в кемпинг"],          ex:"We went camping in the mountains." },
@@ -134,18 +134,32 @@ const WORDS = [
   { en:"sunbathe on the beach",   ru:["загорать на пляже"],                              ex:"She sunbathed on the beach all afternoon." },
   { en:"go away for the weekend", ru:["уехать на выходные"],                             ex:"We went away for the weekend to the countryside." },
   { en:"go on holiday",           ru:["поехать в отпуск","уйти в каникулы"],             ex:"I want to go on holiday to Spain this summer." },
-  { en:"go by bus / car / plane / train", ru:["ехать на автобусе / машине / самолете / поезде"], ex:"We decided to go by train to enjoy the views." },
-  { en:"go skiing / walking / cycling",   ru:["кататься на лыжах / ходить пешком / кататься на велосипеде"], ex:"We often go skiing in winter." },
-  { en:"go sailing / surfing / fishing",  ru:["заниматься парусным спортом / серфингом / рыбалкой"], ex:"He loves to go fishing at the lake." },
+  
+  // --- GO BY TRANSPORT ---
+  { en:"go by bus",               ru:["ехать на автобусе"],                              ex:"We decided to go by bus to save some money." },
+  { en:"go by car",               ru:["ехать на машине"],                                ex:"It is much faster to go by car." },
+  { en:"go by plane",             ru:["лететь на самолете"],                             ex:"We prefer to go by plane when traveling far." },
+  { en:"go by train",             ru:["ехать на поезде"],                                ex:"We decided to go by train to enjoy the views." },
+  
+  // --- GO + SPORTS/ACTIVITIES ---
+  { en:"go skiing",               ru:["кататься на лыжах"],                              ex:"We often go skiing in winter." },
+  { en:"go walking",              ru:["ходить пешком","отправляться на пешую прогулку"], ex:"We love to go walking in the local forests." },
+  { en:"go cycling",              ru:["кататься на велосипеде"],                         ex:"On Sundays we usually go cycling in the park." },
+  { en:"go sailing",              ru:["заниматься парусным спортом"],                   ex:"They decided to go sailing on a small yacht." },
+  { en:"go surfing",              ru:["заниматься серфингом"],                           ex:"He wants to go surfing in Hawaii." },
+  { en:"go fishing",              ru:["ходить на рыбалку","рыбачить"],                  ex:"He loves to go fishing at the lake." },
 
   // --- 2. OTHER HOLIDAY PHRASES ---
-  { en:"stay at a campsite / with friends", ru:["остановиться в кемкинге / у друзей"],   ex:"We stayed at a campsite to be closer to nature." },
+  { en:"stay at a campsite",      ru:["остановиться в кемпинге"],                        ex:"We stayed at a campsite to be closer to nature." },
+  { en:"stay with friends",       ru:["остановиться у друзей"],                          ex:"When I go to London, I usually stay with friends." },
   { en:"take photos",             ru:["фотографировать","делать фотографии"],            ex:"She loved to take photos of local monuments." },
   { en:"buy souvenirs",           ru:["покупать сувениры"],                              ex:"I need to buy souvenirs for my family." },
   { en:"have a good time",        ru:["хорошо проводить время"],                         ex:"Have a good time in London!" },
-  { en:"spend money / time",      ru:["тратить деньги / проводить время"],               ex:"They spend a lot of money on trips." },
+  { en:"spend money",             ru:["тратить деньги"],                                 ex:"They spend a lot of money on trips." },
+  { en:"spend time",              ru:["проводить время"],                                ex:"I love to spend time with my friends on holidays." },
   { en:"rent an apartment",       ru:["снимать квартиру","арендовать апартаменты"],       ex:"We rent an apartment in the city center for a week." },
-  { en:"hire a bicycle / skis",   ru:["брать напрокат велосипед / лыжи"],                ex:"Let's hire a bicycle and explore the park." },
+  { en:"hire a bicycle",          ru:["брать напрокат велосипед"],                       ex:"Let's hire a bicycle and explore the park." },
+  { en:"hire skis",               ru:["брать напрокат лыжи"],                            ex:"You can hire skis right at the resort." },
 
   // --- 3. ADJECTIVES ---
   { en:"comfortable",             ru:["удобный","комфортный"],                            ex:"Our room was very comfortable." },
@@ -156,7 +170,7 @@ const WORDS = [
   { en:"basic",                   ru:["простой","базовый","скромный"],                    ex:"The apartment was very basic, no fridge at all." },
   { en:"friendly",                ru:["дружелюбный"],                                     ex:"The other people on the trip were very friendly." },
   { en:"helpful",                 ru:["готовый помочь","отзывчивый"],                    ex:"The hotel receptionist was very helpful." },
-  { en:"lovely",                  ru:["прекрасный","чудесный"],                           ex:"The town was lovely, with flowers everywhere." },
+  { en:"lovely",                  ru:["прекрасный","милый (очень приятный)"],             ex:"The town was lovely, with flowers everywhere." },
   { en:"beautiful",               ru:["красивый"],                                        ex:"We saw many beautiful places." },
   { en:"cloudy",                  ru:["облачный","пасмурный"],                            ex:"It was cloudy all day, so we couldn't sunbathe." },
   { en:"luxurious",               ru:["роскошный"],                                       ex:"The apartment was very luxurious and comfortable." },
@@ -168,85 +182,81 @@ const WORDS = [
   
   // --- GENERAL POSITIVE / NEGATIVE ---
   { en:"great",                   ru:["отличный","великолепный"],                         ex:"We had a great holiday!" },
-  { en:"wonderful",               ru:["чудесный","удивительный"],                         ex:"The view from the window was wonderful." },
+  { en:"wonderful",               ru:["чудесный","удивительный (вызывает восторг)"],      ex:"The view from the window was wonderful." },
   { en:"fantastic",               ru:["фантастический"],                                  ex:"The food was absolutely fantastic." },
-  { en:"OK / not bad / all right",ru:["нормально / неплохо / всё в порядке"],             ex:"The hotel was OK, nothing special." },
-  { en:"awful",                   ru:["ужасный"],                                         ex:"The weather was awful, it rained all week." },
-  { en:"horrible",                ru:["отвратительный","ужасный"],                        ex:"We stayed in a horrible room." },
-  { en:"terrible",                ru:["страшный","ужасный"],                              ex:"The service at the restaurant was terrible." }
+  { en:"OK",                      ru:["нормально","приемлемо"],                           ex:"The hotel was OK, nothing special." },
+  { en:"not bad",                 ru:["неплохо"],                                         ex:"The weather was not bad, at least it didn't rain." },
+  { en:"all right",               ru:["всё в порядке","нормально"],                       ex:"The service was all right, quite standard." },
+  { en:"awful",                   ru:["ужасный (когда всё очень плохо, например погода)"], ex:"The weather was awful, it rained all week." },
+  { en:"horrible",                ru:["отвратительный","ужасный (вызывает неприятные эмоции)"], ex:"We stayed in a horrible room." },
+  { en:"terrible",                ru:["страшный","ужасный (крайняя степень плохого)"],     ex:"The service at the restaurant was terrible." }
 ];
-</script>
-<script>
-// vocab-engine.js — shared engine for all vocabulary pages[cite: 2]
 
-const SB_URL  = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';[cite: 2]
-const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';[cite: 2]
-const STUDENT = 'olya';[cite: 2]
-const LS_KEY  = 'olya_vocab_' + SET_ID;[cite: 2]
+const SB_URL  = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg0MTQxMTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
+const STUDENT = 'olya';
+const LS_KEY  = 'olya_vocab_' + SET_ID;
 
-// ─── STATE ────────────────────────────────────────────────────────────────────
-let knownMap = {};[cite: 2]
+let knownMap = {};
 
-function loadLocal(){ try { knownMap = JSON.parse(localStorage.getItem(LS_KEY)||'{}'); } catch(e){ knownMap = {}; } }[cite: 2]
-function saveLocal(){ localStorage.setItem(LS_KEY, JSON.stringify(knownMap)); }[cite: 2]
+function loadLocal(){ try { knownMap = JSON.parse(localStorage.getItem(LS_KEY)||'{}'); } catch(e){ knownMap = {}; } }
+function saveLocal(){ localStorage.setItem(LS_KEY, JSON.stringify(knownMap)); }
 
-function setKnown(idx, val){[cite: 2]
-  knownMap[idx] = val;[cite: 2]
-  saveLocal();[cite: 2]
-  saveToSupabase();[cite: 2]
-  updateStats();[cite: 2]
-  renderDict();[cite: 2]
-}[cite: 2]
+function setKnown(idx, val){
+  knownMap[idx] = val;
+  saveLocal();
+  saveToSupabase();
+  updateStats();
+  renderDict();
+}
 
-function countKnown(){ return Object.values(knownMap).filter(Boolean).length; }[cite: 2]
-function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }[cite: 2]
-function norm(s){ return (s||'').toLowerCase().trim().replace(/[ёе]/g,'е').replace(/\s+/g,' '); }[cite: 2]
+function countKnown(){ return Object.values(knownMap).filter(Boolean).length; }
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+function norm(s){ return (s||'').toLowerCase().trim().replace(/[ёе]/g,'е').replace(/\s+/g,' '); }
 
-async function saveToSupabase(){[cite: 2]
-  const knownWords = WORDS.filter((_,i) => knownMap[i]).map(w => w.en);[cite: 2]
-  try {[cite: 2]
-    await fetch(`${SB_URL}/vocab_progress`, {[cite: 2]
-      method: 'POST',[cite: 2]
-      headers: { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates,return=minimal' },[cite: 2]
-      body: JSON.stringify({ student:STUDENT, set_id:SET_ID, known_count:knownWords.length, known_words:knownWords.join(','), updated_at:new Date().toISOString() })[cite: 2]
-    });[cite: 2]
-  } catch(e){}[cite: 2]
-}[cite: 2]
+async function saveToSupabase(){
+  const knownWords = WORDS.filter((_,i) => knownMap[i]).map(w => w.en);
+  try {
+    await fetch(`${SB_URL}/vocab_progress`, {
+      method: 'POST',
+      headers: { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify({ student:STUDENT, set_id:SET_ID, known_count:knownWords.length, known_words:knownWords.join(','), updated_at:new Date().toISOString() })
+    });
+  } catch(e){}
+}
 
-async function loadFromSupabase(){[cite: 2]
-  try {[cite: 2]
-    const r = await fetch(`${SB_URL}/vocab_progress?student=eq.${STUDENT}&set_id=eq.${SET_ID}&select=known_words`, {[cite: 2]
-      headers: { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY }[cite: 2]
-    });[cite: 2]
-    if(!r.ok) return;[cite: 2]
-    const rows = await r.json();[cite: 2]
-    if(rows.length && rows[0].known_words){[cite: 2]
-      rows[0].known_words.split(',').forEach(en => {[cite: 2]
-        const idx = WORDS.findIndex(w => w.en === en.trim());[cite: 2]
-        if(idx >= 0) knownMap[idx] = true;[cite: 2]
-      });[cite: 2]
-      saveLocal();[cite: 2]
-      updateStats();[cite: 2]
-      renderDict();[cite: 2]
-    }[cite: 2]
-  } catch(e){}[cite: 2]
-}[cite: 2]
+async function loadFromSupabase(){
+  try {
+    const r = await fetch(`${SB_URL}/vocab_progress?student=eq.${STUDENT}&set_id=eq.${SET_ID}&select=known_words`, {
+      headers: { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY }
+    });
+    if(!r.ok) return;
+    const rows = await r.json();
+    if(rows.length && rows[0].known_words){
+      rows[0].known_words.split(',').forEach(en => {
+        const idx = WORDS.findIndex(w => w.en === en.trim());
+        if(idx >= 0) knownMap[idx] = true;
+      });
+      saveLocal();
+      updateStats();
+      renderDict();
+    }
+  } catch(e){}
+}
 
-function updateStats(){[cite: 2]
-  const k = countKnown();[cite: 2]
-  const pct = Math.round(k / WORDS.length * 100);[cite: 2]
-  const el = id => document.getElementById(id);[cite: 2]
-  if(el('statKnown')) el('statKnown').textContent = k;[cite: 2]
-  if(el('statPct'))   el('statPct').textContent   = pct+'%';[cite: 2]
-  if(el('heroKnown')) el('heroKnown').textContent  = k;[cite: 2]
-  if(el('heroPct'))   el('heroPct').textContent    = pct+'%';[cite: 2]
-}[cite: 2]
+function updateStats(){
+  const k = countKnown();
+  const pct = Math.round(k / WORDS.length * 100);
+  const el = id => document.getElementById(id);
+  if(el('statKnown')) el('statKnown').textContent = k;
+  if(el('statPct'))   el('statPct').textContent   = pct+'%';
+  if(el('heroKnown')) el('heroKnown').textContent  = k;
+  if(el('heroPct'))   el('heroPct').textContent    = pct+'%';
+}
 
-// ─── BUILD PAGE ───────────────────────────────────────────────────────────────
-function buildPage(){[cite: 2]
-  document.title = SET_TITLE + ' — Olya\'s English Space';[cite: 2]
-
-  const hasV2 = WORDS.some(w => w.v2);[cite: 2]
+function buildPage(){
+  document.title = SET_TITLE + ' — Olya\'s English Space';
+  const hasV2 = WORDS.some(w => w.v2);
 
   document.body.innerHTML = `
     <div class="hero">
@@ -290,15 +300,13 @@ function buildPage(){[cite: 2]
       <a href="vocabulary-hub.html" class="active"><span class="nav-icon">💥</span><span class="nav-label">Vocab</span></a>
       <a href="irregular-verbs.html"><span class="nav-icon">⚡</span><span class="nav-label">Verbs</span></a>
     </div>
-  `;[cite: 2]
+  `;
+  renderDict();
+  updateStats();
+}
 
-  renderDict();[cite: 2]
-  updateStats();[cite: 2]
-}[cite: 2]
-
-// ─── DICTIONARY ───────────────────────────────────────────────────────────────
-function renderDict(){[cite: 2]
-  const hasV2 = WORDS.some(w => w.v2);[cite: 2]
+function renderDict(){
+  const hasV2 = WORDS.some(w => w.v2);
   document.getElementById('tab-dict').innerHTML = `
     <table class="dict-table">
       <thead><tr>
@@ -318,40 +326,38 @@ function renderDict(){[cite: 2]
           <td class="ru-word">${w.ru.join(', ')}</td>
         </tr>`).join('')}
       </tbody>
-    </table>`;[cite: 2]
-}[cite: 2]
+    </table>`;
+}
 
-// ─── TABS ─────────────────────────────────────────────────────────────────────
-function switchTab(id){[cite: 2]
-  ['dict','cards','quiz'].forEach((t,i)=>{[cite: 2]
-    document.querySelectorAll('.tab-btn')[i].className = 'tab-btn'+(t===id?' active':'');[cite: 2]
-    document.getElementById('tab-'+t).className = 'tab-pane'+(t===id?' active':'');[cite: 2]
-  });[cite: 2]
-  if(id==='cards') initCards();[cite: 2]
-  if(id==='quiz')  initQuiz();[cite: 2]
-}[cite: 2]
+function switchTab(id){
+  ['dict','cards','quiz'].forEach((t,i)=>{
+    document.querySelectorAll('.tab-btn')[i].className = 'tab-btn'+(t===id?' active':'');
+    document.getElementById('tab-'+t).className = 'tab-pane'+(t===id?' active':'');
+  });
+  if(id==='cards') initCards();
+  if(id==='quiz')  initQuiz();
+}
 
-// ─── FLASHCARDS ───────────────────────────────────────────────────────────────
-let fcWords=[], fcIdx=0;[cite: 2]
+let fcWords=[], fcIdx=0;
 
-function initCards(){[cite: 2]
-  fcWords = shuffle(WORDS.map((w,i)=>({...w,idx:i})));[cite: 2]
-  fcIdx = 0;[cite: 2]
-  showCard();[cite: 2]
-}[cite: 2]
+function initCards(){
+  fcWords = shuffle(WORDS.map((w,i)=>({...w,idx:i})));
+  fcIdx = 0;
+  showCard();
+}
 
-function showCard(){[cite: 2]
-  const cont = document.getElementById('tab-cards');[cite: 2]
-  if(fcIdx >= fcWords.length){[cite: 2]
+function showCard(){
+  const cont = document.getElementById('tab-cards');
+  if(fcIdx >= fcWords.length){
     cont.innerHTML = `<div class="fc-done">
       <div class="fc-done-emoji">🎉</div>
       <div class="fc-done-title">Все карточки пройдены!</div>
       <div class="fc-done-sub">Знаю: ${countKnown()} из ${WORDS.length} слов</div>
       <button class="btn" onclick="initCards()">🔄 Снова</button>
-    </div>`;[cite: 2]
-    return;[cite: 2]
-  }[cite: 2]
-  const w = fcWords[fcIdx];[cite: 2]
+    </div>`;
+    return;
+  }
+  const w = fcWords[fcIdx];
   cont.innerHTML = `
     <div class="fc-counter">${fcIdx+1} / ${fcWords.length}</div>
     <div class="flashcard-wrap" onclick="this.querySelector('.flashcard').classList.toggle('flipped')">
@@ -370,40 +376,39 @@ function showCard(){[cite: 2]
     <div class="fc-btns">
       <button class="fc-btn hard" onclick="markCard(${w.idx},false)">😅 Трудно</button>
       <button class="fc-btn know" onclick="markCard(${w.idx},true)">✅ Знаю!</button>
-    </div>`;[cite: 2]
-}[cite: 2]
+    </div>`;
+}
 
-function markCard(idx, val){[cite: 2]
-  setKnown(idx, val);[cite: 2]
-  fcIdx++;[cite: 2]
-  showCard();[cite: 2]
-}[cite: 2]
+function markCard(idx, val){
+  setKnown(idx, val);
+  fcIdx++;
+  showCard();
+}
 
-// ─── QUIZ ─────────────────────────────────────────────────────────────────────
-let qWords=[], qIdx=0, qCorrect=0, qAnswered=false;[cite: 2]
+let qWords=[], qIdx=0, qCorrect=0, qAnswered=false;
 
-function initQuiz(){[cite: 2]
-  qWords = shuffle([...WORDS.map((w,i)=>({...w,idx:i}))]);[cite: 2]
-  qIdx=0; qCorrect=0; qAnswered=false;[cite: 2]
-  showQuestion();[cite: 2]
-}[cite: 2]
+function initQuiz(){
+  qWords = shuffle([...WORDS.map((w,i)=>({...w,idx:i}))]);
+  qIdx=0; qCorrect=0; qAnswered=false;
+  showQuestion();
+}
 
-function showQuestion(){[cite: 2]
-  const cont = document.getElementById('tab-quiz');[cite: 2]
-  if(qIdx >= qWords.length){[cite: 2]
-    const pct = Math.round(qCorrect/qWords.length*100);[cite: 2]
+function showQuestion(){
+  const cont = document.getElementById('tab-quiz');
+  if(qIdx >= qWords.length){
+    const pct = Math.round(qCorrect/qWords.length*100);
     cont.innerHTML = `<div class="quiz-done">
       <div class="quiz-done-score">${qCorrect}/${qWords.length}</div>
       <div class="quiz-done-msg">${pct>=80?'🎉 Отлично! Слова усвоены!':pct>=50?'👍 Хорошо! Продолжай!':'💪 Повтори карточки и попробуй снова'}</div>
       <button class="btn" onclick="initQuiz()">🔄 Пройти снова</button>
-    </div>`;[cite: 2]
-    return;[cite: 2]
-  }[cite: 2]
-  const w = qWords[qIdx];[cite: 2]
-  const others = shuffle(WORDS.filter(x=>x.en!==w.en)).slice(0,3);[cite: 2]
-  const opts   = shuffle([w,...others]);[cite: 2]
-  const pct    = Math.round(qIdx/qWords.length*100);[cite: 2]
-  qAnswered = false;[cite: 2]
+    </div>`;
+    return;
+  }
+  const w = qWords[qIdx];
+  const others = shuffle(WORDS.filter(x=>x.en!==w.en)).slice(0,3);
+  const opts   = shuffle([w,...others]);
+  const pct    = Math.round(qIdx/qWords.length*100);
+  qAnswered = false;
 
   cont.innerHTML = `
     <div class="quiz-pb-bg"><div class="quiz-pb-fill" style="width:${pct}%"></div></div>
@@ -413,30 +418,29 @@ function showQuestion(){[cite: 2]
     <div class="quiz-opts">${opts.map(o=>`
       <div class="quiz-opt" onclick="answerQuiz(this,'${o.en}','${w.en}',${w.idx})">${o.ru.join(' / ')}</div>
     `).join('')}</div>
-    <div class="quiz-score"></div>`;[cite: 2]
-}[cite: 2]
+    <div class="quiz-score"></div>`;
+}
 
-function answerQuiz(el, chosen, correct, idx){[cite: 2]
-  if(qAnswered) return;[cite: 2]
-  qAnswered = true;[cite: 2]
-  const isOk = chosen === correct;[cite: 2]
-  el.classList.add(isOk ? 'correct' : 'wrong');[cite: 2]
-  if(!isOk){[cite: 2]
-    const cw = WORDS.find(w=>w.en===correct);[cite: 2]
-    [...el.parentNode.children].forEach(c=>{[cite: 2]
-      if(c.textContent.trim() === cw.ru.join(' / ').trim()) c.classList.add('reveal');[cite: 2]
-    });[cite: 2]
-  }[cite: 2]
-  setKnown(idx, isOk);[cite: 2]
-  if(isOk) qCorrect++;[cite: 2]
-  setTimeout(()=>{ qIdx++; showQuestion(); }, isOk ? 600 : 1400);[cite: 2]
-}[cite: 2]
+function answerQuiz(el, chosen, correct, idx){
+  if(qAnswered) return;
+  qAnswered = true;
+  const isOk = chosen === correct;
+  el.classList.add(isOk ? 'correct' : 'wrong');
+  if(!isOk){
+    const cw = WORDS.find(w=>w.en===correct);
+    [...el.parentNode.children].forEach(c=>{
+      if(c.textContent.trim() === cw.ru.join(' / ').trim()) c.classList.add('reveal');
+    });
+  }
+  setKnown(idx, isOk);
+  if(isOk) qCorrect++;
+  setTimeout(()=>{ qIdx++; showQuestion(); }, isOk ? 600 : 1400);
+}
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-loadLocal();[cite: 2]
-buildPage();[cite: 2]
-loadFromSupabase();[cite: 2]
-
+loadLocal();
+buildPage();
+loadFromSupabase();
 </script>
+
 </body>
 </html>
