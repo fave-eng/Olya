@@ -24,6 +24,15 @@
     .hero h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(22px,5vw,34px); font-weight:800; color:#fff; letter-spacing:-.5px; margin-bottom:6px; position:relative; z-index:1; }
     .hero p { color:rgba(255,255,255,.8); font-size:14px; position:relative; z-index:1; }
 
+    /* CORE WRAPPERS FOR MAIN TABS */
+    .main-tab-pane { display: none; }
+    .main-tab-pane.active { display: block; }
+
+    /* SWITCHER FOR HOMEWORK VS VOCAB */
+    .mode-tabs { display: flex; gap: 10px; margin: 20px 0; }
+    .mode-btn { flex: 1; padding: 14px; border: 1.5px solid var(--border); background: var(--card); border-radius: 14px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .mode-btn.active { background: linear-gradient(135deg, var(--rose), var(--orange)); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(244,63,94,0.2); }
+
     .page { max-width:700px; margin:0 auto; padding:0 20px; }
 
     .status-msg { display:none; border-radius:14px; padding:14px 18px; margin:20px 0 4px; font-size:14px; font-weight:600; }
@@ -51,4 +60,671 @@
     input[type="text"].wide { width:100%; max-width:340px; }
     input[type="text"]:focus { outline:none; border-color:var(--indigo); background:#fff; }
     input[type="text"].correct { border-color:var(--emerald)!important; background:#f0fdf4; }
-    input[type="text"].wrong   {
+    input[type="text"].wrong   { border-color:var(--rose)!important; background:#fff5f5; }
+    input[type="text"]:disabled { background:#f1f5f9; color:#475569; cursor:not-allowed; }
+
+    textarea { padding:10px 12px; font-size:14px; font-family:inherit; border:1.5px solid var(--border); border-radius:9px; background:#fafbff; color:var(--text); width:100%; resize:vertical; min-height:70px; }
+    textarea:focus { outline:none; border-color:var(--indigo); background:#fff; }
+    textarea:disabled { background:#f1f5f9; color:#475569; cursor:not-allowed; }
+
+    .feedback { font-size:12px; font-weight:600; margin-top:3px; display:none; }
+    .feedback.ok  { color:var(--emerald); display:block; }
+    .feedback.bad { color:var(--rose); display:block; }
+
+    .check-btn { margin-top:12px; padding:9px 20px; background:#f1f5f9; border:1.5px solid var(--border); border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:700; cursor:pointer; color:var(--text); transition:all .2s; }
+    .check-btn:hover { background:#e2e8f0; }
+    .check-btn:disabled { opacity:.4; cursor:not-allowed; }
+
+    .qa-block { border-top:1px solid var(--border); padding-top:12px; margin-top:12px; }
+    .qa-block:first-child { border-top:none; padding-top:0; margin-top:0; }
+    .qa-lbl { font-size:12px; font-weight:700; color:var(--muted); margin-bottom:4px; }
+
+    .submit-btn { width:100%; padding:16px; background:linear-gradient(135deg,#f43f5e,#fb923c); color:#fff; border:none; border-radius:14px; font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; cursor:pointer; margin-top:6px; display:flex; align-items:center; justify-content:center; gap:10px; transition:opacity .2s, transform .2s; }
+    .submit-btn:hover:not(:disabled) { opacity:.92; transform:translateY(-1px); }
+    .submit-btn:disabled { opacity:.55; cursor:not-allowed; transform:none; }
+
+    /* VOCABULARY EMBEDDED STYLES */
+    .stats-row { display:flex; gap:12px; margin-bottom:20px; }
+    .stat-chip { background:var(--card); border-radius:16px; border:1.5px solid var(--border); padding:14px 16px; flex:1; text-align:center; }
+    .sc-num { font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:800; }
+    .sc-lbl { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+    .sc-known .sc-num { color:var(--emerald); }
+    .sc-total .sc-num { color:var(--orange); }
+    .sc-pct   .sc-num { color:var(--rose); }
+
+    .tabs-wrap { background:var(--card); border-radius:18px; border:1.5px solid var(--border); overflow:hidden; margin-bottom:20px; }
+    .tabs { display:flex; padding:6px; gap:4px; border-bottom:1px solid var(--border); background: #f8fafc; }
+    .tab-btn { flex:1; padding:10px; border:none; background:none; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; color:var(--muted); transition:all .2s; font-family:'Inter',sans-serif; }
+    .tab-btn.active { background:linear-gradient(135deg,var(--rose),var(--orange)); color:#fff; }
+    .tab-pane { display:none; padding:20px; }
+    .tab-pane.active { display:block; }
+
+    .dict-table { width:100%; border-collapse:collapse; font-size:14px; }
+    .dict-table th { padding:9px 12px; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); border-bottom:1px solid var(--border); }
+    .dict-table td { padding:9px 12px; border-bottom:1px solid var(--border); vertical-align: middle; }
+    .dict-table tr:last-child td { border-bottom:none; }
+    .dict-table .en-word { font-weight:700; font-size:15px; color: var(--text); }
+    .dict-table .ru-word { color:var(--muted); }
+    .dict-table .ex-word { font-size:12px; color:#94a3b8; font-style:italic; margin-top:2px; }
+    .known-dot { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+    .known-dot.known { background:var(--emerald); }
+
+    .fc-counter { text-align:center; font-size:13px; color:var(--muted); margin-bottom:12px; }
+    .flashcard-wrap { perspective:800px; height:180px; cursor:pointer; margin-bottom:18px; }
+    .flashcard { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .45s; }
+    .flashcard.flipped { transform:rotateY(180deg); }
+    .card-face { position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:18px; border:1.5px solid var(--border); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; }
+    .card-front { background:linear-gradient(135deg,#fff,#fff8f8); }
+    .card-back  { background:linear-gradient(135deg,#f0fdf4,#fff); transform:rotateY(180deg); }
+    .card-word  { font-family:'Plus Jakarta Sans',sans-serif; font-size:26px; font-weight:800; margin-bottom:6px; color: var(--text); }
+    .card-tap   { font-size:12px; color:var(--muted); }
+    .card-trans { font-family:'Plus Jakarta Sans',sans-serif; font-size:20px; font-weight:700; color:var(--emerald); margin-bottom:6px; }
+    .card-ex    { font-size:12px; color:var(--muted); font-style:italic; line-height:1.5; }
+    .fc-btns { display:flex; gap:10px; }
+    .fc-btn { flex:1; padding:12px; border:none; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; transition:all .15s; }
+    .fc-btn.know { background:#d1fae5; color:#065f46; }
+    .fc-btn.know:hover { background:#a7f3d0; }
+    .fc-btn.hard { background:#fce7f3; color:#9d174d; }
+    .fc-btn.hard:hover { background:#fbcfe8; }
+    .fc-done { text-align:center; padding:30px; }
+    .fc-done-emoji { font-size:40px; margin-bottom:8px; }
+    .fc-done-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:800; margin-bottom:6px; }
+    .fc-done-sub { font-size:13px; color:var(--muted); margin-bottom:18px; }
+
+    .quiz-pb-bg { height:5px; background:var(--bg); border-radius:100px; overflow:hidden; margin-bottom:12px; }
+    .quiz-pb-fill { height:100%; background:linear-gradient(90deg,var(--rose),var(--orange)); border-radius:100px; transition:width .4s; }
+    .quiz-counter { font-size:12px; color:var(--muted); text-align:right; margin-bottom:10px; }
+    .quiz-word { font-family:'Plus Jakarta Sans',sans-serif; font-size:26px; font-weight:800; text-align:center; margin-bottom:14px; }
+    .quiz-opts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+    .quiz-opt { padding:12px; border-radius:10px; border:1.5px solid var(--border); cursor:pointer; font-size:13px; font-weight:600; text-align:center; transition:all .15s; font-family:'Plus Jakarta Sans',sans-serif; background: var(--card); }
+    .quiz-opt:hover { border-color:var(--rose); background:#fff8f8; }
+    .quiz-opt.correct { border-color:var(--emerald)!important; background:#f0fdf4!important; pointer-events:none; }
+    .quiz-opt.wrong   { border-color:#ef4444!important; background:#fef2f2!important; pointer-events:none; }
+    .quiz-opt.reveal  { border-color:var(--emerald)!important; background:#f0fdf4!important; pointer-events:none; }
+    .quiz-score { font-size:13px; color:var(--muted); text-align:center; }
+    .quiz-done { text-align:center; padding:24px; }
+    .quiz-done-score { font-family:'Plus Jakarta Sans',sans-serif; font-size:36px; font-weight:800; color:var(--rose); margin-bottom:6px; }
+    .quiz-done-msg  { font-size:14px; color:var(--muted); margin-bottom:18px; }
+    .btn { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg,var(--rose),var(--orange)); color:#fff; border:none; border-radius:12px; padding:10px 24px; font-size:14px; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; }
+
+    .nav-pill { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#0f172a; border-radius:100px; padding:8px 10px; display:flex; gap:4px; box-shadow:0 8px 32px rgba(15,23,42,.35); z-index:999; white-space:nowrap; }
+    .nav-pill a { display:flex; align-items:center; gap:6px; color:rgba(255,255,255,.55); font-size:13px; font-weight:600; text-decoration:none; padding:8px 16px; border-radius:100px; transition:all .2s; }
+    .nav-pill a .nav-icon { font-size:16px; }
+    .nav-pill a:hover { color:rgba(255,255,255,.9); background:rgba(255,255,255,.08); }
+    .nav-pill a.active { background:var(--rose); color:#fff; }
+    @media(max-width:480px){ .nav-pill a span.nav-label { display:none; } .nav-pill a { padding:8px 12px; } .quiz-opts { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="page">
+    <a href="homework.html" class="hero-back">← Все задания</a>
+    <div class="hero-eyebrow">📝 Homework 3</div>
+    <h1>Vocabulary: Holidays</h1>
+    <p>Фразы про отпуск, прилагательные и вопросы в Past Simple</p>
+  </div>
+</div>
+<div class="hero-wave">
+  <svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="background:linear-gradient(135deg,#f43f5e,#fb923c 50%,#f59e0b)">
+    <path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#f1f5f9"/>
+  </svg>
+</div>
+
+<div class="page">
+
+  <!-- MAIN MODE TABS -->
+  <div class="mode-tabs">
+    <button class="mode-btn active" id="btn-mode-hw" onclick="switchMode('hw')">📝 Домашняя работа</button>
+    <button class="mode-btn" id="btn-mode-vocab" onclick="switchMode('vocab')">🏖️ Слова урока</button>
+  </div>
+
+  <!-- CONTAINER 1: HOMEWORK MAIN CONTENT -->
+  <div id="pane-mode-hw" class="main-tab-pane active">
+    <div id="statusMsg" class="status-msg"></div>
+
+    <div class="section-lbl">Прогресс домашней работы</div>
+    <div class="progress-wrap">
+      <div class="progress-row">
+        <span>Верных ответов</span>
+        <span id="progText">0 / 28</span>
+      </div>
+      <div class="progress-bg"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="section-lbl">Упражнения</div>
+
+    <!-- EX A: Phrases -->
+    <div class="ex-card">
+      <div class="ex-head">
+        <div class="ex-num">A</div>
+        <h2>Complete the phrases</h2>
+      </div>
+      <div class="ex-body">
+        <div class="ex-sub">Дополни фразы про отпуск (1 — пример).</div>
+        <div class="q-example">1. <b>go camping</b> — пример, уже дано ✓</div>
+
+        <div class="q-row"><span class="q-num">2.</span> go <input type="text" data-id="a2" placeholder="…">
+          <div class="feedback" id="fb-a2"></div></div>
+        <div class="q-row"><span class="q-num">3.</span> <input type="text" data-id="a3" placeholder="…"> a flight online
+          <div class="feedback" id="fb-a3"></div></div>
+        <div class="q-row"><span class="q-num">4.</span> go <input type="text" data-id="a4" placeholder="…">
+          <div class="feedback" id="fb-a4"></div></div>
+        <div class="q-row"><span class="q-num">5.</span> <input type="text" data-id="a5" placeholder="…"> swimming
+          <div class="feedback" id="fb-a5"></div></div>
+        <div class="q-row"><span class="q-num">6.</span> go <input type="text" data-id="a6" placeholder="…"> at night
+          <div class="feedback" id="fb-a6"></div></div>
+        <div class="q-row"><span class="q-num">7.</span> <input type="text" data-id="a7" placeholder="…"> in a hotel
+          <div class="feedback" id="fb-a7"></div></div>
+        <div class="q-row"><span class="q-num">8.</span> go <input type="text" data-id="a8" placeholder="…">
+          <div class="feedback" id="fb-a8"></div></div>
+        <div class="q-row"><span class="q-num">9.</span> <input type="text" data-id="a9" placeholder="…"> on the beach
+          <div class="feedback" id="fb-a9"></div></div>
+        <div class="q-row"><span class="q-num">10.</span> go <input type="text" data-id="a10" placeholder="…"> for the weekend
+          <div class="feedback" id="fb-a10"></div></div>
+
+        <button class="check-btn" id="check-a" onclick="checkA()">Проверить A</button>
+      </div>
+    </div>
+
+    <!-- EX B: Adjectives -->
+    <div class="ex-card">
+      <div class="ex-head">
+        <div class="ex-num">B</div>
+        <h2>Complete with an adjective</h2>
+      </div>
+      <div class="ex-body">
+        <div class="ex-sub">Дополни предложения прилагательным (1 — пример: comfortable).</div>
+        <div class="q-example">1. We loved our room. It was very <b>comfortable</b>.</div>
+
+        <div class="q-row"><span class="q-num">2.</span> The weather was warm and s<input type="text" data-id="b2" placeholder="…"> every day.
+          <div class="feedback" id="fb-b2"></div></div>
+        <div class="q-row"><span class="q-num">3.</span> There were a lot of people on the beach. It was very cr<input type="text" data-id="b3" placeholder="…">.
+          <div class="feedback" id="fb-b3"></div></div>
+        <div class="q-row"><span class="q-num">4.</span> The hotel was on a busy road, so it was really n<input type="text" data-id="b4" placeholder="…">.
+          <div class="feedback" id="fb-b4"></div></div>
+        <div class="q-row"><span class="q-num">5.</span> The staff in the hotel were very unh<input type="text" data-id="b5" placeholder="…"> and sometimes quite unfriendly.
+          <div class="feedback" id="fb-b5"></div></div>
+        <div class="q-row"><span class="q-num">6.</span> There wasn't much in the apartment. It was very b<input type="text" data-id="b6" placeholder="…">. It didn't even have a fridge.
+          <div class="feedback" id="fb-b6"></div></div>
+        <div class="q-row"><span class="q-num">7.</span> The other people on the trip were very fr<input type="text" data-id="b7" placeholder="…">. We made some good friends.
+          <div class="feedback" id="fb-b7"></div></div>
+        <div class="q-row"><span class="q-num">8.</span> The town was l<input type="text" data-id="b8" placeholder="…">. All the houses had flowers on the balcony and were painted different colours.
+          <div class="feedback" id="fb-b8"></div></div>
+        <div class="q-row"><span class="q-num">9.</span> It was cl<input type="text" data-id="b9" placeholder="…"> all day, so we couldn't sunbathe.
+          <div class="feedback" id="fb-b9"></div></div>
+        <div class="q-row"><span class="q-num">10.</span> The apartment was very l<input type="text" data-id="b10" placeholder="…"> — it was full of expensive furniture and very comfortable!
+          <div class="feedback" id="fb-b10"></div></div>
+
+        <button class="check-btn" id="check-b" onclick="checkB()">Проверить B</button>
+      </div>
+    </div>
+
+    <!-- EX C: Questions -->
+    <div class="ex-card">
+      <div class="ex-head">
+        <div class="ex-num">C</div>
+        <h2>Write the questions and Lucy's answers</h2>
+      </div>
+      <div class="ex-body">
+        <div class="ex-sub">Составь вопрос из слов и напиши ответ Люси (1 — пример).</div>
+        <div class="q-example">1. Where / you go → <b>Where did you go?</b> — Greece → <b>I went to Greece.</b></div>
+
+        <div class="qa-block">
+          <div class="qa-lbl">2. How / you / get there (plane)</div>
+          Вопрос: <input type="text" class="wide" data-id="c2q" placeholder="Напиши вопрос..."><br>
+          Ответ Люси: <input type="text" class="wide" data-id="c2a" placeholder="Напиши ответ...">
+          <div class="feedback" id="fb-c2q"></div>
+          <div class="feedback" id="fb-c2a"></div>
+        </div>
+
+        <div class="qa-block">
+          <div class="qa-lbl">3. Where / you / stay (hotel)</div>
+          Вопрос: <input type="text" class="wide" data-id="c3q" placeholder="Напиши вопрос..."><br>
+          Ответ Люси: <input type="text" class="wide" data-id="c3a" placeholder="Напиши ответ...">
+          <div class="feedback" id="fb-c3q"></div>
+          <div class="feedback" id="fb-c3a"></div>
+        </div>
+
+        <div class="qa-block">
+          <div class="qa-lbl">4. How long / you / stay (ten days)</div>
+          Вопрос: <input type="text" class="wide" data-id="c4q" placeholder="Напиши вопрос..."><br>
+          Ответ Люси: <input type="text" class="wide" data-id="c4a" placeholder="Напиши ответ...">
+          <div class="feedback" id="fb-c4q"></div>
+          <div class="feedback" id="fb-c4a"></div>
+        </div>
+
+        <div class="qa-block">
+          <div class="qa-lbl">5. What / you / do (went swimming)</div>
+          Вопрос: <input type="text" class="wide" data-id="c5q" placeholder="Напиши вопрос..."><br>
+          Ответ Люси: <input type="text" class="wide" data-id="c5a" placeholder="Напиши ответ...">
+          <div class="feedback" id="fb-c5q"></div>
+          <div class="feedback" id="fb-c5a"></div>
+        </div>
+
+        <div class="qa-block">
+          <div class="qa-lbl">6. What / be / weather like (sunny)</div>
+          Вопрос: <input type="text" class="wide" data-id="c6q" placeholder="Напиши вопрос..."><br>
+          Ответ Люси: <input type="text" class="wide" data-id="c6a" placeholder="Напиши ответ...">
+          <div class="feedback" id="fb-c6q"></div>
+          <div class="feedback" id="fb-c6a"></div>
+        </div>
+
+        <button class="check-btn" id="check-c" onclick="checkC()">Проверить C</button>
+      </div>
+    </div>
+
+    <!-- EX D: Own answers -->
+    <div class="ex-card">
+      <div class="ex-head">
+        <div class="ex-num">D</div>
+        <h2>Write about your last holiday</h2>
+      </div>
+      <div class="ex-body">
+        <div class="ex-sub">Ответь своими словами на вопросы из C (2–6) про свой последний отпуск. Это задание не проверяется автоматически — учитель посмотрит вручную.</div>
+        <textarea id="d-answer" placeholder="Например: On my last holiday, I went to... I got there by... I stayed in... I stayed for... I went... The weather was..."></textarea>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitAll()">
+      <span>🚀</span> Отправить результаты домашней работы
+    </button>
+  </div>
+
+  <!-- CONTAINER 2: VOCABULARY ENGINE CONTENT -->
+  <div id="pane-mode-vocab" class="main-tab-pane">
+    <div class="stats-row">
+      <div class="stat-chip sc-known"><div class="sc-num" id="statKnown">0</div><div class="sc-lbl">Знаю</div></div>
+      <div class="stat-chip sc-total"><div class="sc-num">20</div><div class="sc-lbl">Всего слов</div></div>
+      <div class="stat-chip sc-pct"><div class="sc-num" id="statPct">0%</div><div class="sc-lbl">Прогресс</div></div>
+    </div>
+
+    <div class="tabs-wrap">
+      <div class="tabs">
+        <button class="tab-btn active" id="sub-btn-dict" onclick="switchVocabTab('dict')">📋 Словарь</button>
+        <button class="tab-btn" id="sub-btn-cards" onclick="switchVocabTab('cards')">🃏 Карточки</button>
+        <button class="tab-btn" id="sub-btn-quiz" onclick="switchVocabTab('quiz')">🎯 Тест</button>
+      </div>
+      <div class="tab-pane active" id="tab-dict"></div>
+      <div class="tab-pane"        id="tab-cards"></div>
+      <div class="tab-pane"        id="tab-quiz"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav-pill">
+  <a href="index.html"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="homework.html" class="active"><span class="nav-icon">📝</span><span class="nav-label">HW</span></a>
+  <a href="grammar.html"><span class="nav-icon">📐</span><span class="nav-label">Grammar</span></a>
+  <a href="vocabulary-hub.html"><span class="nav-icon">💥</span><span class="nav-label">Vocab</span></a>
+  <a href="irregular-verbs.html"><span class="nav-icon">⚡</span><span class="nav-label">Verbs</span></a>
+</div>
+
+<script>
+// ─── UTILS & CONFIGS ─────────────────────────────────────────────────────────
+const SB_URL  = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
+const TG_BOT  = '8780310968:AAE2nZnb0ENFPbYDZ0W8cmDF-JpDaqix-SE';
+const TG_CHAT = '-1003908088903';
+const STUDENT = 'olya';
+const HW_ID   = 'hw3';
+const SET_ID  = 'holidays';
+const LS_VOCAB_KEY  = 'olya_vocab_' + SET_ID;
+
+function sbH(){ return { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates,return=minimal' }; }
+
+// ─── DATA SEEDS ──────────────────────────────────────────────────────────────
+const ANSWERS = {
+  a2: ['for a walk'], a3: ['book'], a4: ['abroad'], a5: ['go'], a6: ['out'], a7: ['stay'], a8: ['sightseeing'], a9: ['sunbathe'], a10:['away'],
+  b2: ['sunny'], b3: ['crowded'], b4: ['noisy'], b5: ['unhelpful'], b6: ['basic'], b7: ['friendly'], b8: ['lovely'], b9: ['cloudy'], b10:['luxurious'],
+  c2q: ['how did you get there'], c2a: ['i went by plane'], c3q: ['where did you stay'], c3a: ['i stayed in a hotel'], c4q: ['how long did you stay'], c4a: ['i stayed for ten days'], c5q: ['what did you do'], c5a: ['i went swimming'], c6q: ['what was the weather like'], c6a: ['it was sunny']
+};
+
+const WORDS = [
+  { en:"go camping",              ru:["ехать в поход","отправиться в кемпинг"],          ex:"We went camping in the mountains." },
+  { en:"go for a walk",           ru:["пойти гулять","прогуляться"],                     ex:"Let's go for a walk on the beach." },
+  { en:"book a flight online",    ru:["забронировать билет онлайн"],                     ex:"I booked a flight online for our trip." },
+  { en:"go abroad",               ru:["поехать за границу"],                             ex:"They went abroad for their holiday." },
+  { en:"go swimming",             ru:["пойти плавать"],                                  ex:"We went swimming in the sea every day." },
+  { en:"go out at night",         ru:["выходить куда-то вечером","гулять по ночам"],     ex:"We went out at night to see the city lights." },
+  { en:"stay in a hotel",         ru:["останавливаться в отеле"],                        ex:"We stayed in a hotel near the beach." },
+  { en:"go sightseeing",          ru:["осматривать достопримечательности"],              ex:"We went sightseeing around the old town." },
+  { en:"sunbathe on the beach",   ru:["загорать на пляже"],                              ex:"She sunbathed on the beach all afternoon." },
+  { en:"go away for the weekend", ru:["уехать на выходные"],                             ex:"We went away for the weekend to the countryside." },
+  { en:"comfortable",             ru:["удобный","комфортный"],                            ex:"Our room was very comfortable." },
+  { en:"sunny",                   ru:["солнечный"],                                       ex:"It was warm and sunny every day." },
+  { en:"crowded",                 ru:["многолюдный","переполненный"],                     ex:"The beach was very crowded in summer." },
+  { en:"noisy",                   ru:["шумный"],                                          ex:"The hotel was on a busy road, so it was noisy." },
+  { en:"unhelpful",               ru:["неотзывчивый","не готовый помочь"],                ex:"The staff were unhelpful and unfriendly." },
+  { en:"basic",                   ru:["простой","базовый","скромный"],                    ex:"The apartment was very basic, no fridge at all." },
+  { en:"friendly",                ru:["дружелюбный"],                                     ex:"The other people on the trip were very friendly." },
+  { en:"lovely",                  ru:["прекрасный","чудесный"],                           ex:"The town was lovely, with flowers everywhere." },
+  { en:"cloudy",                  ru:["облачный","пасмурный"],                            ex:"It was cloudy all day, so we couldn't sunbathe." },
+  { en:"luxurious",               ru:["роскошный"],                                       ex:"The apartment was very luxurious and comfortable." }
+];
+
+// ─── STATE MANAGEMENT ────────────────────────────────────────────────────────
+const scores = { a: null, b: null, c: null };
+let knownMap = {};
+function norm(s){ return (s||'').toLowerCase().trim().replace(/[.!?]+$/,'').replace(/\s+/g,' '); }
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+
+function switchMode(mode) {
+  document.querySelectorAll('.main-tab-pane').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.mode-btn').forEach(el => el.classList.remove('active'));
+  
+  document.getElementById('pane-mode-' + mode).classList.add('active');
+  document.getElementById('btn-mode-' + mode).classList.add('active');
+
+  if (mode === 'vocab') {
+    renderDict();
+    updateVocabStats();
+  }
+}
+
+// ─── HOMEWORK ENGINE ─────────────────────────────────────────────────────────
+function updateProgress(){
+  const all = Object.values(scores).filter(s => s !== null);
+  const ok  = all.reduce((a,s) => a + s.ok, 0);
+  const tot = all.reduce((a,s) => a + s.total, 0);
+  document.getElementById('progText').textContent = `${ok} / ${tot}`;
+  document.getElementById('progFill').style.width  = tot > 0 ? Math.round(ok/tot*100)+'%' : '0%';
+}
+
+function checkFields(ids, group){
+  let ok = 0, total = 0;
+  ids.forEach(id => {
+    const inp = document.querySelector(`input[data-id="${id}"]`);
+    const fb  = document.getElementById(`fb-${id}`);
+    const val = inp.value.trim();
+    const good = (ANSWERS[id] || []).map(norm).includes(norm(val));
+    total++;
+    inp.classList.remove('correct','wrong');
+    fb.classList.remove('ok','bad');
+    inp.classList.add(good ? 'correct' : 'wrong');
+    fb.textContent = good ? '✓ Верно!' : '✗ Попробуй ещё раз';
+    fb.className = 'feedback ' + (good ? 'ok' : 'bad');
+    if(good) ok++;
+  });
+  scores[group] = { ok, total };
+  updateProgress();
+}
+
+function checkA(){ checkFields(['a2','a3','a4','a5','a6','a7','a8','a9','a10'], 'a'); }
+function checkB(){ checkFields(['b2','b3','b4','b5','b6','b7','b8','b9','b10'], 'b'); }
+function checkC(){ checkFields(['c2q','c2a','c3q','c3a','c4q','c4a','c5q','c5a','c6q','c6a'], 'c'); }
+
+function lockAll(){
+  document.querySelectorAll('#pane-mode-hw input').forEach(inp => inp.disabled = true);
+  document.querySelectorAll('#pane-mode-hw textarea').forEach(t => t.disabled = true);
+  document.querySelectorAll('#pane-mode-hw .check-btn').forEach(b => { b.disabled = true; b.style.display = 'none'; });
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '✅ Уже отправлено';
+  btn.style.background = '#d1fae5';
+  btn.style.color = '#064e3b';
+}
+
+function saveAnswers(scoreStr){
+  const inputs = {};
+  document.querySelectorAll('input[data-id]').forEach(inp => { inputs[inp.dataset.id] = inp.value; });
+  const dAnswer = document.getElementById('d-answer').value;
+  const data = { score: scoreStr, scores, inputs, dAnswer, submitted_at: new Date().toISOString() };
+  localStorage.setItem('olya_hw3_done',    '1');
+  localStorage.setItem('olya_hw3_score',   scoreStr);
+  localStorage.setItem('olya_hw3_answers', JSON.stringify(data));
+}
+
+function restoreIfSubmitted(){
+  if(!localStorage.getItem('olya_hw3_done')) return;
+  const raw = localStorage.getItem('olya_hw3_answers');
+  if(!raw) return;
+  try {
+    const saved = JSON.parse(raw);
+    Object.entries(saved.inputs || {}).forEach(([id, val]) => {
+      const inp = document.querySelector(`input[data-id="${id}"]`);
+      if(!inp) return;
+      inp.value = val;
+      const good = (ANSWERS[id]||[]).map(norm).includes(norm(val));
+      inp.classList.add(good ? 'correct' : 'wrong');
+      const fb = document.getElementById(`fb-${id}`);
+      if(fb){ fb.textContent = good ? '✓ Верно!' : '✗'; fb.className = 'feedback '+(good?'ok':'bad'); }
+    });
+    if(saved.dAnswer) document.getElementById('d-answer').value = saved.dAnswer;
+    if(saved.scores) Object.assign(scores, saved.scores);
+    updateProgress();
+    const dt = saved.submitted_at ? new Date(saved.submitted_at).toLocaleString('ru-RU') : '';
+    const statusEl = document.getElementById('statusMsg');
+    statusEl.className = 'status-msg ok';
+    statusEl.textContent = `✅ Уже отправлено${dt ? ' ('+dt+')' : ''}. Результат: ${saved.score}`;
+    lockAll();
+  } catch(e){}
+}
+
+function buildTelegramMessage(){
+  const now = new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
+  const all = Object.values(scores).filter(s => s !== null);
+  const totalOk  = all.reduce((a,s) => a + s.ok, 0);
+  const totalAll = all.reduce((a,s) => a + s.total, 0);
+  const v = id => document.querySelector(`input[data-id="${id}"]`)?.value || '?';
+  const check = (id, val) => (ANSWERS[id]||[]).map(norm).includes(norm(val)) ? 'OK' : 'WRONG';
+  const dAnswer = document.getElementById('d-answer').value || '(пусто)';
+
+  let msg = `Homework 3 — Vocabulary: Holidays\nВремя: ${now}\nУченик: ${STUDENT}\n\nИтог: ${totalOk}/${totalAll}\n---\nA. Phrases:\n`;
+  ['a2','a3','a4','a5','a6','a7','a8','a9','a10'].forEach(id => { msg += `  ${id} -> "${v(id)}" [${check(id, v(id))}]\n`; });
+  msg += `B. Adjectives:\n`;
+  ['b2','b3','b4','b5','b6','b7','b8','b9','b10'].forEach(id => { msg += `  ${id} -> "${v(id)}" [${check(id, v(id))}]\n`; });
+  msg += `C. Questions & answers:\n`;
+  ['c2q','c2a','c3q','c3a','c4q','c4a','c5q','c5a','c6q','c6a'].forEach(id => { msg += `  ${id} -> "${v(id)}" [${check(id, v(id))}]\n`; });
+  msg += `D. Своя история (не проверяется):\n  ${dAnswer}\n---\nSupabase hw_id: ${HW_ID}`;
+  return msg;
+}
+
+async function submitAll(){
+  const btn = document.getElementById('submitBtn');
+  const statusEl = document.getElementById('statusMsg');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Отправляю…';
+
+  checkA(); checkB(); checkC();
+
+  const all = Object.values(scores).filter(s => s !== null);
+  const totalOk  = all.reduce((a,s) => a + s.ok, 0);
+  const totalAll = all.reduce((a,s) => a + s.total, 0);
+  const scoreStr = `${totalOk}/${totalAll}`;
+  saveAnswers(scoreStr);
+
+  const dAnswer = document.getElementById('d-answer').value;
+
+  const sbPromise = fetch(`${SB_URL}/homework_results?on_conflict=student,hw_id`, {
+    method: 'POST',
+    headers: sbH(),
+    body: JSON.stringify({
+      student: STUDENT, hw_id: HW_ID, score: scoreStr,
+      score_1a: scores.a ? `${scores.a.ok}/${scores.a.total}` : null,
+      score_1b: scores.b ? `${scores.b.ok}/${scores.b.total}` : null,
+      score_1c: scores.c ? `${scores.c.ok}/${scores.c.total}` : null,
+      own_story: dAnswer, submitted_at: new Date().toISOString()
+    })
+  }).then(r => r.ok || r.status === 201).catch(() => false);
+
+  const tgPromise = fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ chat_id: TG_CHAT, text: buildTelegramMessage() })
+  }).then(r => r.ok).catch(() => false);
+
+  const [sbOk, tgOk] = await Promise.allSettled([sbPromise, tgPromise]).then(rs => rs.map(r => r.status === 'fulfilled' ? r.value : false));
+  statusEl.className = 'status-msg ok';
+  statusEl.textContent = `Результат: ${scoreStr} | ` + (sbOk ? 'Supabase OK' : 'Supabase — ОШИБКА!') + ' | ' + (tgOk ? 'Telegram OK' : 'Telegram — ОШИБКА!');
+  lockAll();
+}
+
+// ─── VOCABULARY ENGINE ───────────────────────────────────────────────────────
+function loadVocabLocal(){ try { knownMap = JSON.parse(localStorage.getItem(LS_VOCAB_KEY)||'{}'); } catch(e){ knownMap = {}; } }
+function saveVocabLocal(){ localStorage.setItem(LS_VOCAB_KEY, JSON.stringify(knownMap)); }
+
+function setWordKnown(idx, val){
+  knownMap[idx] = val;
+  saveVocabLocal();
+  saveVocabToSupabase();
+  updateVocabStats();
+  renderDict();
+}
+
+function countKnownWords(){ return Object.values(knownMap).filter(Boolean).length; }
+
+function updateVocabStats(){
+  const k = countKnownWords();
+  const pct = Math.round(k / WORDS.length * 100);
+  if(document.getElementById('statKnown')) document.getElementById('statKnown').textContent = k;
+  if(document.getElementById('statPct'))   document.getElementById('statPct').textContent   = pct+'%';
+}
+
+async function saveVocabToSupabase(){
+  const knownWords = WORDS.filter((_,i) => knownMap[i]).map(w => w.en);
+  try {
+    await fetch(`${SB_URL}/vocab_progress`, {
+      method: 'POST',
+      headers: sbH(),
+      body: JSON.stringify({ student:STUDENT, set_id:SET_ID, known_count:knownWords.length, known_words:knownWords.join(','), updated_at:new Date().toISOString() })
+    });
+  } catch(e){}
+}
+
+async function loadVocabFromSupabase(){
+  try {
+    const r = await fetch(`${SB_URL}/vocab_progress?student=eq.${STUDENT}&set_id=eq.${SET_ID}&select=known_words`, { headers: { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY } });
+    if(!r.ok) return;
+    const rows = await r.json();
+    if(rows.length && rows[0].known_words){
+      rows[0].known_words.split(',').forEach(en => {
+        const idx = WORDS.findIndex(w => w.en === en.trim());
+        if(idx >= 0) knownMap[idx] = true;
+      });
+      saveVocabLocal();
+      updateVocabStats();
+      renderDict();
+    }
+  } catch(e){}
+}
+
+function renderDict(){
+  document.getElementById('tab-dict').innerHTML = `
+    <table class="dict-table">
+      <thead><tr><th></th><th>English</th><th>Русский</th></tr></thead>
+      <tbody>${WORDS.map((w,i)=>`
+        <tr>
+          <td><span class="known-dot${knownMap[i]?' known':''}"></span></td>
+          <td><div class="en-word">${w.en}</div>${w.ex ? '<div class="ex-word">'+w.ex+'</div>' : ''}</td>
+          <td class="ru-word">${w.ru.join(', ')}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+function switchVocabTab(id){
+  ['dict','cards','quiz'].forEach((t, i)=>{
+    document.getElementById('sub-btn-'+t).classList.toggle('active', t === id);
+    document.getElementById('tab-'+t).classList.toggle('active', t === id);
+  });
+  if(id==='cards') initCards();
+  if(id==='quiz')  initQuiz();
+}
+
+// ─── FLASHCARDS MODE ─────────────────────────────────────────────────────────
+let fcWords=[], fcIdx=0;
+function initCards(){
+  fcWords = shuffle(WORDS.map((w,i)=>({...w,idx:i})));
+  fcIdx = 0;
+  showCard();
+}
+function showCard(){
+  const cont = document.getElementById('tab-cards');
+  if(fcIdx >= fcWords.length){
+    cont.innerHTML = `<div class="fc-done">
+      <div class="fc-done-emoji">🎉</div>
+      <div class="fc-done-title">Все карточки пройдены!</div>
+      <div class="fc-done-sub">Знаю: ${countKnownWords()} из ${WORDS.length} слов</div>
+      <button class="btn" onclick="initCards()">🔄 Снова</button>
+    </div>`;
+    return;
+  }
+  const w = fcWords[fcIdx];
+  cont.innerHTML = `
+    <div class="fc-counter">${fcIdx+1} / ${fcWords.length}</div>
+    <div class="flashcard-wrap" onclick="this.querySelector('.flashcard').classList.toggle('flipped')">
+      <div class="flashcard">
+        <div class="card-face card-front">
+          <div class="card-word">${w.en}</div>
+          <div class="card-tap">👆 нажми чтобы увидеть перевод</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-trans">${w.ru.join(', ')}</div>
+          ${w.ex ? '<div class="card-ex">"'+w.ex+'"</div>' : ''}
+        </div>
+      </div>
+    </div>
+    <div class="fc-btns">
+      <button class="fc-btn hard" onclick="markCard(${w.idx},false)">😅 Трудно</button>
+      <button class="fc-btn know" onclick="markCard(${w.idx},true)">✅ Знаю!</button>
+    </div>`;
+}
+function markCard(idx, val){ setWordKnown(idx, val); fcIdx++; showCard(); }
+
+// ─── QUIZ MODE ───────────────────────────────────────────────────────────────
+let qWords=[], qIdx=0, qCorrect=0, qAnswered=false;
+function initQuiz(){
+  qWords = shuffle([...WORDS.map((w,i)=>({...w,idx:i}))]);
+  qIdx=0; qCorrect=0; qAnswered=false;
+  showQuestion();
+}
+function showQuestion(){
+  const cont = document.getElementById('tab-quiz');
+  if(qIdx >= qWords.length){
+    const pct = Math.round(qCorrect/qWords.length*100);
+    cont.innerHTML = `<div class="quiz-done">
+      <div class="quiz-done-score">${qCorrect}/${qWords.length}</div>
+      <div class="quiz-done-msg">${pct>=80?'🎉 Отлично! Слова усвоены!':pct>=50?'👍 Хорошо! Продолжай!':'💪 Повтори карточки и попробуй снова'}</div>
+      <button class="btn" onclick="initQuiz()">🔄 Пройти снова</button>
+    </div>`;
+    return;
+  }
+  const w = qWords[qIdx];
+  const others = shuffle(WORDS.filter(x=>x.en!==w.en)).slice(0,3);
+  const opts   = shuffle([w,...others]);
+  const pct    = Math.round(qIdx/qWords.length*100);
+  qAnswered = false;
+
+  cont.innerHTML = `
+    <div class="quiz-pb-bg"><div class="quiz-pb-fill" style="width:${pct}%"></div></div>
+    <div class="quiz-counter">${qIdx+1} / ${qWords.length} · Счёт: ${qCorrect}</div>
+    <div class="quiz-word">${w.en}</div>
+    <div class="quiz-opts">${opts.map(o=>`
+      <div class="quiz-opt" onclick="answerQuiz(this,'${o.en}','${w.en}',${w.idx})">${o.ru.join(' / ')}</div>
+    `).join('')}</div>`;
+}
+function answerQuiz(el, chosen, correct, idx){
+  if(qAnswered) return;
+  qAnswered = true;
+  const isOk = chosen === correct;
+  el.classList.add(isOk ? 'correct' : 'wrong');
+  if(!isOk){
+    const cw = WORDS.find(w=>w.en===correct);
+    [...el.parentNode.children].forEach(c=>{
+      if(c.textContent.trim() === cw.ru.join(' / ').trim()) c.classList.add('reveal');
+    });
+  }
+  setWordKnown(idx, isOk);
+  if(isOk) qCorrect++;
+  setTimeout(()=>{ qIdx++; showQuestion(); }, isOk ? 600 : 1400);
+}
+
+// ─── INITIALIZATION ──────────────────────────────────────────────────────────
+restoreIfSubmitted();
+loadVocabLocal();
+loadVocabFromSupabase();
+</script>
+</body>
+</html>
