@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homework 4: Порядок слов SVOMPT и вопросы — Polina's English Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose: #f43f5e; --orange: #fb923c; --amber: #f59e0b;
+      --emerald: #10b981; --blue: #3b82f6; --indigo: #6366f1;
+      --bg: #f1f5f9; --card: #fff; --text: #0f172a; --muted: #64748b; --border: #e2e8f0;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 120px; min-height: 100vh; }
+    
+    /* HERO */
+    .hero { background: linear-gradient(135deg, var(--indigo), var(--rose)); padding: 40px 24px 80px; position: relative; color: #fff; }
+    .hero-wave { position: absolute; bottom: -1px; left: 0; right: 0; line-height: 0; pointer-events: none; }
+    .hero-wave svg { display: block; width: 100%; }
+    .hero-back { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,.8); font-size: 13px; font-weight: 600; text-decoration: none; transition: color .2s; }
+    .hero-back:hover { color: #fff; }
+    .hero-vocab-link:hover { background: #fff !important; color: var(--indigo) !important; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); color: #fff; font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 100px; margin-bottom: 14px; }
+    .hero h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(22px, 5vw, 32px); font-weight: 800; margin-bottom: 6px; }
+    .hero p { color: rgba(255,255,255,.85); font-size: 14px; max-width: 600px; line-height: 1.4; }
+
+    .page { max-width: 800px; margin: 0 auto; padding: 0 24px; position: relative; top: -30px; z-index: 2; }
+    
+    /* STATUS MESSAGE */
+    .status-msg { display: none; border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; font-size: 14px; font-weight: 600; }
+    .status-msg.ok { background: #d1fae5; border: 1.5px solid #6ee7b7; color: #064e3b; display: block; }
+    .status-msg.err { background: #fee2e2; border: 1.5px solid #fca5a5; color: #991b1b; display: block; }
+
+    /* RULE CARD */
+    .rule-card { background: var(--card); border-radius: 20px; border: 1.5px solid var(--border); padding: 28px; box-shadow: 0 10px 25px rgba(0,0,0,.05); margin-bottom: 24px; }
+    .rule-card h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 16px; color: var(--indigo); display: flex; align-items: center; gap: 8px; }
+    
+    /* SVOMPT TABLE */
+    .svompt-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 20px 0; overflow-x: auto; padding-bottom: 8px; }
+    .svompt-head { background: var(--indigo); color: #fff; text-align: center; padding: 10px 6px; border-radius: 8px; font-weight: 700; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; min-width: 90px; }
+    .svompt-head span { display: block; font-size: 9px; opacity: 0.8; font-weight: 500; margin-top: 2px; }
+    .svompt-cell { background: #f8fafc; border: 1px solid var(--border); padding: 12px 8px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 500; min-width: 90px; }
+    
+    /* INFO BLOCKS */
+    .info-block { background: #f8fafc; border-left: 4px solid var(--rose); padding: 16px; border-radius: 0 12px 12px 0; margin: 16px 0; font-size: 14px; line-height: 1.5; }
+    .info-block strong { color: var(--rose); }
+    .example-list { list-style: none; margin: 12px 0; }
+    .example-list li { font-size: 14px; padding: 6px 0; display: flex; flex-direction: column; gap: 2px; }
+    .example-list .eng { font-weight: 600; color: #334155; }
+    .example-list .rus { font-size: 12.5px; color: var(--muted); }
+
+    /* QUESTION WORDS TABLE */
+    .q-words-table-wrapper { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 12px; }
+    .q-words-table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 500px; }
+    .q-words-table th { background: #f1f5f9; text-align: left; padding: 12px; font-weight: 700; color: #334155; border-bottom: 2px solid var(--border); }
+    .q-words-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
+    .q-words-table tr:last-child td { border-bottom: none; }
+    .q-words-table tr:hover { background: #f8fafc; }
+    .qw-name { font-weight: 700; color: var(--blue); }
+
+    /* QUESTION STRUCTURE */
+    .q-box { background: #eff6ff; border-left: 4px solid var(--blue); padding: 16px; border-radius: 0 12px 12px 0; margin-top: 16px; }
+    .q-box h3 { font-size: 15px; color: var(--blue); margin-bottom: 6px; font-weight: 700; }
+    .q-formula { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 14px; background: rgba(59, 130, 246, 0.1); color: var(--blue); padding: 6px 12px; border-radius: 6px; display: inline-block; margin: 6px 0; }
+
+    /* EXERCISES */
+    .ex-card { background: var(--card); border-radius: 20px; border: 1.5px solid var(--border); padding: 28px; box-shadow: 0 4px 14px rgba(0,0,0,.04); margin-bottom: 24px; }
+    .ex-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .ex-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.4; }
+    
+    /* CHIPS CONTAINER & REORDER ZONE */
+    .chips-container { display: flex; flex-wrap: wrap; gap: 8px; background: #f8fafc; border: 1.5px dashed var(--border); padding: 14px; border-radius: 12px; min-height: 54px; margin-bottom: 16px; }
+    .reorder-zone { display: flex; flex-wrap: wrap; gap: 8px; background: #f0fdf4; border: 1.5px solid #bbf7d0; padding: 14px; border-radius: 12px; min-height: 54px; margin-bottom: 10px; }
+    .word-chip { background: var(--card); border: 1px solid var(--border); padding: 8px 14px; border-radius: 8px; font-size: 13.5px; font-weight: 500; cursor: pointer; user-select: none; transition: all .15s; box-shadow: 0 2px 4px rgba(0,0,0,.02); }
+    .word-chip:hover { border-color: var(--indigo); background: #fdfeff; }
+    .word-chip.used { opacity: 0.3; pointer-events: none; background: #e2e8f0; }
+    .reorder-zone .word-chip { background: var(--card); border-color: #86efac; }
+    
+    /* OPTIONS LISTS */
+    .opt-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+    .opt-item { padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--border); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; line-height: 1.4; }
+    .opt-item:hover { border-color: var(--rose); background: #fff8f8; }
+    .opt-item.selected { border-color: var(--indigo); background: #f5f3ff; font-weight: 600; }
+
+    /* SENTENCE ITEMS */
+    .sentence-item { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; }
+    .sentence-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .sentence-prompt { font-size: 14.5px; font-weight: 600; margin-bottom: 8px; color: #334155; line-height: 1.4; }
+    .sentence-hint { font-size: 12.5px; color: var(--muted); font-style: italic; margin-bottom: 10px; line-height: 1.4; }
+    .input-wrap { position: relative; }
+    .text-input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--border); font-family: inherit; font-size: 14px; font-weight: 500; outline: none; transition: all .2s; }
+    .text-input:focus { border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+
+    /* UTILS */
+    .feedback { font-size: 13px; font-weight: 600; margin-top: 8px; display: none; }
+    .feedback.success { color: var(--emerald); }
+    .feedback.error { color: #ef4444; }
+    .correct-ans { font-size: 12.5px; color: var(--muted); font-style: italic; margin-top: 4px; display: none; }
+
+    .btn-check { background: var(--indigo); color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .2s; margin-top: 10px; }
+    .btn-check:hover { opacity: 0.9; }
+    
+    .score-badge { font-size: 12px; background: #f1f5f9; padding: 4px 12px; border-radius: 100px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+    .score-badge.done { background: #d1fae5; color: #065f46; }
+
+    /* TG BUTTON CARD */
+    .tg-card { background: #fff; border: 2px solid #e0f2fe; border-radius: 20px; padding: 24px; text-align: center; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.05); margin-top: 12px; margin-bottom: 40px; }
+    .btn-tg { background: linear-gradient(135deg, var(--indigo), var(--rose)); color: #fff; border: none; padding: 14px 28px; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3); }
+    .btn-tg:hover:not(:disabled) { transform: translateY(-1px); opacity: 0.95; }
+    .btn-tg:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* BOTTOM NAV BAR */
+    .nav-pill { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #0f172a; border-radius: 100px; padding: 8px 10px; display: flex; gap: 4px; box-shadow: 0 8px 32px rgba(15,23,42,.35); z-index: 999; white-space: nowrap; }
+    .nav-pill a { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,.55); font-size: 13px; font-weight: 600; text-decoration: none; padding: 8px 16px; border-radius: 100px; transition: all .2s; }
+    .nav-pill a:hover { color: rgba(255,255,255,.9); background: rgba(255,255,255,.08); }
+    .nav-pill a.active { background: var(--rose); color: #fff; }
+    @media (max-width:480px) { .nav-pill a span.nav-label { display: none; } .nav-pill a { padding: 8px 12px; } }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div style="max-width:800px; margin:0 auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <a href="homework.html" class="hero-back">← Домашние задания</a>
+        <a href="vocab-holidays.html" class="hero-vocab-link" style="color: #fff; background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.25); transition: all 0.2s;">
+          💡 Сначала повтори лексику к уроку! →
+        </a>
+      </div>
+      <div class="hero-badge">🧠 Разбор структуры предложений</div>
+      <h1>Homework 4: Порядок слов SVOMPT</h1>
+      <p>Осваиваем железную логику утверждений и учимся безошибочно строить вопросы в Present Simple и Past Simple.</p>
+    </div>
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#f1f5f9"/></svg>
+    </div>
+  </div>
+
+  <div class="page">
+    
+    <div id="statusMsg" class="status-msg"></div>
+
+    <!-- RULE: SVOMPT DETAIL -->
+    <div class="rule-card">
+      <h2>📋 Правило порядка слов: SVOMPT</h2>
+      <p style="font-size: 14px; color: var(--muted); line-height: 1.5;">В английском языке порядок слов строго фиксирован. Запомнить схему помогает аббревиатура <strong>SVOMPT</strong>:</p>
+      
+      <div class="svompt-grid">
+        <div class="svompt-head">S<span>Subject</span>Кто? Что?</div>
+        <div class="svompt-head">V<span>Verb</span>Что делает?</div>
+        <div class="svompt-head">O<span>Object</span>Кого? Что?</div>
+        <div class="svompt-head">M<span>Manner</span>Как?</div>
+        <div class="svompt-head">P<span>Place</span>Где? Куда?</div>
+        <div class="svompt-head">T<span>Time</span>Когда?</div>
+        
+        <div class="svompt-cell" style="font-weight:700;">We</div>
+        <div class="svompt-cell" style="color:var(--rose); font-weight:700;">rent</div>
+        <div class="svompt-cell">an apartment</div>
+        <div class="svompt-cell">—</div>
+        <div class="svompt-cell">in the center</div>
+        <div class="svompt-cell" style="color:var(--amber);">every summer.</div>
+
+        <div class="svompt-cell" style="font-weight:700;">She</div>
+        <div class="svompt-cell" style="color:var(--rose); font-weight:700;">sunbathed</div>
+        <div class="svompt-cell">—</div>
+        <div class="svompt-cell">happily</div>
+        <div class="svompt-cell">on the beach</div>
+        <div class="svompt-cell" style="color:var(--amber);">yesterday.</div>
+      </div>
+
+      <div class="info-block">
+        <strong>Важная фишка времени (Time):</strong> Слово времени почти всегда ставится <u>в самый конец</u>. Его нельзя вставлять между глаголом и дополнением!
+      </div>
+    </div>
+
+    <!-- RULE: QUESTION WORDS & STRUCTURE -->
+    <div class="rule-card" style="border-color: var(--blue);">
+      <h2>❓ Специальные вопросительные слова (Уровень A2)</h2>
+      <p style="font-size: 14px; color: var(--muted);">Полный список базовых вопросительных слов, которые открывают формулу специальных вопросов:</p>
+      
+      <div class="q-words-table-wrapper">
+        <table class="q-words-table">
+          <thead>
+            <tr>
+              <th>Слово</th>
+              <th>Перевод</th>
+              <th>Пример</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="qw-name">Who</td>
+              <td>Кто? Кому?</td>
+              <td><strong>Who</strong> did you go on holiday with?</td>
+            </tr>
+            <tr>
+              <td class="qw-name">What</td>
+              <td>Что? Какой?</td>
+              <td><strong>What</strong> souvenirs did they buy?</td>
+            </tr>
+            <tr>
+              <td class="qw-name">Where</td>
+              <td>Где? Куда?</td>
+              <td><strong>Where</strong> do you usually stay?</td>
+            </tr>
+            <tr>
+              <td class="qw-name">When</td>
+              <td>Когда?</td>
+              <td><strong>When</strong> did she book the flights?</td>
+            </tr>
+            <tr>
+              <td class="qw-name">Why</td>
+              <td>Почему? Зачем?</td>
+              <td><strong>Why</strong> was the hotel so noisy?</td>
+            </tr>
+            <tr>
+              <td class="qw-name">How</td>
+              <td>Как? Каким образом?</td>
+              <td><strong>How</strong> do they usually travel?</td>
+            </tr>
+            <tr>
+              <td class="qw-name">How much / many</td>
+              <td>Сколько?</td>
+              <td><strong>How much</strong> money did you spend?</td>
+            </tr>
+            <tr>
+              <td class="qw-name">How long</td>
+              <td>Как долго?</td>
+              <td><strong>How long</strong> did they rent the car?</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr style="border:none; border-top:1px solid var(--border); margin:16px 0;">
+
+      <h2>📐 Формулы вопросов: ASI и PASI</h2>
+      
+      <div class="q-box">
+        <h3>1. Общие вопросы (Да/Нет) — Формула <strong>ASI</strong>:</h3>
+        <div class="q-formula">Auxiliary (Do/Does/Did) + Subject (Кто?) + Infinitive (Глагол)</div>
+        <ul class="example-list">
+          <li>
+            <span class="eng"><strong>Do</strong> you <strong>go</strong> abroad every year? <span style="color:var(--muted); font-weight:400;">(Present)</span></span>
+          </li>
+          <li>
+            <span class="eng"><strong>Did</strong> they <strong>hire</strong> a bicycle yesterday? <span style="color:var(--muted); font-weight:400;">(Past — у hire нет окончания -d)</span></span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="q-box" style="background:#f5f3ff; border-color:var(--indigo);">
+        <h3 style="color:var(--indigo);">2. Специальные вопросы — Формула <strong>PASI</strong>:</h3>
+        <div class="q-formula" style="background:rgba(99,102,241,0.1); color:var(--indigo);">Question Word + Auxiliary + Subject + Infinitive</div>
+        <ul class="example-list">
+          <li>
+            <span class="eng"><span style="color:var(--indigo);">Where</span> <strong>did</strong> you <strong>stay</strong> last week?</span>
+          </li>
+          <li>
+            <span class="eng"><span style="color:var(--indigo);">Why</span> <strong>does</strong> she <strong>spend</strong> so much money?</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EXERCISE 1: REORDER (SVOMPT) -->
+    <div class="ex-card" id="ex1-card">
+      <div class="ex-title">
+        <span>Упражнение 1: Собери SVOMPT (Утверждения)</span>
+        <span class="score-badge" id="ex1-badge">0 / 3</span>
+      </div>
+      <div class="ex-desc">Нажимай на слова в правильном порядке, чтобы составить верное английское предложение.</div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">1. Мы провели чудесное время в кемпинге в прошлые выходные.</div>
+        <div class="reorder-zone" id="ex1-zone-0"></div>
+        <div class="chips-container" id="ex1-chips-0"></div>
+        <div class="feedback" id="ex1-feed-0"></div>
+      </div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">2. Мои друзья обычно бронируют полеты онлайн по вечерам.</div>
+        <div class="reorder-zone" id="ex1-zone-1"></div>
+        <div class="chips-container" id="ex1-chips-1"></div>
+        <div class="feedback" id="ex1-feed-1"></div>
+      </div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">3. Он катался на лыжат в очень многолюдном месте вчера.</div>
+        <div class="reorder-zone" id="ex1-zone-2"></div>
+        <div class="chips-container" id="ex1-chips-2"></div>
+        <div class="feedback" id="ex1-feed-2"></div>
+      </div>
+
+      <button class="btn-check" id="btn-ex1" onclick="checkExercise1()">Проверить Упражнение 1</button>
+    </div>
+
+    <!-- EXERCISE 2: BUILD QUESTIONS (PASI) -->
+    <div class="ex-card" id="ex2-card">
+      <div class="ex-title">
+        <span>Упражнение 2: Восстанови вопросы (ASI / PASI)</span>
+        <span class="score-badge" id="ex2-badge">0 / 3</span>
+      </div>
+      <div class="ex-desc">Собери вопросительные предложения из предложенных слов в соответствии с правилами.</div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">1. Вы брали напрокат велосипеды на пляже вчера? (Общий вопрос)</div>
+        <div class="reorder-zone" id="ex2-zone-0"></div>
+        <div class="chips-container" id="ex2-chips-0"></div>
+        <div class="feedback" id="ex2-feed-0"></div>
+      </div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">2. Почему этот отель был таким шумным прошлым летом?</div>
+        <div class="reorder-zone" id="ex2-zone-1"></div>
+        <div class="chips-container" id="ex2-chips-1"></div>
+        <div class="feedback" id="ex2-feed-1"></div>
+      </div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">3. Где они обычно покупают сувениры за границей?</div>
+        <div class="reorder-zone" id="ex2-zone-2"></div>
+        <div class="chips-container" id="ex2-chips-2"></div>
+        <div class="feedback" id="ex2-feed-2"></div>
+      </div>
+
+      <button class="btn-check" id="btn-ex2" onclick="checkExercise2()">Проверить Упражнение 2</button>
+    </div>
+
+    <!-- EXERCISE 3: FIND THE ERROR -->
+    <div class="ex-card" id="ex3-card">
+      <div class="ex-title">
+        <span>Упражнение 3: Найди предложение БЕЗ ошибок</span>
+        <span class="score-badge" id="ex3-badge">0 / 3</span>
+      </div>
+      <div class="ex-desc">Выбери единственный вариант, где полностью соблюден правильный порядок слов.</div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">1. Какое предложение составлено по правилу SVOMPT?</div>
+        <div class="opt-list" id="ex3-opts-0">
+          <div class="opt-item" onclick="selectOpt(0, 0)">Yesterday we stayed in a very basic hotel.</div>
+          <div class="opt-item" onclick="selectOpt(0, 1)">We stayed in a very basic hotel yesterday.</div>
+          <div class="opt-item" onclick="selectOpt(0, 2)">We yesterday stayed in a hotel very basic.</div>
+        </div>
+        <div class="feedback" id="ex3-feed-0"></div>
+      </div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">2. Как правильно спросить про грязный пляж в прошлом?</div>
+        <div class="opt-list" id="ex3-opts-1">
+          <div class="opt-item" onclick="selectOpt(1, 0)">Why the beach was so dirty last week?</div>
+          <div class="opt-item" onclick="selectOpt(1, 1)">Why did the beach be so dirty last week?</div>
+          <div class="opt-item" onclick="selectOpt(1, 2)">Why was the beach so dirty last week?</div>
+        </div>
+        <div class="feedback" id="ex3-feed-1"></div>
+      </div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">3. Выберите грамматически корректный вопрос в Present Simple:</div>
+        <div class="opt-list" id="ex3-opts-2">
+          <div class="opt-item" onclick="selectOpt(2, 0)">Does he always sunbathe on the beach in the morning?</div>
+          <div class="opt-item" onclick="selectOpt(2, 1)">Does he sunbathe always on the beach in the morning?</div>
+          <div class="opt-item" onclick="selectOpt(2, 2)">He always does sunbathe on the beach in the morning?</div>
+        </div>
+        <div class="feedback" id="ex3-feed-2"></div>
+      </div>
+
+      <button class="btn-check" id="btn-ex3" onclick="checkExercise3()">Проверить Упражнение 3</button>
+    </div>
+
+    <!-- EXERCISE 4: TRANSLATION -->
+    <div class="ex-card" id="ex4-card">
+      <div class="ex-title">
+        <span>Упражнение 4: Перевод предложений на английский</span>
+        <span class="score-badge" id="ex4-badge">0 / 3</span>
+      </div>
+      <div class="ex-desc">Напишите полноценный перевод предложений. Будьте предельно внимательны ко временам и структуре SVOMPT!</div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">1. В прошлый вторник погода была ужасной и туманной.</div>
+        <div class="sentence-hint">Подсказка: Past Simple (was), "ужасный" — awful/terrible, "туманный" — foggy. Ограничение времени "last Tuesday" поставьте в конец.</div>
+        <div class="input-wrap">
+          <input type="text" class="text-input" id="ex4-ans-0" placeholder="Type your translation here...">
+        </div>
+        <div class="feedback" id="ex4-feed-0"></div>
+        <div class="correct-ans" id="ex4-correct-0"></div>
+      </div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">2. Куда вы обычно ездите за границу летом?</div>
+        <div class="sentence-hint">Подсказка: Вопрос в Present Simple. "Ездить за границу" — go abroad. Помните место "usually".</div>
+        <div class="input-wrap">
+          <input type="text" class="text-input" id="ex4-ans-1" placeholder="Type your question here...">
+        </div>
+        <div class="feedback" id="ex4-feed-1"></div>
+        <div class="correct-ans" id="ex4-correct-1"></div>
+      </div>
+
+      <div class="sentence-item">
+        <div class="sentence-prompt">3. Она не фотографировала многолюдный город вчера.</div>
+        <div class="sentence-hint">Подсказка: Отрицание в Past Simple (didn't + глагол). "Фотографировать" — take photos, "многолюдный" — crowded.</div>
+        <div class="input-wrap">
+          <input type="text" class="text-input" id="ex4-ans-2" placeholder="Type your sentence here...">
+        </div>
+        <div class="feedback" id="ex4-feed-2"></div>
+        <div class="correct-ans" id="ex4-correct-2"></div>
+      </div>
+
+      <button class="btn-check" id="btn-ex4" onclick="checkExercise4()">Проверить Упражнение 4</button>
+    </div>
+
+    <!-- TELEGRAM EXPORT CARD -->
+    <div class="tg-card">
+      <h3 style="font-family:'Plus Jakarta Sans', sans-serif; font-size:16px; font-weight:800; margin-bottom:6px;">🎉 Задание выполнено?</h3>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:16px;">Отправь свои результаты на проверку преподавателю одним кликом!</p>
+      <button class="btn-tg" id="submitAllBtn" onclick="submitFinalResults()">
+        <span>🚀 Отправить результаты учителю</span>
+      </button>
+    </div>
+
+  </div>
+
+  <div class="nav-pill">
+    <a href="index.html"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+    <a href="homework.html" class="active"><span class="nav-icon">📝</span><span class="nav-label">HW</span></a>
+    <a href="grammar.html"><span class="nav-icon">📐</span><span class="nav-label">Grammar</span></a>
+    <a href="vocabulary-hub.html"><span class="nav-icon">💥</span><span class="nav-label">Vocab</span></a>
+    <a href="irregular-verbs.html"><span class="nav-icon">⚡</span><span class="nav-label">Verbs</span></a>
+  </div>
+
+  <script>
+    const SB_URL = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
+    const TG_BOT  = '8780310968:AAE2nZnb0ENFPbYDZ0W8cmDF-JpDaqix-SE';
+    const TG_CHAT = '-1003908088903';
+    const STUDENT = 'olya';
+    const HW_ID = 'hw4';
+
+    const ex1Data = [
+      { words: ["We", "had", "a lovely time", "at a campsite", "last weekend"], correct: "We had a lovely time at a campsite last weekend" },
+      { words: ["My friends", "usually", "book flights online", "in the evenings"], correct: "My friends usually book flights online in the evenings" },
+      { words: ["He", "went skiing", "in a very crowded place", "yesterday"], correct: "He went skiing in a very crowded place yesterday" }
+    ];
+
+    const ex2Data = [
+      { words: ["Did", "you", "hire", "a bicycle", "on the beach", "yesterday?"], correct: "Did you hire a bicycle on the beach yesterday?" },
+      { words: ["Why", "was", "this hotel", "so noisy", "last summer?"], correct: "Why was this hotel so noisy last summer?" },
+      { words: ["Where", "do", "they", "usually", "buy souvenirs", "abroad?"], correct: "Where do they usually buy souvenirs abroad?" }
+    ];
+
+    const ex3CorrectAnswers = [1, 2, 0]; 
+    const ex3Selected = [-1, -1, -1];
+
+    const ex4CorrectAnswers = [
+      ["the weather was awful and foggy last tuesday", "the weather was terrible and foggy last tuesday"],
+      ["where do you usually go abroad in summer", "where do you usually go abroad in the summer"],
+      ["she didn't take photos of the crowded city yesterday", "she did not take photos of the crowded city yesterday"]
+    ];
+
+    let hwScores = { ex1: 0, ex2: 0, ex3: 0, ex4: 0 };
+
+    function initChips(exNum, dataSet) {
+      dataSet.forEach((item, idx) => {
+        const zone = document.getElementById(`ex${exNum}-zone-${idx}`);
+        const chipsCont = document.getElementById(`ex${exNum}-chips-${idx}`);
+        
+        if(!zone || !chipsCont) return;
+        
+        zone.innerHTML = '';
+        chipsCont.innerHTML = '';
+        
+        const shuffled = [...item.words].sort(() => Math.random() - 0.5);
+        shuffled.forEach(w => {
+          const chip = document.createElement('div');
+          chip.className = 'word-chip';
+          chip.innerText = w;
+          chip.onclick = () => {
+            if (!chip.classList.contains('used')) {
+              chip.classList.add('used');
+              createTopChip(exNum, idx, w, chip);
+            }
+          };
+          chipsCont.appendChild(chip);
+        });
+      });
+    }
+
+    function createTopChip(exNum, itemIdx, wordText, originalChip) {
+      const zone = document.getElementById(`ex${exNum}-zone-${itemIdx}`);
+      const topChip = document.createElement('div');
+      topChip.className = 'word-chip';
+      topChip.innerText = wordText;
+      topChip.onclick = () => {
+        topChip.remove();
+        originalChip.classList.remove('used');
+      };
+      zone.appendChild(topChip);
+    }
+
+    function selectOpt(questionIdx, optIdx) {
+      const parent = document.getElementById(`ex3-opts-${questionIdx}`);
+      [...parent.children].forEach((child, i) => {
+        child.className = 'opt-item' + (i === optIdx ? ' selected' : '');
+      });
+      ex3Selected[questionIdx] = optIdx;
+    }
+
+    function cleanStr(str) {
+      return str.toLowerCase().trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").replace(/\s+/g," ");
+    }
+
+    function checkExercise1() {
+      let score = 0;
+      ex1Data.forEach((item, idx) => {
+        const zone = document.getElementById(`ex1-zone-${idx}`);
+        const userAns = [...zone.children].map(c => c.innerText).join(' ');
+        const feed = document.getElementById(`ex1-feed-${idx}`);
+        
+        if (cleanStr(userAns) === cleanStr(item.correct)) {
+          score++;
+          feed.className = "feedback success";
+          feed.innerText = "🤩 Верно!";
+        } else {
+          feed.className = "feedback error";
+          feed.innerText = `❌ Ошибка. Правильно: "${item.correct}"`;
+        }
+        feed.style.display = 'block';
+      });
+      hwScores.ex1 = score;
+      document.getElementById('ex1-badge').innerText = `${score} / 3`;
+      if(score === 3) document.getElementById('ex1-badge').className = "score-badge done";
+      saveProgressLocal();
+    }
+
+    function checkExercise2() {
+      let score = 0;
+      ex2Data.forEach((item, idx) => {
+        const zone = document.getElementById(`ex2-zone-${idx}`);
+        const userAns = [...zone.children].map(c => c.innerText).join(' ');
+        const feed = document.getElementById(`ex2-feed-${idx}`);
+        
+        if (cleanStr(userAns) === cleanStr(item.correct)) {
+          score++;
+          feed.className = "feedback success";
+          feed.innerText = "🤩 Отличный вопрос!";
+        } else {
+          feed.className = "feedback error";
+          feed.innerText = `❌ Неправильный порядок слов. Ответ: "${item.correct}"`;
+        }
+        feed.style.display = 'block';
+      });
+      hwScores.ex2 = score;
+      document.getElementById('ex2-badge').innerText = `${score} / 3`;
+      if(score === 3) document.getElementById('ex2-badge').className = "score-badge done";
+      saveProgressLocal();
+    }
+
+    function checkExercise3() {
+      let score = 0;
+      ex3CorrectAnswers.forEach((correctIdx, qIdx) => {
+        const feed = document.getElementById(`ex3-feed-${qIdx}`);
+        const chosen = ex3Selected[qIdx];
+        
+        if (chosen === correctIdx) {
+          score++;
+          feed.className = "feedback success";
+          feed.innerText = "✅ Абсолютно верно!";
+        } else {
+          feed.className = "feedback error";
+          feed.innerText = "❌ Неверно. Нарушено правило SVOMPT/PASI.";
+        }
+        feed.style.display = 'block';
+      });
+      hwScores.ex3 = score;
+      document.getElementById('ex3-badge').innerText = `${score} / 3`;
+      if(score === 3) document.getElementById('ex3-badge').className = "score-badge done";
+      saveProgressLocal();
+    }
+
+    function checkExercise4() {
+      let score = 0;
+      ex4CorrectAnswers.forEach((variants, idx) => {
+        const val = cleanStr(document.getElementById(`ex4-ans-${idx}`).value);
+        const feed = document.getElementById(`ex4-feed-${idx}`);
+        const corrLabel = document.getElementById(`ex4-correct-${idx}`);
+        
+        const isCorrect = variants.some(v => cleanStr(v) === val);
+        
+        if (isCorrect) {
+          score++;
+          feed.className = "feedback success";
+          feed.innerText = "🎉 Великолепный перевод!";
+          corrLabel.style.display = 'none';
+        } else {
+          feed.className = "feedback error";
+          feed.innerText = "❌ Кое-где закралась ошибка. Сверьтесь со структурой.";
+          corrLabel.innerText = `Возможный вариант: "${variants[0]}"`;
+          corrLabel.style.display = 'block';
+        }
+        feed.style.display = 'block';
+      });
+      hwScores.ex4 = score;
+      document.getElementById('ex4-badge').innerText = `${score} / 3`;
+      if(score === 3) document.getElementById('ex4-badge').className = "score-badge done";
+      saveProgressLocal();
+    }
+
+    function saveProgressLocal() {
+      const totalScore = hwScores.ex1 + hwScores.ex2 + hwScores.ex3 + hwScores.ex4;
+      const progressData = { scores: hwScores, total: totalScore, updatedAt: new Date().toISOString() };
+      localStorage.setItem(`olya_hw_${HW_ID}`, JSON.stringify(progressData));
+    }
+
+    function buildTelegramMessage(totalScore) {
+      const now = new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
+      const zText = (exNum, idx) => document.getElementById(`ex${exNum}-zone-${idx}`)?.innerText.trim().replace(/\s+/g, ' ') || '—';
+      
+      let msg = `🎯 СТУДЕНТ ${STUDENT.toUpperCase()} ВЫПОЛНИЛ ДОМАШНЮЮ РАБОТУ 4\n`;
+      msg += `Время: ${now} (МСК)\n\n`;
+      msg += `📊 Общий итог: ${totalScore} из 12\n`;
+      msg += `----------------------------\n`;
+      msg += `Упр 1 (SVOMPT): ${hwScores.ex1}/3\n`;
+      msg += `  1. ${zText(1, 0)}\n`;
+      msg += `  2. ${zText(1, 1)}\n`;
+      msg += `  3. ${zText(1, 2)}\n\n`;
+      msg += `Упр 2 (Вопросы): ${hwScores.ex2}/3\n`;
+      msg += `  1. ${zText(2, 0)}\n`;
+      msg += `  2. ${zText(2, 1)}\n`;
+      msg += `  3. ${zText(2, 2)}\n\n`;
+      msg += `Упр 3 (Тест): ${hwScores.ex3}/3\n`;
+      msg += `Упр 4 (Перевод): ${hwScores.ex4}/3\n`;
+      msg += `  1. "${document.getElementById('ex4-ans-0').value.trim()}"\n`;
+      msg += `  2. "${document.getElementById('ex4-ans-1').value.trim()}"\n`;
+      msg += `  3. "${document.getElementById('ex4-ans-2').value.trim()}"\n`;
+      msg += `----------------------------\n`;
+      msg += `Supabase ID: ${HW_ID}`;
+      return msg;
+    }
+
+    async function submitFinalResults() {
+      const btn = document.getElementById('submitAllBtn');
+      const statusEl = document.getElementById('statusMsg');
+      
+      btn.disabled = true;
+      btn.innerHTML = '⏳ Отправка результатов...';
+
+      // Автоматически запускаем проверку всех блоков, чтобы зафиксировать баллы
+      checkExercise1(); checkExercise2(); checkExercise3(); checkExercise4();
+
+      const totalScore = hwScores.ex1 + hwScores.ex2 + hwScores.ex3 + hwScores.ex4;
+
+      // 1. Запрос в Supabase
+      const sbPromise = fetch(`${SB_URL}/homework_progress`, {
+        method: 'POST',
+        headers: {
+          'apikey': SB_KEY,
+          'Authorization': 'Bearer ' + SB_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify({
+          student: STUDENT,
+          hw_id: HW_ID,
+          score: totalScore,
+          max_score: 12,
+          updated_at: new Date().toISOString()
+        })
+      }).then(r => r.ok || r.status === 201).catch(() => false);
+
+      // 2. Фоновый запрос в Telegram API
+      const tgPromise = fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TG_CHAT,
+          text: buildTelegramMessage(totalScore)
+        })
+      }).then(r => r.ok).catch(() => false);
+
+      const [sbOk, tgOk] = await Promise.allSettled([sbPromise, tgPromise])
+        .then(results => results.map(r => r.status === 'fulfilled' ? r.value : false));
+
+      if (sbOk && tgOk) {
+        statusEl.className = 'status-msg ok';
+        statusEl.textContent = `✅ Результаты успешно отправлены! Итоговый балл: ${totalScore} / 12. Молодцы!`;
+        btn.innerHTML = '✅ Результаты отправлены';
+        // Блокируем кнопки блоков
+        document.querySelectorAll('.btn-check').forEach(b => b.disabled = true);
+      } else {
+        statusEl.className = 'status-msg err';
+        statusEl.textContent = `⚠️ Что-то пошло не так. База: ${sbOk ? 'OK' : 'ERR'} | Бот: ${tgOk ? 'OK' : 'ERR'}. Попробуйте еще раз.`;
+        btn.disabled = false;
+        btn.innerHTML = '🚀 Отправить результаты учителю';
+      }
+    }
+
+    function loadSavedProgress() {
+      const saved = localStorage.getItem(`olya_hw_${HW_ID}`);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.scores) hwScores = parsed.scores;
+          ['ex1','ex2','ex3','ex4'].forEach(exKey => {
+            const el = document.getElementById(`${exKey}-badge`);
+            if (el) {
+              el.innerText = `${hwScores[exKey]} / 3`;
+              if(hwScores[exKey] === 3) el.className = "score-badge done";
+            }
+          });
+        } catch(e) {}
+      }
+    }
+
+    window.onload = () => {
+      initChips(1, ex1Data);
+      initChips(2, ex2Data);
+      loadSavedProgress();
+    };
+  </script>
+</body>
+</html>
