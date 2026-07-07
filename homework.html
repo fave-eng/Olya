@@ -102,7 +102,7 @@
     <h1>Домашние задания</h1>
     <p>Выполняй и отслеживай прогресс по каждому уроку</p>
     <div class="pb-wrap"><div class="pb-fill" id="heroBar" style="width:0%"></div></div>
-    <div class="pb-label" id="heroLabel">0 из 1 выполнено</div>
+    <div class="pb-label" id="heroLabel">0 из 4 выполнено</div>
   </div>
   <div class="hero-wave">
     <svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
@@ -115,12 +115,12 @@
 
   <div class="stats-row">
     <div class="stat-chip done"><div class="sc-num" id="statDone">0</div><div class="sc-lbl">Выполнено</div></div>
-    <div class="stat-chip total"><div class="sc-num">2</div><div class="sc-lbl">Всего</div></div>
+    <div class="stat-chip total"><div class="sc-num">4</div><div class="sc-lbl">Всего</div></div>
     <div class="stat-chip pct"><div class="sc-num" id="statPct">0%</div><div class="sc-lbl">Прогресс</div></div>
   </div>
 
   <div id="sec-done" style="display:none"><div class="section-title">✅ Выполнено</div></div>
-  <div class="section-title" id="sec-current">📝 Текущее</div>
+  <div class="section-title" id="sec-current">📝 Текущие</div>
 
   <!-- HW 1 -->
   <div class="lesson-card active" id="card-hw1">
@@ -144,6 +144,7 @@
     </div>
   </div>
 
+  <!-- HW 2 -->
   <div class="lesson-card active" id="card-hw2">
     <a href="hw2.html" style="text-decoration:none;color:inherit;">
       <div class="lc-main">
@@ -165,13 +166,58 @@
     </div>
   </div>
 
+  <!-- HW 3 -->
+  <div class="lesson-card active" id="card-hw3">
+    <a href="hw3.html" style="text-decoration:none;color:inherit;">
+      <div class="lc-main">
+        <div class="lc-num active-num" id="num-hw3">3</div>
+        <div class="lc-info">
+          <div class="lc-lesson-label">Homework 3</div>
+          <div class="lc-title">Vocabulary: Holidays</div>
+          <div class="lc-meta">
+            <span class="lc-status-pill pill-current" id="pill-hw3">📝 Выполнить</span>
+            <span class="lc-score" id="score-hw3"></span>
+          </div>
+        </div>
+        <div class="lc-arrow">→</div>
+      </div>
+    </a>
+    <div class="lc-vocab-strip">
+      <div class="lvs-left">💡 <span>Лексика к уроку:</span> Phrases, Adjectives & Questions</div>
+      <div style="display:flex;gap:8px;align-items:center"><a href="vocab-holidays.html" class="lvs-link">Лексика Holidays <span>→</span></a></div>
+    </div>
+  </div>
+
+  <!-- HW 4 -->
+  <div class="lesson-card active" id="card-hw4">
+    <a href="hw4.html" style="text-decoration:none;color:inherit;">
+      <div class="lc-main">
+        <div class="lc-num active-num" id="num-hw4">4</div>
+        <div class="lc-info">
+          <div class="lc-lesson-label">Homework 4</div>
+          <div class="lc-title">Vocabulary & Practice: Next Level</div>
+          <div class="lc-meta">
+            <span class="lc-status-pill pill-current" id="pill-hw4">📝 Выполнить</span>
+            <span class="lc-score" id="score-hw4"></span>
+          </div>
+        </div>
+        <div class="lc-arrow">→</div>
+      </div>
+    </a>
+    <div class="lc-vocab-strip">
+      <div class="lvs-left">📚 <span>Лексика к уроку:</span> Extended Words List</div>
+      <div style="display:flex;gap:8px;align-items:center"><a href="vocab-holidays.html" class="lvs-link">Лексика Holidays <span>→</span></a></div>
+    </div>
+  </div>
+
   <div class="section-title">🔒 Предстоящие</div>
 
+  <!-- HW 5 -->
   <div class="lesson-card locked">
     <div class="lc-main">
-      <div class="lc-num locked-num">3</div>
+      <div class="lc-num locked-num">5</div>
       <div class="lc-info">
-        <div class="lc-lesson-label">Homework 2</div>
+        <div class="lc-lesson-label">Homework 5</div>
         <div class="lc-title">Coming soon…</div>
         <div class="lc-meta"><span class="lc-status-pill pill-locked">🔒 Скоро</span></div>
       </div>
@@ -179,11 +225,38 @@
     <div class="locked-strip">🔒 Задание появится после следующего урока</div>
   </div>
 
+  <!-- HW 6 -->
   <div class="lesson-card locked">
     <div class="lc-main">
-      <div class="lc-num locked-num">3</div>
+      <div class="lc-num locked-num">6</div>
       <div class="lc-info">
-        <div class="lc-lesson-label">Homework 3</div>
+        <div class="lc-lesson-label">Homework 6</div>
+        <div class="lc-title">Coming soon…</div>
+        <div class="lc-meta"><span class="lc-status-pill pill-locked">🔒 Скоро</span></div>
+      </div>
+    </div>
+    <div class="locked-strip">🔒 Задание появится после следующего урока</div>
+  </div>
+
+  <!-- HW 7 -->
+  <div class="lesson-card locked">
+    <div class="lc-main">
+      <div class="lc-num locked-num">7</div>
+      <div class="lc-info">
+        <div class="lc-lesson-label">Homework 7</div>
+        <div class="lc-title">Coming soon…</div>
+        <div class="lc-meta"><span class="lc-status-pill pill-locked">🔒 Скоро</span></div>
+      </div>
+    </div>
+    <div class="locked-strip">🔒 Задание появится после следующего урока</div>
+  </div>
+
+  <!-- HW 8 -->
+  <div class="lesson-card locked">
+    <div class="lc-main">
+      <div class="lc-num locked-num">8</div>
+      <div class="lc-info">
+        <div class="lc-lesson-label">Homework 8</div>
         <div class="lc-title">Coming soon…</div>
         <div class="lc-meta"><span class="lc-status-pill pill-locked">🔒 Скоро</span></div>
       </div>
@@ -215,13 +288,19 @@ function renderCard(hwNum){
 function render(){
   const d1 = renderCard(1);
   const d2 = renderCard(2);
-  const d  = (d1?1:0) + (d2?1:0);
-  const total = 2;
+  const d3 = renderCard(3);
+  const d4 = renderCard(4);
+  const d  = (d1?1:0) + (d2?1:0) + (d3?1:0) + (d4?1:0);
+  const total = 4;
   const pct = Math.round(d/total*100);
 
   if(d > 0){
     document.getElementById('sec-done').style.display = '';
-    document.getElementById('sec-current').style.display = 'none';
+    if(d === total) {
+      document.getElementById('sec-current').style.display = 'none';
+    } else {
+      document.getElementById('sec-current').style.display = '';
+    }
   }
 
   document.getElementById('statDone').textContent  = d;
