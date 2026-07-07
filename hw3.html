@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HW 3 — Vocabulary: Holidays · Olya's English Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose: #f43f5e; --orange: #fb923c; --amber: #f59e0b;
+      --emerald: #10b981; --indigo: #4f46e5; --violet: #8b5cf6;
+      --bg: #f1f5f9; --card: #ffffff;
+      --text: #0f172a; --muted: #64748b; --border: #e2e8f0;
+    }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); padding-bottom:120px; }
+
+    .hero { background:linear-gradient(135deg,#f43f5e 0%,#fb923c 50%,#f59e0b 100%); padding:36px 24px 48px; position:relative; }
+    .hero-wave { display:block; width:100%; line-height:0; background:var(--bg); }
+    .hero-wave svg { display:block; width:100%; }
+    .hero-back { display:inline-flex; align-items:center; gap:6px; color:rgba(255,255,255,.8); font-size:13px; font-weight:600; text-decoration:none; margin-bottom:18px; transition:color .2s; position:relative; z-index:1; }
+    .hero-back:hover { color:#fff; }
+    .hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.3); color:#fff; font-size:12px; font-weight:600; padding:5px 14px; border-radius:100px; margin-bottom:12px; position:relative; z-index:1; }
+    .hero h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(22px,5vw,34px); font-weight:800; color:#fff; letter-spacing:-.5px; margin-bottom:6px; position:relative; z-index:1; }
+    .hero p { color:rgba(255,255,255,.8); font-size:14px; position:relative; z-index:1; }
+
+    .page { max-width:700px; margin:0 auto; padding:0 20px; }
+
+    .status-msg { display:none; border-radius:14px; padding:14px 18px; margin:20px 0 4px; font-size:14px; font-weight:600; }
+    .status-msg.ok  { background:#d1fae5; border:1.5px solid #6ee7b7; color:#064e3b; display:block; }
+
+    .section-lbl { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin:28px 0 12px; }
+
+    .progress-wrap { background:var(--card); border-radius:14px; border:1.5px solid var(--border); padding:16px 20px; margin-bottom:4px; }
+    .progress-row { display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:8px; }
+    .progress-bg { background:var(--border); border-radius:100px; height:7px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,#f43f5e,#fb923c); border-radius:100px; transition:width .6s; }
+
+    .ex-card { background:var(--card); border-radius:18px; border:1.5px solid var(--border); margin-bottom:16px; overflow:hidden; }
+    .ex-head { display:flex; align-items:center; gap:12px; padding:16px 20px 0; }
+    .ex-num  { width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,#f43f5e,#fb923c); color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .ex-head h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; font-weight:700; }
+    .ex-body { padding:12px 20px 20px; }
+    .ex-sub { font-size:12.5px; color:var(--muted); font-style:italic; margin-bottom:14px; }
+
+    .q-row { margin-bottom:14px; font-size:14.5px; line-height:1.8; }
+    .q-example { font-size:13px; color:var(--muted); margin-bottom:10px; padding:8px 12px; background:#f8fafc; border-radius:8px; border:1px dashed var(--border); }
+    .q-num { font-weight:700; color:var(--rose); margin-right:4px; }
+
+    input[type="text"] { padding:7px 12px; font-size:14px; font-family:inherit; border:1.5px solid var(--border); border-radius:9px; background:#fafbff; color:var(--text); transition:border-color .2s; vertical-align:middle; width:170px; }
+    input[type="text"].wide { width:100%; max-width:340px; }
+    input[type="text"]:focus { outline:none; border-color:var(--indigo); background:#fff; }
+    input[type="text"].correct { border-color:var(--emerald)!important; background:#f0fdf4; }
+    input[type="text"].wrong   { border-color:var(--rose)!important; background:#fff5f5; }
+    input[type="text"]:disabled { background:#f1f5f9; color:#475569; cursor:not-allowed; }
+
+    textarea { padding:10px 12px; font-size:14px; font-family:inherit; border:1.5px solid var(--border); border-radius:9px; background:#fafbff; color:var(--text); width:100%; resize:vertical; min-height:70px; }
+    textarea:focus { outline:none; border-color:var(--indigo); background:#fff; }
+    textarea:disabled { background:#f1f5f9; color:#475569; cursor:not-allowed; }
+
+    .feedback { font-size:12px; font-weight:600; margin-top:3px; display:none; }
+    .feedback.ok  { color:var(--emerald); display:block; }
+    .feedback.bad { color:var(--rose); display:block; }
+
+    .check-btn { margin-top:12px; padding:9px 20px; background:#f1f5f9; border:1.5px solid var(--border); border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:700; cursor:pointer; color:var(--text); transition:all .2s; }
+    .check-btn:hover { background:#e2e8f0; }
+    .check-btn:disabled { opacity:.4; cursor:not-allowed; }
+
+    .qa-block { border-top:1px solid var(--border); padding-top:12px; margin-top:12px; }
+    .qa-block:first-child { border-top:none; padding-top:0; margin-top:0; }
+    .qa-lbl { font-size:12px; font-weight:700; color:var(--muted); margin-bottom:4px; }
+
+    .submit-btn { width:100%; padding:16px; background:linear-gradient(135deg,#f43f5e,#fb923c); color:#fff; border:none; border-radius:14px; font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; cursor:pointer; margin-top:6px; display:flex; align-items:center; justify-content:center; gap:10px; transition:opacity .2s, transform .2s; }
+    .submit-btn:hover:not(:disabled) { opacity:.92; transform:translateY(-1px); }
+    .submit-btn:disabled { opacity:.55; cursor:not-allowed; transform:none; }
+
+    .nav-pill { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#0f172a; border-radius:100px; padding:8px 10px; display:flex; gap:4px; box-shadow:0 8px 32px rgba(15,23,42,.35); z-index:999; white-space:nowrap; }
+    .nav-pill a { display:flex; align-items:center; gap:6px; color:rgba(255,255,255,.55); font-size:13px; font-weight:600; text-decoration:none; padding:8px 16px; border-radius:100px; transition:all .2s; }
+    .nav-pill a .nav-icon { font-size:16px; }
+    .nav-pill a:hover { color:rgba(255,255,255,.9); background:rgba(255,255,255,.08); }
+    .nav-pill a.active { background:var(--rose); color:#fff; }
+    @media(max-width:480px){ .nav-pill a span.nav-label { display:none; } .nav-pill a { padding:8px 12px; } }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="page">
+    <a href="homework.html" class="hero-back">← Все задания</a>
+    <div class="hero-eyebrow">📝 Homework 3</div>
+    <h1>Vocabulary: Holidays</h1>
+    <p>Фразы про отпуск, прилагательные и вопросы в Past Simple</p>
+  </div>
+</div>
+<div class="hero-wave">
+  <svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="background:linear-gradient(135deg,#f43f5e,#fb923c 50%,#f59e0b)">
+    <path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#f1f5f9"/>
+  </svg>
+</div>
+
+<div class="page">
+
+  <div id="statusMsg" class="status-msg"></div>
+
+  <div class="section-lbl">Прогресс</div>
+  <div class="progress-wrap">
+    <div class="progress-row">
+      <span>Верных ответов</span>
+      <span id="progText">0 / 28</span>
+    </div>
+    <div class="progress-bg"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="section-lbl">Упражнения</div>
+
+  <!-- EX A: Phrases -->
+  <div class="ex-card">
+    <div class="ex-head">
+      <div class="ex-num">A</div>
+      <h2>Complete the phrases</h2>
+    </div>
+    <div class="ex-body">
+      <div class="ex-sub">Дополни фразы про отпуск (1 — пример).</div>
+      <div class="q-example">1. <b>go camping</b> — пример, уже дано ✓</div>
+
+      <div class="q-row"><span class="q-num">2.</span> go <input type="text" data-id="a2" placeholder="…">
+        <div class="feedback" id="fb-a2"></div></div>
+      <div class="q-row"><span class="q-num">3.</span> <input type="text" data-id="a3" placeholder="…"> a flight online
+        <div class="feedback" id="fb-a3"></div></div>
+      <div class="q-row"><span class="q-num">4.</span> go <input type="text" data-id="a4" placeholder="…">
+        <div class="feedback" id="fb-a4"></div></div>
+      <div class="q-row"><span class="q-num">5.</span> <input type="text" data-id="a5" placeholder="…"> swimming
+        <div class="feedback" id="fb-a5"></div></div>
+      <div class="q-row"><span class="q-num">6.</span> go <input type="text" data-id="a6" placeholder="…"> at night
+        <div class="feedback" id="fb-a6"></div></div>
+      <div class="q-row"><span class="q-num">7.</span> <input type="text" data-id="a7" placeholder="…"> in a hotel
+        <div class="feedback" id="fb-a7"></div></div>
+      <div class="q-row"><span class="q-num">8.</span> go <input type="text" data-id="a8" placeholder="…">
+        <div class="feedback" id="fb-a8"></div></div>
+      <div class="q-row"><span class="q-num">9.</span> <input type="text" data-id="a9" placeholder="…"> on the beach
+        <div class="feedback" id="fb-a9"></div></div>
+      <div class="q-row"><span class="q-num">10.</span> go <input type="text" data-id="a10" placeholder="…"> for the weekend
+        <div class="feedback" id="fb-a10"></div></div>
+
+      <button class="check-btn" id="check-a" onclick="checkA()">Проверить A</button>
+    </div>
+  </div>
+
+  <!-- EX B: Adjectives -->
+  <div class="ex-card">
+    <div class="ex-head">
+      <div class="ex-num">B</div>
+      <h2>Complete with an adjective</h2>
+    </div>
+    <div class="ex-body">
+      <div class="ex-sub">Дополни предложения прилагательным (1 — пример: comfortable).</div>
+      <div class="q-example">1. We loved our room. It was very <b>comfortable</b>.</div>
+
+      <div class="q-row"><span class="q-num">2.</span> The weather was warm and s<input type="text" data-id="b2" placeholder="…"> every day.
+        <div class="feedback" id="fb-b2"></div></div>
+      <div class="q-row"><span class="q-num">3.</span> There were a lot of people on the beach. It was very cr<input type="text" data-id="b3" placeholder="…">.
+        <div class="feedback" id="fb-b3"></div></div>
+      <div class="q-row"><span class="q-num">4.</span> The hotel was on a busy road, so it was really n<input type="text" data-id="b4" placeholder="…">.
+        <div class="feedback" id="fb-b4"></div></div>
+      <div class="q-row"><span class="q-num">5.</span> The staff in the hotel were very unh<input type="text" data-id="b5" placeholder="…"> and sometimes quite unfriendly.
+        <div class="feedback" id="fb-b5"></div></div>
+      <div class="q-row"><span class="q-num">6.</span> There wasn't much in the apartment. It was very b<input type="text" data-id="b6" placeholder="…">. It didn't even have a fridge.
+        <div class="feedback" id="fb-b6"></div></div>
+      <div class="q-row"><span class="q-num">7.</span> The other people on the trip were very fr<input type="text" data-id="b7" placeholder="…">. We made some good friends.
+        <div class="feedback" id="fb-b7"></div></div>
+      <div class="q-row"><span class="q-num">8.</span> The town was l<input type="text" data-id="b8" placeholder="…">. All the houses had flowers on the balcony and were painted different colours.
+        <div class="feedback" id="fb-b8"></div></div>
+      <div class="q-row"><span class="q-num">9.</span> It was cl<input type="text" data-id="b9" placeholder="…"> all day, so we couldn't sunbathe.
+        <div class="feedback" id="fb-b9"></div></div>
+      <div class="q-row"><span class="q-num">10.</span> The apartment was very l<input type="text" data-id="b10" placeholder="…"> — it was full of expensive furniture and very comfortable!
+        <div class="feedback" id="fb-b10"></div></div>
+
+      <button class="check-btn" id="check-b" onclick="checkB()">Проверить B</button>
+    </div>
+  </div>
+
+  <!-- EX C: Questions -->
+  <div class="ex-card">
+    <div class="ex-head">
+      <div class="ex-num">C</div>
+      <h2>Write the questions and Lucy's answers</h2>
+    </div>
+    <div class="ex-body">
+      <div class="ex-sub">Составь вопрос из слов и напиши ответ Люси (1 — пример).</div>
+      <div class="q-example">1. Where / you go → <b>Where did you go?</b> — Greece → <b>I went to Greece.</b></div>
+
+      <div class="qa-block">
+        <div class="qa-lbl">2. How / you / get there (plane)</div>
+        Вопрос: <input type="text" class="wide" data-id="c2q" placeholder="How did you get there?"><br>
+        Ответ Люси: <input type="text" class="wide" data-id="c2a" placeholder="I went by plane.">
+        <div class="feedback" id="fb-c2q"></div>
+        <div class="feedback" id="fb-c2a"></div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-lbl">3. Where / you / stay (hotel)</div>
+        Вопрос: <input type="text" class="wide" data-id="c3q" placeholder="Where did you stay?"><br>
+        Ответ Люси: <input type="text" class="wide" data-id="c3a" placeholder="I stayed in a hotel.">
+        <div class="feedback" id="fb-c3q"></div>
+        <div class="feedback" id="fb-c3a"></div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-lbl">4. How long / you / stay (ten days)</div>
+        Вопрос: <input type="text" class="wide" data-id="c4q" placeholder="How long did you stay?"><br>
+        Ответ Люси: <input type="text" class="wide" data-id="c4a" placeholder="I stayed for ten days.">
+        <div class="feedback" id="fb-c4q"></div>
+        <div class="feedback" id="fb-c4a"></div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-lbl">5. What / you / do (went swimming)</div>
+        Вопрос: <input type="text" class="wide" data-id="c5q" placeholder="What did you do?"><br>
+        Ответ Люси: <input type="text" class="wide" data-id="c5a" placeholder="I went swimming.">
+        <div class="feedback" id="fb-c5q"></div>
+        <div class="feedback" id="fb-c5a"></div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-lbl">6. What / be / weather like (sunny)</div>
+        Вопрос: <input type="text" class="wide" data-id="c6q" placeholder="What was the weather like?"><br>
+        Ответ Люси: <input type="text" class="wide" data-id="c6a" placeholder="It was sunny.">
+        <div class="feedback" id="fb-c6q"></div>
+        <div class="feedback" id="fb-c6a"></div>
+      </div>
+
+      <button class="check-btn" id="check-c" onclick="checkC()">Проверить C</button>
+    </div>
+  </div>
+
+  <!-- EX D: Own answers -->
+  <div class="ex-card">
+    <div class="ex-head">
+      <div class="ex-num">D</div>
+      <h2>Write about your last holiday</h2>
+    </div>
+    <div class="ex-body">
+      <div class="ex-sub">Ответь своими словами на вопросы из C (2–6) про свой последний отпуск. Это задание не проверяется автоматически — учитель посмотрит вручную.</div>
+      <textarea id="d-answer" placeholder="Например: On my last holiday, I went to... I got there by... I stayed in... I stayed for... I went... The weather was..."></textarea>
+    </div>
+  </div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitAll()">
+    <span>🚀</span> Отправить результаты
+  </button>
+
+</div>
+
+<div class="nav-pill">
+  <a href="index.html"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="homework.html" class="active"><span class="nav-icon">📝</span><span class="nav-label">HW</span></a>
+  <a href="grammar.html"><span class="nav-icon">📐</span><span class="nav-label">Grammar</span></a>
+  <a href="vocabulary-hub.html"><span class="nav-icon">💥</span><span class="nav-label">Vocab</span></a>
+  <a href="irregular-verbs.html"><span class="nav-icon">⚡</span><span class="nav-label">Verbs</span></a>
+</div>
+
+<script>
+const SB_URL  = 'https://echffgdxkcxvobrwwiyw.supabase.co/rest/v1';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjaGZmZ2R4a2N4dm9icnd3aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NDE0MTQsImV4cCI6MjA5NzQxNzQxNH0.MCcX7JTBZfqBCzcmLiqfxLqmzE_3mo5WuQmrmpf1qKU';
+const TG_BOT  = '8780310968:AAE2nZnb0ENFPbYDZ0W8cmDF-JpDaqix-SE';
+const TG_CHAT = '-1003908088903';
+const STUDENT = 'olya';
+const HW_ID   = 'hw3';
+
+function sbH(){ return { 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates,return=minimal' }; }
+
+const ANSWERS = {
+  a2: ['for a walk'],
+  a3: ['book'],
+  a4: ['abroad'],
+  a5: ['go'],
+  a6: ['out'],
+  a7: ['stay'],
+  a8: ['sightseeing'],
+  a9: ['sunbathe'],
+  a10:['away'],
+
+  b2: ['sunny'],
+  b3: ['crowded'],
+  b4: ['noisy'],
+  b5: ['unhelpful'],
+  b6: ['basic'],
+  b7: ['friendly'],
+  b8: ['lovely'],
+  b9: ['cloudy'],
+  b10:['luxurious'],
+
+  c2q: ['how did you get there'],
+  c2a: ['i went by plane'],
+  c3q: ['where did you stay'],
+  c3a: ['i stayed in a hotel'],
+  c4q: ['how long did you stay'],
+  c4a: ['i stayed for ten days'],
+  c5q: ['what did you do'],
+  c5a: ['i went swimming'],
+  c6q: ['what was the weather like'],
+  c6a: ['it was sunny'],
+};
+
+const scores = { a: null, b: null, c: null };
+function norm(s){ return (s||'').toLowerCase().trim().replace(/[.!?]+$/,'').replace(/\s+/g,' '); }
+
+function updateProgress(){
+  const all = Object.values(scores).filter(s => s !== null);
+  const ok  = all.reduce((a,s) => a + s.ok, 0);
+  const tot = all.reduce((a,s) => a + s.total, 0);
+  document.getElementById('progText').textContent = `${ok} / ${tot}`;
+  document.getElementById('progFill').style.width  = tot > 0 ? Math.round(ok/tot*100)+'%' : '0%';
+}
+
+function checkFields(ids, group){
+  let ok = 0, total = 0;
+  ids.forEach(id => {
+    const inp = document.querySelector(`input[data-id="${id}"]`);
+    const fb  = document.getElementById(`fb-${id}`);
+    const val = inp.value.trim();
+    const good = (ANSWERS[id] || []).map(norm).includes(norm(val));
+    total++;
+    inp.classList.remove('correct','wrong');
+    fb.classList.remove('ok','bad');
+    inp.classList.add(good ? 'correct' : 'wrong');
+    fb.textContent = good ? '✓ Верно!' : '✗ Попробуй ещё раз';
+    fb.className = 'feedback ' + (good ? 'ok' : 'bad');
+    if(good) ok++;
+  });
+  scores[group] = { ok, total };
+  updateProgress();
+}
+
+function checkA(){ checkFields(['a2','a3','a4','a5','a6','a7','a8','a9','a10'], 'a'); }
+function checkB(){ checkFields(['b2','b3','b4','b5','b6','b7','b8','b9','b10'], 'b'); }
+function checkC(){ checkFields(['c2q','c2a','c3q','c3a','c4q','c4a','c5q','c5a','c6q','c6a'], 'c'); }
+
+function lockAll(){
+  document.querySelectorAll('input').forEach(inp => inp.disabled = true);
+  document.querySelectorAll('textarea').forEach(t => t.disabled = true);
+  document.querySelectorAll('.check-btn').forEach(b => { b.disabled = true; b.style.display = 'none'; });
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '✅ Уже отправлено';
+  btn.style.background = '#d1fae5';
+  btn.style.color = '#064e3b';
+}
+
+function saveAnswers(scoreStr){
+  const inputs = {};
+  document.querySelectorAll('input[data-id]').forEach(inp => { inputs[inp.dataset.id] = inp.value; });
+  const dAnswer = document.getElementById('d-answer').value;
+  const data = { score: scoreStr, scores, inputs, dAnswer, submitted_at: new Date().toISOString() };
+  localStorage.setItem('olya_hw3_done',    '1');
+  localStorage.setItem('olya_hw3_score',   scoreStr);
+  localStorage.setItem('olya_hw3_answers', JSON.stringify(data));
+}
+
+function restoreIfSubmitted(){
+  if(!localStorage.getItem('olya_hw3_done')) return;
+  const raw = localStorage.getItem('olya_hw3_answers');
+  if(!raw) return;
+  try {
+    const saved = JSON.parse(raw);
+    Object.entries(saved.inputs || {}).forEach(([id, val]) => {
+      const inp = document.querySelector(`input[data-id="${id}"]`);
+      if(!inp) return;
+      inp.value = val;
+      const good = (ANSWERS[id]||[]).map(norm).includes(norm(val));
+      inp.classList.add(good ? 'correct' : 'wrong');
+      const fb = document.getElementById(`fb-${id}`);
+      if(fb){ fb.textContent = good ? '✓ Верно!' : '✗'; fb.className = 'feedback '+(good?'ok':'bad'); }
+    });
+    if(saved.dAnswer) document.getElementById('d-answer').value = saved.dAnswer;
+    if(saved.scores) Object.assign(scores, saved.scores);
+    updateProgress();
+    const dt = saved.submitted_at ? new Date(saved.submitted_at).toLocaleString('ru-RU') : '';
+    const statusEl = document.getElementById('statusMsg');
+    statusEl.className = 'status-msg ok';
+    statusEl.textContent = `✅ Уже отправлено${dt ? ' ('+dt+')' : ''}. Результат: ${saved.score}`;
+    lockAll();
+  } catch(e){}
+}
+
+function buildTelegramMessage(){
+  const now = new Date().toLocaleString('ru-RU', {timeZone:'Europe/Moscow'});
+  const all = Object.values(scores).filter(s => s !== null);
+  const totalOk  = all.reduce((a,s) => a + s.ok, 0);
+  const totalAll = all.reduce((a,s) => a + s.total, 0);
+
+  const v = id => document.querySelector(`input[data-id="${id}"]`)?.value || '?';
+  const check = (id, val) => (ANSWERS[id]||[]).map(norm).includes(norm(val)) ? 'OK' : 'WRONG';
+  const dAnswer = document.getElementById('d-answer').value || '(пусто)';
+
+  let msg = `Homework 3 — Vocabulary: Holidays\n`;
+  msg += `Время: ${now}\n`;
+  msg += `Ученик: ${STUDENT}\n\n`;
+  msg += `Итог: ${totalOk}/${totalAll}\n`;
+  msg += `---\n`;
+  msg += `A. Phrases:\n`;
+  ['a2','a3','a4','a5','a6','a7','a8','a9','a10'].forEach(id => {
+    msg += `  ${id} -> "${v(id)}" [${check(id, v(id))}]\n`;
+  });
+  msg += `B. Adjectives:\n`;
+  ['b2','b3','b4','b5','b6','b7','b8','b9','b10'].forEach(id => {
+    msg += `  ${id} -> "${v(id)}" [${check(id, v(id))}]\n`;
+  });
+  msg += `C. Questions & answers:\n`;
+  ['c2q','c2a','c3q','c3a','c4q','c4a','c5q','c5a','c6q','c6a'].forEach(id => {
+    msg += `  ${id} -> "${v(id)}" [${check(id, v(id))}]\n`;
+  });
+  msg += `D. Своя история (не проверяется):\n  ${dAnswer}\n`;
+  msg += `---\n`;
+  msg += `Supabase hw_id: ${HW_ID}`;
+  return msg;
+}
+
+async function submitAll(){
+  const btn = document.getElementById('submitBtn');
+  const statusEl = document.getElementById('statusMsg');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Отправляю…';
+
+  // Прогоняем проверку на случай, если кнопки не нажимали
+  checkA(); checkB(); checkC();
+
+  const all = Object.values(scores).filter(s => s !== null);
+  const totalOk  = all.reduce((a,s) => a + s.ok, 0);
+  const totalAll = all.reduce((a,s) => a + s.total, 0);
+  const scoreStr = `${totalOk}/${totalAll}`;
+
+  saveAnswers(scoreStr);
+
+  const dAnswer = document.getElementById('d-answer').value;
+
+  const sbPromise = fetch(`${SB_URL}/homework_results?on_conflict=student,hw_id`, {
+    method: 'POST',
+    headers: sbH(),
+    body: JSON.stringify({
+      student: STUDENT, hw_id: HW_ID, score: scoreStr,
+      score_1a: scores.a ? `${scores.a.ok}/${scores.a.total}` : null,
+      score_1b: scores.b ? `${scores.b.ok}/${scores.b.total}` : null,
+      score_1c: scores.c ? `${scores.c.ok}/${scores.c.total}` : null,
+      own_story: dAnswer,
+      submitted_at: new Date().toISOString()
+    })
+  }).then(r => r.ok || r.status === 201).catch(() => false);
+
+  const tgPromise = fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ chat_id: TG_CHAT, text: buildTelegramMessage() })
+  }).then(r => r.ok).catch(() => false);
+
+  const [sbOk, tgOk] = await Promise.allSettled([sbPromise, tgPromise])
+    .then(rs => rs.map(r => r.status === 'fulfilled' ? r.value : false));
+
+  statusEl.className = 'status-msg ok';
+  statusEl.textContent =
+    `Результат: ${scoreStr} | `
+    + (sbOk ? 'Supabase OK' : 'Supabase — ОШИБКА!')
+    + ' | '
+    + (tgOk ? 'Telegram OK' : 'Telegram — ОШИБКА!');
+
+  lockAll();
+}
+
+restoreIfSubmitted();
+</script>
+</body>
+</html>
