@@ -117,21 +117,18 @@
 </div>
 
 <script>
-// All vocab sets — add new ones here as they appear
 const SETS = [
   { id:'unit2a-nouns',   file:'vocab-unit2a-nouns.html',   icon:'📖', lesson:'Unit 2A', name:'Слова урока', total:17 },
   { id:'unit2a-verbs',   file:'vocab-unit2a-verbs.html',   icon:'⚡', lesson:'Unit 2A', name:'Глаголы (regular)', total:10 },
+  { id:'holidays',       file:'vocab-holidays.html',       icon:'🏖️', lesson:'Homework 3', name:'Holidays & Adjectives', total:57 }
 ];
 
-// Read progress from localStorage for each set
 function getKnown(setId){
   try {
-    // Try new key first: olya_vocab_unit2a-nouns
     const raw = localStorage.getItem('olya_vocab_'+setId);
     if(raw){
       return Object.values(JSON.parse(raw)).filter(Boolean).length;
     }
-    // Fallback: old key olya_vocab_known (for backwards compat)
     if(setId==='unit2a-nouns'){
       const old = localStorage.getItem('olya_vocab_known');
       if(old) return Object.values(JSON.parse(old)).filter(Boolean).length;
