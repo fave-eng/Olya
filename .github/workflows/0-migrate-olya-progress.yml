@@ -1,0 +1,29 @@
+name: 0 - Migrate Olya progress to shared Supabase
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    env:
+      OLD_SUPABASE_URL: https://echffgdxkcxvobrwwiyw.supabase.co
+      NEW_SUPABASE_URL: https://zqzgarvmpqqqaobeicpc.supabase.co
+      OLD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.OLD_SUPABASE_SERVICE_ROLE_KEY }}
+      NEW_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.NEW_SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check migration secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$OLD_SUPABASE_SERVICE_ROLE_KEY" || (echo "Missing OLD_SUPABASE_SERVICE_ROLE_KEY" && exit 1)
+          test -n "$NEW_SUPABASE_SERVICE_ROLE_KEY" || (echo "Missing NEW_SUPABASE_SERVICE_ROLE_KEY" && exit 1)
+      - name: Migrate Olya progress
+        run: node scripts/migrate-olya-progress.mjs
