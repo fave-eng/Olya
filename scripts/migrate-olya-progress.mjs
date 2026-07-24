@@ -10,15 +10,43 @@ const OLD_KEY = process.env.OLD_SUPABASE_SERVICE_ROLE_KEY?.trim()
 const NEW_KEY = process.env.NEW_SUPABASE_SERVICE_ROLE_KEY?.trim()
 if (!OLD_KEY) throw new Error('Missing OLD_SUPABASE_SERVICE_ROLE_KEY')
 if (!NEW_KEY) throw new Error('Missing NEW_SUPABASE_SERVICE_ROLE_KEY')
+console.log(`Old project key type: ${keyKindForLog(OLD_KEY)}`)
+console.log(`New project key type: ${keyKindForLog(NEW_KEY)}`)
 
+function keyKindForLog(key) {
+  if (key.startsWith('sb_secret_')) return 'new secret key (sb_secret_...)'
+  if (key.startsWith('sb_publishable_')) return 'ERROR: publishable key'
+  if (key.split('.').length === 3) return 'legacy JWT key'
+  return 'unknown format'
+}
+
+function keyKind(key) {
+  if (key.startsWith('sb_secret_')) return 'new secret key'
+  if (key.startsWith('sb_publishable_')) return 'publishable key (wrong for migration)'
+  if (key.split('.').length === 3) return 'legacy JWT key'
+  return 'unknown key format'
+}
 function headers(key, extra = {}) {
-  return { apikey: key, Authorization: `Bearer ${key}`, 'content-type': 'application/json', ...extra }
+  const result = { apikey: key, 'content-type': 'application/json', ...extra }
+  // New sb_secret_* keys are opaque API keys, not JWTs. Sending them as
+  // Authorization: Bearer makes PostgREST try to parse them as a JWT.
+  if (!key.startsWith('sb_secret_') && !key.startsWith('sb_publishable_')) {
+    result.Authorization = `Bearer ${key}`
+  }
+  return result
+}
+function projectLabel(base) {
+  if (base.includes('echffgdxkcxvobrwwiyw')) return 'OLD Supabase (echffgdxkcxvobrwwiyw)'
+  if (base.includes('zqzgarvmpqqqaobeicpc')) return 'NEW Supabase (zqzgarvmpqqqaobeicpc)'
+  return base
 }
 async function getRows(base, key, table, query) {
   const response = await fetch(`${base}/rest/v1/${table}?${query}`, { headers: headers(key) })
   if (response.status === 404) return []
   const data = await response.json().catch(() => null)
-  if (!response.ok) throw new Error(`${table}: ${data?.message || response.status}`)
+  if (!response.ok) {
+    throw new Error(`${projectLabel(base)} / ${table}: HTTP ${response.status}: ${data?.message || data?.error || 'request failed'}; key type: ${keyKind(key)}`)
+  }
   return Array.isArray(data) ? data : []
 }
 async function upsert(table, rows, conflict) {
