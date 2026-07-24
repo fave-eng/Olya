@@ -1,0 +1,71 @@
+{
+  "id": "lesson-3",
+  "number": 3,
+  "title": "Holidays: key phrases",
+  "subtitle": "English File · Holidays vocabulary practice",
+  "status": "available",
+  "page": "lesson.html?id=lesson-3",
+  "vocabularyId": "vocab-holidays",
+  "grammarIds": [],
+  "totalPoints": 5,
+  "notification": {
+    "enabled": false,
+    "version": 1
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "eyebrow": "Holidays",
+      "title": "Complete the sentences",
+      "text": "Используй основные выражения по теме путешествий."
+    },
+    {
+      "type": "exercise",
+      "id": "l3-ex1",
+      "title": "Complete the gaps",
+      "instructions": "Введи подходящий глагол маленькими буквами.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "We decided to ___ abroad last summer.",
+          "input": "text",
+          "answer": "go",
+          "explanation": "go abroad"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "Did you ___ your flights online?",
+          "input": "text",
+          "answer": "book",
+          "explanation": "book flights online"
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "I prefer to ___ in a luxury hotel.",
+          "input": "text",
+          "answer": "stay",
+          "explanation": "stay in a hotel"
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "prompt": "Don't forget to ___ photos of the views!",
+          "input": "text",
+          "answer": "take",
+          "explanation": "take photos"
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "prompt": "We went to the beach to ___ all day.",
+          "input": "text",
+          "answer": "sunbathe",
+          "explanation": "sunbathe on the beach"
+        }
+      ]
+    }
+  ]
+}

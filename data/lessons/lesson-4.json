@@ -1,0 +1,212 @@
+{
+  "id": "lesson-4",
+  "number": 4,
+  "title": "Word order: SVOMPT and questions",
+  "subtitle": "English File · sentence order, questions and translation",
+  "status": "available",
+  "page": "lesson.html?id=lesson-4",
+  "vocabularyId": "vocab-holidays",
+  "grammarIds": [
+    "grammar-word-order-questions"
+  ],
+  "totalPoints": 12,
+  "notification": {
+    "enabled": false,
+    "version": 1
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "eyebrow": "SVOMPT",
+      "title": "Sentence word order",
+      "text": "Собери утверждения по схеме Subject–Verb–Object–Manner–Place–Time."
+    },
+    {
+      "type": "tip",
+      "title": "SVOMPT",
+      "text": "Subject + Verb + Object + Manner + Place + Time. Наречия частоты usually / always обычно стоят перед основным глаголом."
+    },
+    {
+      "type": "exercise",
+      "id": "l4-ex1",
+      "title": "1. Put the words in the correct order",
+      "instructions": "Напиши полное предложение.",
+      "wordBank": [
+        "We",
+        "had",
+        "a lovely time",
+        "at a campsite",
+        "last weekend",
+        "My friends",
+        "usually",
+        "book flights online",
+        "in the evenings",
+        "He",
+        "went skiing",
+        "in a very crowded place",
+        "yesterday"
+      ],
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "We / had / a lovely time / at a campsite / last weekend",
+          "input": "text",
+          "answer": "We had a lovely time at a campsite last weekend",
+          "explanation": "SVOMPT"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "My friends / usually / book flights online / in the evenings",
+          "input": "text",
+          "answer": "My friends usually book flights online in the evenings",
+          "explanation": "Frequency adverb before the main verb"
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "He / went skiing / in a very crowded place / yesterday",
+          "input": "text",
+          "answer": "He went skiing in a very crowded place yesterday",
+          "explanation": "Place before time"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "eyebrow": "Questions",
+      "title": "ASI and PASI",
+      "text": "Собери общие и специальные вопросы."
+    },
+    {
+      "type": "exercise",
+      "id": "l4-ex2",
+      "title": "2. Put the questions in the correct order",
+      "instructions": "Напиши полный вопрос.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "Did / you / hire / a bicycle / on the beach / yesterday?",
+          "input": "text",
+          "answer": "Did you hire a bicycle on the beach yesterday?",
+          "explanation": "Did + subject + V1"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "Why / was / this hotel / so noisy / last summer?",
+          "input": "text",
+          "answer": "Why was this hotel so noisy last summer?",
+          "explanation": "Question word + be + subject"
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "Where / do / they / usually / buy souvenirs / abroad?",
+          "input": "text",
+          "answer": "Where do they usually buy souvenirs abroad?",
+          "explanation": "Where + do + subject + usually + verb"
+        }
+      ]
+    },
+    {
+      "type": "exercise",
+      "id": "l4-ex3",
+      "title": "3. Choose the sentence without mistakes",
+      "instructions": "Выбери единственный грамматически правильный вариант.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "Which sentence follows SVOMPT?",
+          "input": "single",
+          "answer": 1,
+          "explanation": "We stayed in a very basic hotel yesterday.",
+          "options": [
+            "Yesterday we stayed in a very basic hotel.",
+            "We stayed in a very basic hotel yesterday.",
+            "We yesterday stayed in a hotel very basic."
+          ]
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "How do you ask about a dirty beach in the past?",
+          "input": "single",
+          "answer": 2,
+          "explanation": "Why was the beach so dirty last week?",
+          "options": [
+            "Why the beach was so dirty last week?",
+            "Why did the beach be so dirty last week?",
+            "Why was the beach so dirty last week?"
+          ]
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "Choose the correct Present Simple question.",
+          "input": "single",
+          "answer": 0,
+          "explanation": "Does he always sunbathe on the beach in the morning?",
+          "options": [
+            "Does he always sunbathe on the beach in the morning?",
+            "Does he sunbathe always on the beach in the morning?",
+            "He always does sunbathe on the beach in the morning?"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "eyebrow": "Translation",
+      "title": "Translate into English",
+      "text": "Соблюдай время и порядок слов."
+    },
+    {
+      "type": "exercise",
+      "id": "l4-ex4",
+      "title": "4. Translate the sentences",
+      "instructions": "Допустимы варианты из ключа.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "В прошлый вторник погода была ужасной и туманной.",
+          "input": "text",
+          "answer": "The weather was awful and foggy last Tuesday",
+          "acceptedAnswers": [
+            "The weather was awful and foggy last Tuesday",
+            "The weather was terrible and foggy last Tuesday"
+          ],
+          "explanation": "The weather was awful / terrible and foggy last Tuesday."
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "Куда вы обычно ездите за границу летом?",
+          "input": "text",
+          "answer": "Where do you usually go abroad in summer",
+          "acceptedAnswers": [
+            "Where do you usually go abroad in summer",
+            "Where do you usually go abroad in the summer"
+          ],
+          "explanation": "Where do you usually go abroad in summer?"
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "Она не фотографировала многолюдный город вчера.",
+          "input": "text",
+          "answer": "She didn't take photos of the crowded city yesterday",
+          "acceptedAnswers": [
+            "She didn't take photos of the crowded city yesterday",
+            "She did not take photos of the crowded city yesterday"
+          ],
+          "explanation": "She didn't take photos of the crowded city yesterday."
+        }
+      ]
+    }
+  ]
+}

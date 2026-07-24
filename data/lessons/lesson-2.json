@@ -1,0 +1,348 @@
+{
+  "id": "lesson-2",
+  "number": 2,
+  "title": "Past Simple: regular and irregular verbs",
+  "subtitle": "English File · Unit 2A · verb forms and a story about Bali",
+  "status": "available",
+  "page": "lesson.html?id=lesson-2",
+  "vocabularyId": "vocab-irregular-verbs",
+  "grammarIds": [
+    "grammar-past-simple"
+  ],
+  "totalPoints": 35,
+  "notification": {
+    "enabled": false,
+    "version": 1
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "eyebrow": "Verb forms",
+      "title": "Past Simple forms",
+      "text": "Напиши V2 для regular и irregular verbs."
+    },
+    {
+      "type": "exercise",
+      "id": "l2-exa",
+      "title": "A. Write the Past Simple form",
+      "instructions": "Для was / were принимаются обе формы.",
+      "items": [
+        {
+          "id": "irr-go",
+          "number": "irr-go",
+          "prompt": "go → ___",
+          "input": "text",
+          "answer": "went",
+          "explanation": "go → went"
+        },
+        {
+          "id": "irr-be",
+          "number": "irr-be",
+          "prompt": "be → ___",
+          "input": "text",
+          "answer": "was",
+          "acceptedAnswers": [
+            "was",
+            "were",
+            "was / were"
+          ],
+          "explanation": "was / were"
+        },
+        {
+          "id": "irr-take",
+          "number": "irr-take",
+          "prompt": "take → ___",
+          "input": "text",
+          "answer": "took",
+          "explanation": "take → took"
+        },
+        {
+          "id": "irr-have",
+          "number": "irr-have",
+          "prompt": "have → ___",
+          "input": "text",
+          "answer": "had",
+          "explanation": "have → had"
+        },
+        {
+          "id": "irr-can",
+          "number": "irr-can",
+          "prompt": "can → ___",
+          "input": "text",
+          "answer": "could",
+          "explanation": "can → could"
+        },
+        {
+          "id": "irr-sit",
+          "number": "irr-sit",
+          "prompt": "sit → ___",
+          "input": "text",
+          "answer": "sat",
+          "explanation": "sit → sat"
+        },
+        {
+          "id": "irr-get",
+          "number": "irr-get",
+          "prompt": "get → ___",
+          "input": "text",
+          "answer": "got",
+          "explanation": "get → got"
+        },
+        {
+          "id": "irr-think",
+          "number": "irr-think",
+          "prompt": "think → ___",
+          "input": "text",
+          "answer": "thought",
+          "explanation": "think → thought"
+        },
+        {
+          "id": "irr-say",
+          "number": "irr-say",
+          "prompt": "say → ___",
+          "input": "text",
+          "answer": "said",
+          "explanation": "say → said"
+        },
+        {
+          "id": "irr-spend",
+          "number": "irr-spend",
+          "prompt": "spend → ___",
+          "input": "text",
+          "answer": "spent",
+          "explanation": "spend → spent"
+        },
+        {
+          "id": "irr-feel",
+          "number": "irr-feel",
+          "prompt": "feel → ___",
+          "input": "text",
+          "answer": "felt",
+          "explanation": "feel → felt"
+        },
+        {
+          "id": "reg-climb",
+          "number": "reg-climb",
+          "prompt": "climb → ___",
+          "input": "text",
+          "answer": "climbed",
+          "explanation": "climb → climbed"
+        },
+        {
+          "id": "reg-want",
+          "number": "reg-want",
+          "prompt": "want → ___",
+          "input": "text",
+          "answer": "wanted",
+          "explanation": "want → wanted"
+        },
+        {
+          "id": "reg-decide",
+          "number": "reg-decide",
+          "prompt": "decide → ___",
+          "input": "text",
+          "answer": "decided",
+          "explanation": "decide → decided"
+        },
+        {
+          "id": "reg-start",
+          "number": "reg-start",
+          "prompt": "start → ___",
+          "input": "text",
+          "answer": "started",
+          "explanation": "start → started"
+        }
+      ]
+    },
+    {
+      "type": "exercise",
+      "id": "l2-exb",
+      "title": "B. Complete the sentences",
+      "instructions": "Реши, нужна ли V2, did + V1 или didn’t + V1.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "Last summer, she ___ to Bali by plane. (go)",
+          "input": "text",
+          "answer": "went",
+          "explanation": "Утверждение: go → went"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "They ___ very high — just a small hill. (not / climb)",
+          "input": "text",
+          "answer": "didn't climb",
+          "acceptedAnswers": [
+            "didn't climb",
+            "did not climb"
+          ],
+          "explanation": "didn't climb / did not climb"
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "She ___ so excited at the airport. (feel)",
+          "input": "text",
+          "answer": "felt",
+          "explanation": "feel → felt"
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "prompt": "___ a good time? (they / have)",
+          "input": "text",
+          "answer": "did they have",
+          "explanation": "Did + they + have"
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "prompt": "He ___ to leave Bali. (not / want)",
+          "input": "text",
+          "answer": "didn't want",
+          "acceptedAnswers": [
+            "didn't want",
+            "did not want"
+          ],
+          "explanation": "didn't want / did not want"
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "prompt": "She ___ hundreds of photos. (take)",
+          "input": "text",
+          "answer": "took",
+          "explanation": "take → took"
+        },
+        {
+          "id": "7",
+          "number": "7",
+          "prompt": "They ___ three weeks there. (spend)",
+          "input": "text",
+          "answer": "spent",
+          "explanation": "spend → spent"
+        },
+        {
+          "id": "8",
+          "number": "8",
+          "prompt": "___ about coming back? (she / think)",
+          "input": "text",
+          "answer": "did she think",
+          "explanation": "Did + she + think"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "eyebrow": "Story",
+      "title": "Olya's trip to Bali",
+      "text": "Заполни рассказ формами Past Simple."
+    },
+    {
+      "type": "exercise",
+      "id": "l2-exc",
+      "title": "C. Complete the story",
+      "instructions": "Напиши только форму глагола.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "Last summer, Olya ___ to visit Bali. (decide)",
+          "input": "text",
+          "answer": "decided",
+          "explanation": "decide → decided"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "They ___ by plane. (go)",
+          "input": "text",
+          "answer": "went",
+          "explanation": "go → went"
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "It ___ a long flight. (be)",
+          "input": "text",
+          "answer": "was",
+          "explanation": "Oдна поездка: was"
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "prompt": "They ___ very excited. (feel)",
+          "input": "text",
+          "answer": "felt",
+          "explanation": "feel → felt"
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "prompt": "When they ___ to the hotel... (get)",
+          "input": "text",
+          "answer": "got",
+          "explanation": "get → got"
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "prompt": "Olya ___ lots of photos. (take)",
+          "input": "text",
+          "answer": "took",
+          "explanation": "take → took"
+        },
+        {
+          "id": "7",
+          "number": "7",
+          "prompt": "They ___ up to a rice terrace. (climb)",
+          "input": "text",
+          "answer": "climbed",
+          "explanation": "climb → climbed"
+        },
+        {
+          "id": "8",
+          "number": "8",
+          "prompt": "Olya ___ there for an hour. (sit)",
+          "input": "text",
+          "answer": "sat",
+          "explanation": "sit → sat"
+        },
+        {
+          "id": "9",
+          "number": "9",
+          "prompt": "She ___ about her art. (think)",
+          "input": "text",
+          "answer": "thought",
+          "explanation": "think → thought"
+        },
+        {
+          "id": "10",
+          "number": "10",
+          "prompt": "She ___ three amazing weeks in Bali. (spend)",
+          "input": "text",
+          "answer": "spent",
+          "explanation": "spend → spent"
+        },
+        {
+          "id": "11",
+          "number": "11",
+          "prompt": "She ___ to her sister... (say)",
+          "input": "text",
+          "answer": "said",
+          "explanation": "say → said"
+        },
+        {
+          "id": "12",
+          "number": "12",
+          "prompt": "I ___ to come back every year! (want)",
+          "input": "text",
+          "answer": "wanted",
+          "explanation": "want → wanted"
+        }
+      ]
+    }
+  ]
+}

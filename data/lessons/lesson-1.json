@@ -1,0 +1,387 @@
+{
+  "id": "lesson-1",
+  "number": 1,
+  "title": "OMG! Where's my passport?",
+  "subtitle": "English File · Unit 2A · Past Simple: forms, negatives and questions",
+  "status": "available",
+  "page": "lesson.html?id=lesson-1",
+  "vocabularyId": "vocab-unit2a",
+  "grammarIds": [
+    "grammar-past-simple"
+  ],
+  "totalPoints": 35,
+  "notification": {
+    "enabled": false,
+    "version": 1
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "eyebrow": "Past Simple",
+      "title": "Forms and verb groups",
+      "text": "Сначала вспомни формы Past Simple, затем выполни отрицания, текст и вопросы."
+    },
+    {
+      "type": "tip",
+      "title": "Past Simple — напоминание",
+      "text": "Regular verbs: добавь -ed. Irregular verbs имеют особую форму. После didn't и did всегда используется V1."
+    },
+    {
+      "type": "exercise",
+      "id": "l1-ex1a",
+      "title": "1A. Write the Past Simple forms",
+      "instructions": "Напиши форму Past Simple. Подсказка в скобках показывает группу глагола.",
+      "items": [
+        {
+          "id": "reg-1",
+          "number": "reg-1",
+          "prompt": "argue (regular) → ___",
+          "input": "text",
+          "answer": "argued",
+          "explanation": "argue → argued"
+        },
+        {
+          "id": "reg-2",
+          "number": "reg-2",
+          "prompt": "arrive (regular) → ___",
+          "input": "text",
+          "answer": "arrived",
+          "explanation": "arrive → arrived"
+        },
+        {
+          "id": "reg-3",
+          "number": "reg-3",
+          "prompt": "ask (regular) → ___",
+          "input": "text",
+          "answer": "asked",
+          "explanation": "ask → asked"
+        },
+        {
+          "id": "reg-4",
+          "number": "reg-4",
+          "prompt": "invite (regular) → ___",
+          "input": "text",
+          "answer": "invited",
+          "explanation": "invite → invited"
+        },
+        {
+          "id": "reg-5",
+          "number": "reg-5",
+          "prompt": "rent (regular) → ___",
+          "input": "text",
+          "answer": "rented",
+          "explanation": "rent → rented"
+        },
+        {
+          "id": "reg-6",
+          "number": "reg-6",
+          "prompt": "stay (regular) → ___",
+          "input": "text",
+          "answer": "stayed",
+          "explanation": "stay → stayed"
+        },
+        {
+          "id": "reg-7",
+          "number": "reg-7",
+          "prompt": "study (regular) → ___",
+          "input": "text",
+          "answer": "studied",
+          "explanation": "study → studied"
+        },
+        {
+          "id": "irr-1",
+          "number": "irr-1",
+          "prompt": "begin (irregular) → ___",
+          "input": "text",
+          "answer": "began",
+          "explanation": "begin → began"
+        },
+        {
+          "id": "irr-2",
+          "number": "irr-2",
+          "prompt": "buy (irregular) → ___",
+          "input": "text",
+          "answer": "bought",
+          "explanation": "buy → bought"
+        },
+        {
+          "id": "irr-3",
+          "number": "irr-3",
+          "prompt": "can (irregular) → ___",
+          "input": "text",
+          "answer": "could",
+          "explanation": "can → could"
+        },
+        {
+          "id": "irr-4",
+          "number": "irr-4",
+          "prompt": "choose (irregular) → ___",
+          "input": "text",
+          "answer": "chose",
+          "explanation": "choose → chose"
+        },
+        {
+          "id": "irr-5",
+          "number": "irr-5",
+          "prompt": "eat (irregular) → ___",
+          "input": "text",
+          "answer": "ate",
+          "explanation": "eat → ate"
+        },
+        {
+          "id": "irr-6",
+          "number": "irr-6",
+          "prompt": "feel (irregular) → ___",
+          "input": "text",
+          "answer": "felt",
+          "explanation": "feel → felt"
+        },
+        {
+          "id": "irr-7",
+          "number": "irr-7",
+          "prompt": "say (irregular) → ___",
+          "input": "text",
+          "answer": "said",
+          "explanation": "say → said"
+        }
+      ]
+    },
+    {
+      "type": "exercise",
+      "id": "l1-ex1b",
+      "title": "1B. Rewrite with a negative form",
+      "instructions": "Вставь отрицательную форму: didn't + V1 или weren't.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "They ___ any souvenirs. (They bought some postcards.)",
+          "input": "text",
+          "answer": "didn't buy",
+          "acceptedAnswers": [
+            "didn't buy",
+            "did not buy"
+          ],
+          "explanation": "didn't buy / did not buy"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "The people ___ very helpful. (They were unfriendly.)",
+          "input": "text",
+          "answer": "weren't",
+          "acceptedAnswers": [
+            "weren't",
+            "were not"
+          ],
+          "explanation": "weren't / were not"
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "I ___ in the swimming pool. (I swam in the sea.)",
+          "input": "text",
+          "answer": "didn't swim",
+          "acceptedAnswers": [
+            "didn't swim",
+            "did not swim"
+          ],
+          "explanation": "didn't swim / did not swim"
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "prompt": "We ___ a car. (We rented a flat.)",
+          "input": "text",
+          "answer": "didn't rent",
+          "acceptedAnswers": [
+            "didn't rent",
+            "did not rent"
+          ],
+          "explanation": "didn't rent / did not rent"
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "prompt": "He ___ a week there. (He spent a month in Bangkok.)",
+          "input": "text",
+          "answer": "didn't spend",
+          "acceptedAnswers": [
+            "didn't spend",
+            "did not spend"
+          ],
+          "explanation": "didn't spend / did not spend"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "eyebrow": "Reading gap-fill",
+      "title": "The Holiday That Wasn't",
+      "text": "Вставь глаголы в Past Simple."
+    },
+    {
+      "type": "reading",
+      "title": "The Holiday That Wasn't",
+      "sections": [
+        {
+          "number": "Story",
+          "heading": "Read the complete context before answering",
+          "text": "Four years ago, we decided to go away for the weekend. We wanted to go to Portugal, so we booked a beautiful apartment online. A week later, we took a taxi to the airport. We arrived at the airport at two o’clock, and we asked to check in. The woman at the desk asked us for our passports. We looked in our bags and coat pockets, but we couldn’t find them. So we went home again!"
+        }
+      ]
+    },
+    {
+      "type": "exercise",
+      "id": "l1-ex1c",
+      "title": "1C. Complete the story",
+      "instructions": "Напиши только недостающую форму глагола.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "Four years ago, we ___ to go away for the weekend. (decide)",
+          "input": "text",
+          "answer": "decided",
+          "explanation": "decide → decided"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "We ___ to go to Portugal. (want)",
+          "input": "text",
+          "answer": "wanted",
+          "explanation": "want → wanted"
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "We ___ a beautiful apartment online. (book)",
+          "input": "text",
+          "answer": "booked",
+          "explanation": "book → booked"
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "prompt": "A week later, we ___ a taxi to the airport. (take)",
+          "input": "text",
+          "answer": "took",
+          "explanation": "take → took"
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "prompt": "We ___ at the airport at two o’clock. (arrive)",
+          "input": "text",
+          "answer": "arrived",
+          "explanation": "arrive → arrived"
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "prompt": "We ___ to check in. (ask)",
+          "input": "text",
+          "answer": "asked",
+          "explanation": "ask → asked"
+        },
+        {
+          "id": "7",
+          "number": "7",
+          "prompt": "The woman at the desk ___ us for our passports. (ask)",
+          "input": "text",
+          "answer": "asked",
+          "explanation": "ask → asked"
+        },
+        {
+          "id": "8",
+          "number": "8",
+          "prompt": "We ___ in our bags and coat pockets. (look)",
+          "input": "text",
+          "answer": "looked",
+          "explanation": "look → looked"
+        },
+        {
+          "id": "9",
+          "number": "9",
+          "prompt": "We ___ find them. (cannot)",
+          "input": "text",
+          "answer": "couldn't",
+          "acceptedAnswers": [
+            "couldn't",
+            "could not"
+          ],
+          "explanation": "couldn't / could not"
+        },
+        {
+          "id": "10",
+          "number": "10",
+          "prompt": "So we ___ home again! (go)",
+          "input": "text",
+          "answer": "went",
+          "explanation": "go → went"
+        }
+      ]
+    },
+    {
+      "type": "exercise",
+      "id": "l1-ex1d",
+      "title": "1D. Complete the Past Simple questions",
+      "instructions": "Вставь недостающую часть вопроса.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "When ___ to go away for the weekend? — Four years ago.",
+          "input": "text",
+          "answer": "did they decide",
+          "explanation": "did + they + decide"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "Where ___ to go? — Portugal.",
+          "input": "text",
+          "answer": "did they want",
+          "explanation": "did + they + want"
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "How ___ the apartment? — They booked it online.",
+          "input": "text",
+          "answer": "did they book",
+          "explanation": "did + they + book"
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "prompt": "What time ___ at the airport? — At two o’clock.",
+          "input": "text",
+          "answer": "did they arrive",
+          "explanation": "did + they + arrive"
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "prompt": "What ___ at check-in ask for? — Their passports.",
+          "input": "text",
+          "answer": "did the woman",
+          "acceptedAnswers": [
+            "did the woman",
+            "did the woman at the desk"
+          ],
+          "explanation": "did the woman / did the woman at the desk"
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "prompt": "Where ___ in the end? — They went home.",
+          "input": "text",
+          "answer": "did they go",
+          "explanation": "did + they + go"
+        }
+      ]
+    }
+  ]
+}
