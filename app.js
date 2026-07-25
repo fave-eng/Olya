@@ -858,6 +858,37 @@
           : '<div class="card disabled empty-state"><div class="empty-state-icon">✨</div><h3>Текущий материал пока не опубликован</h3><p>Здесь автоматически появится последнее доступное домашнее задание.</p></div>';
       }
     }
+
+    const knowledge = byId('knowledge-list');
+    if (knowledge) {
+      const publishedTopics = GRAMMAR_DATA
+        .filter((topic) => topic.status !== 'draft' && topic.status !== 'locked')
+        .sort((a, b) => Number(b.order || 0) - Number(a.order || 0));
+
+      if (!publishedTopics.length) {
+        knowledge.innerHTML = emptyState('🧠', 'Теория пока не опубликована', 'Новые памятки и правила появятся здесь после уроков.');
+      } else {
+        const latestTopics = publishedTopics.slice(0, 3);
+        const topicCards = latestTopics.map((topic) => {
+          const state = window.ProgressService.loadGrammarProgress().topics[topic.id] || {};
+          const isPassed = state.passed === true || topic.passed === true;
+          const href = topic.page || `grammar-topic.html?id=${encodeURIComponent(topic.id)}`;
+          const description = topic.overview?.keyRule || topic.overview?.lead || 'Памятка, примеры и мини-тест.';
+          return `<a class="card interactive item-card" href="${escapeHtml(href)}">
+            <div class="item-icon">${isPassed ? '✅' : '🧠'}</div>
+            <div class="item-main"><h3>${escapeHtml(safeText(topic.title, 'Грамматическая тема'))}</h3><p>${escapeHtml(safeText(description, 'Памятка, примеры и мини-тест.'))}</p></div>
+            <span class="status-badge status-${isPassed ? 'completed' : 'available'}">${isPassed ? 'Пройдено' : 'Открыть'}</span>
+          </a>`;
+        }).join('');
+
+        knowledge.innerHTML = `${topicCards}
+          <a class="card interactive item-card" href="grammar.html">
+            <div class="item-icon">📐</div>
+            <div class="item-main"><h3>Все темы грамматики</h3><p>Открыть полный справочник и мини-тесты по опубликованным темам.</p></div>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>`;
+      }
+    }
   }
 
   function renderHomework() {

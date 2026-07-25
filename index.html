@@ -10,8 +10,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="config.js" defer></script>
   <script src="data/vocabulary-data.js" defer></script>
-  <script src="data/grammar-data.js?v=2" defer></script>
-  <script src="app.js" defer></script>
+  <script src="data/grammar-data.js?v=4" defer></script>
+  <script src="app.js?v=4" defer></script>
 </head>
 <body class="has-bottom-nav" data-page="home" data-view="home">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -63,7 +63,7 @@
 
     <section class="section reveal" aria-labelledby="knowledge-title">
       <div class="section-heading"><div><span class="eyebrow">Справочник</span><h2 id="knowledge-title">База знаний</h2></div></div>
-      <div class="card empty-state"><div class="empty-state-icon">🧠</div><h3>Теория появится постепенно</h3><p>Здесь будут храниться опубликованные преподавателем памятки, правила и полезные материалы для повторения.</p></div>
+      <div id="knowledge-list" class="list"></div>
     </section>
 
     <section class="section reveal" aria-labelledby="book-title">
