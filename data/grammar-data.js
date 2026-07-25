@@ -494,5 +494,200 @@ window.GRAMMAR_DATA = [
       "translation": "Где они обычно покупают сувениры?",
       "note": "Если основной глагол be, do / did не используются."
     }
+  },
+  {
+    "id": "grammar-past-simple-continuous",
+    "order": 6,
+    "title": "Past Simple vs Past Continuous",
+    "level": "A2",
+    "status": "available",
+    "page": "grammar-topic.html?id=grammar-past-simple-continuous",
+    "passScore": 100,
+    "overview": {
+      "lead": "Past Simple показывает завершённое событие, а Past Continuous — действие, которое находилось в процессе в определённый момент прошлого.",
+      "keyRule": "Past Continuous создаёт фон или длительный процесс; Past Simple сообщает, что произошло на этом фоне.",
+      "subjects": [
+        "Past Simple = событие",
+        "Past Continuous = процесс"
+      ],
+      "example": "I was walking home when I saw an accident."
+    },
+    "uses": [
+      {
+        "icon": "✅",
+        "title": "Завершённое событие",
+        "text": "Одно действие закончилось в прошлом или события произошли последовательно.",
+        "example": "He opened the door and went inside."
+      },
+      {
+        "icon": "🕘",
+        "title": "Действие в процессе",
+        "text": "Действие происходило в конкретный момент прошлого.",
+        "example": "At nine, we were watching a film."
+      },
+      {
+        "icon": "⚡",
+        "title": "Прерванный процесс",
+        "text": "Длительное действие было фоном, когда произошло короткое событие.",
+        "example": "I was cooking when the lights went out."
+      },
+      {
+        "icon": "↔️",
+        "title": "Два одновременных процесса",
+        "text": "Два действия происходили одновременно; часто используется while.",
+        "example": "While I was cooking, she was setting the table."
+      }
+    ],
+    "forms": [
+      {
+        "id": "past-simple",
+        "icon": "✓",
+        "title": "Past Simple",
+        "formula": "subject + V2",
+        "example": "She bought new shoes yesterday.",
+        "translation": "Она купила новые туфли вчера.",
+        "note": "Для завершённого действия. После did / didn’t используй V1."
+      },
+      {
+        "id": "past-continuous",
+        "icon": "↻",
+        "title": "Past Continuous",
+        "formula": "subject + was / were + V-ing",
+        "example": "She was buying shoes at five.",
+        "translation": "В пять часов она покупала туфли.",
+        "note": "Для действия, которое находилось в процессе."
+      },
+      {
+        "id": "when",
+        "icon": "⚡",
+        "title": "When",
+        "formula": "Past Continuous + when + Past Simple",
+        "example": "We were driving home when the car stopped.",
+        "translation": "Мы ехали домой, когда машина остановилась.",
+        "note": "When часто вводит короткое событие в Past Simple."
+      },
+      {
+        "id": "while",
+        "icon": "↔️",
+        "title": "While",
+        "formula": "While + Past Continuous, Past Simple / Past Continuous",
+        "example": "While I was studying, Anna called me.",
+        "translation": "Пока я занималась, Анна позвонила мне.",
+        "note": "После while обычно идёт длительное действие."
+      }
+    ],
+    "contrast": {
+      "title": "Как выбрать время",
+      "intro": "Сначала реши, видишь ли ты завершённое событие или процесс в определённый момент.",
+      "ordinary": {
+        "label": "Past Simple",
+        "verbs": "V2 · did / didn’t + V1 · was / were",
+        "affirmative": "I called her.",
+        "negative": "I didn’t call her.",
+        "question": "Did you call her?",
+        "rule": "Событие завершилось; важен факт или результат. Маркеры: yesterday, last..., ago, then, suddenly."
+      },
+      "be": {
+        "label": "Past Continuous",
+        "verbs": "was / were + V-ing",
+        "affirmative": "I was calling her.",
+        "negative": "I wasn’t calling her.",
+        "question": "Were you calling her?",
+        "rule": "Действие было в процессе. Маркеры: at 7 o’clock, at that moment, while, when another action happened."
+      }
+    },
+    "questionBuilder": {
+      "title": "Фон и событие в одном предложении",
+      "pattern": [
+        "Past Continuous: процесс",
+        "when",
+        "Past Simple: событие"
+      ],
+      "example": "I was walking home when I saw an accident.",
+      "translation": "Я шла домой, когда увидела аварию.",
+      "note": "Можно начать с when: When I saw the accident, I was walking home. Время не меняется — меняется только порядок частей."
+    },
+    "memoryRule": {
+      "title": "Как быстро выбрать время",
+      "steps": [
+        "Найди конкретный момент или слово while: это часто Past Continuous.",
+        "Найди короткое завершённое событие: это Past Simple.",
+        "Если одно действие прерывает другое, фон ставь в Past Continuous, событие — в Past Simple.",
+        "После did / didn’t всегда используй V1; в Past Continuous обязательно нужны was / were и -ing."
+      ]
+    },
+    "commonMistakes": [
+      {
+        "wrong": "I was walk home.",
+        "right": "I was walking home.",
+        "reason": "После was / were нужен глагол с -ing."
+      },
+      {
+        "wrong": "She didn’t went out.",
+        "right": "She didn’t go out.",
+        "reason": "После didn’t используется V1."
+      },
+      {
+        "wrong": "While I cooked, the phone was ringing once.",
+        "right": "While I was cooking, the phone rang.",
+        "reason": "Фон — Past Continuous; короткое событие — Past Simple."
+      },
+      {
+        "wrong": "What did you do when I called? (о процессе в момент звонка)",
+        "right": "What were you doing when I called?",
+        "reason": "Вопрос относится к действию, которое происходило в тот момент."
+      }
+    ],
+    "quiz": [
+      {
+        "difficulty": "1 · Easy",
+        "skill": "Past Continuous",
+        "prompt": "At eight o’clock, I ___ dinner.",
+        "options": [
+          "cooked",
+          "was cooking",
+          "were cooking"
+        ],
+        "answer": 1,
+        "explanation": "Действие происходило в конкретный момент: was cooking."
+      },
+      {
+        "difficulty": "2 · Basic",
+        "skill": "Past Simple",
+        "prompt": "We ___ them during our holiday last summer.",
+        "options": [
+          "met",
+          "were meeting",
+          "was meeting"
+        ],
+        "answer": 0,
+        "explanation": "Завершённое событие: met."
+      },
+      {
+        "difficulty": "3 · Medium",
+        "skill": "Процесс + событие",
+        "prompt": "While she ___ home, she ___ her keys.",
+        "options": [
+          "walked / was losing",
+          "was walking / lost",
+          "was walking / was losing"
+        ],
+        "answer": 1,
+        "explanation": "Фон: was walking. Событие: lost."
+      },
+      {
+        "difficulty": "4 · Challenge",
+        "skill": "Вопрос о процессе",
+        "prompt": "What ___ when I called you?",
+        "options": [
+          "did you do",
+          "were you doing",
+          "was you doing"
+        ],
+        "answer": 1,
+        "explanation": "Действие было в процессе в момент звонка: were you doing."
+      }
+    ],
+    "linkedLessonId": "lesson-5"
   }
 ];

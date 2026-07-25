@@ -1,0 +1,436 @@
+{
+  "id": "lesson-5",
+  "number": 5,
+  "title": "Past Simple and Past Continuous",
+  "subtitle": "Grammar practice · completed actions, background actions and interruptions",
+  "status": "available",
+  "page": "lesson.html?id=lesson-5",
+  "grammarIds": [
+    "grammar-past-simple-continuous"
+  ],
+  "totalPoints": 32,
+  "notification": {
+    "enabled": true,
+    "version": 1
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "eyebrow": "Past Simple",
+      "title": "Completed actions in the past",
+      "text": "Используй Past Simple для завершённых действий и событий в прошлом."
+    },
+    {
+      "type": "tip",
+      "title": "Past Simple reminder",
+      "text": "Утверждение: V2. Отрицание: didn’t + V1. Вопрос: Did + subject + V1? Для be используй was / were."
+    },
+    {
+      "type": "exercise",
+      "id": "l5-ex1",
+      "title": "1. Complete the sentences in the Past Simple",
+      "instructions": "Напиши недостающую форму глагола. В вопросах впиши всю недостающую часть.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "Last Saturday, I ___ my grandmother. (visit)",
+          "input": "text",
+          "answer": "visited",
+          "explanation": "Past Simple: visit → visited."
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "We ___ TV yesterday evening. (not watch)",
+          "input": "text",
+          "answer": "didn't watch",
+          "acceptedAnswers": [
+            "didn't watch",
+            "did not watch"
+          ],
+          "explanation": "Past Simple negative: didn’t + watch."
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "___ your homework last night? (you / finish)",
+          "input": "text",
+          "answer": "Did you finish",
+          "explanation": "Past Simple question: Did + subject + V1."
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "prompt": "She ___ a new pair of shoes two days ago. (buy)",
+          "input": "text",
+          "answer": "bought",
+          "explanation": "buy → bought."
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "prompt": "The lesson ___ at nine o’clock. (start)",
+          "input": "text",
+          "answer": "started",
+          "explanation": "start → started."
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "prompt": "They ___ very tired after the trip. (be)",
+          "input": "text",
+          "answer": "were",
+          "explanation": "They → were."
+        },
+        {
+          "id": "7",
+          "number": "7",
+          "prompt": "Tom ___ to work on Monday. (not go)",
+          "input": "text",
+          "answer": "didn't go",
+          "acceptedAnswers": [
+            "didn't go",
+            "did not go"
+          ],
+          "explanation": "После didn’t используется V1: go."
+        },
+        {
+          "id": "8",
+          "number": "8",
+          "prompt": "Where ___ her friends? (Anna / meet)",
+          "input": "text",
+          "answer": "did Anna meet",
+          "explanation": "Where + did + Anna + meet."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "eyebrow": "Past Continuous",
+      "title": "Actions in progress in the past",
+      "text": "Используй was / were + verb-ing для действия, которое происходило в определённый момент в прошлом."
+    },
+    {
+      "type": "tip",
+      "title": "Past Continuous reminder",
+      "text": "I / he / she / it → was. You / we / they → were. После was / were ставь глагол с -ing."
+    },
+    {
+      "type": "exercise",
+      "id": "l5-ex2",
+      "title": "2. Complete the sentences in the Past Continuous",
+      "instructions": "Напиши недостающую форму was / were + verb-ing.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "At eight o’clock, I ___ a book. (read)",
+          "input": "text",
+          "answer": "was reading",
+          "explanation": "I → was reading."
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "They ___ at midnight. (not sleep)",
+          "input": "text",
+          "answer": "weren't sleeping",
+          "acceptedAnswers": [
+            "weren't sleeping",
+            "were not sleeping"
+          ],
+          "explanation": "They → were not sleeping."
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "What ___ at seven yesterday evening? (you / do)",
+          "input": "text",
+          "answer": "were you doing",
+          "explanation": "What + were + you + doing?"
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "prompt": "Kate ___ dinner at that moment. (cook)",
+          "input": "text",
+          "answer": "was cooking",
+          "explanation": "Kate → was cooking."
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "prompt": "We ___ for the bus at 6:30. (wait)",
+          "input": "text",
+          "answer": "were waiting",
+          "explanation": "We → were waiting."
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "prompt": "The children ___ in the garden. (play)",
+          "input": "text",
+          "answer": "were playing",
+          "explanation": "Children → were playing."
+        },
+        {
+          "id": "7",
+          "number": "7",
+          "prompt": "___ when you left the house? (it / rain)",
+          "input": "text",
+          "answer": "Was it raining",
+          "explanation": "Was + it + raining?"
+        },
+        {
+          "id": "8",
+          "number": "8",
+          "prompt": "My parents ___ at ten last night. (not work)",
+          "input": "text",
+          "answer": "weren't working",
+          "acceptedAnswers": [
+            "weren't working",
+            "were not working"
+          ],
+          "explanation": "My parents → were not working."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "eyebrow": "Past Simple or Past Continuous?",
+      "title": "Choose the correct tense",
+      "text": "Смотри на смысл: завершённое событие или действие в процессе."
+    },
+    {
+      "type": "exercise",
+      "id": "l5-ex3",
+      "title": "3. Choose the correct verb form",
+      "instructions": "Выбери форму, которая лучше передаёт смысл предложения.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "I ___ home when I saw an accident.",
+          "input": "single",
+          "options": [
+            "walked",
+            "was walking",
+            "were walking"
+          ],
+          "answer": 1,
+          "explanation": "Длительное действие было фоном: was walking."
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "They ___ tennis from three to five yesterday.",
+          "input": "single",
+          "options": [
+            "played",
+            "were playing",
+            "was playing"
+          ],
+          "answer": 1,
+          "explanation": "Действие шло в течение периода: were playing."
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "She dropped her phone while she ___.",
+          "input": "single",
+          "options": [
+            "ran",
+            "was running",
+            "were running"
+          ],
+          "answer": 1,
+          "explanation": "После while обычно описывается процесс: was running."
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "prompt": "At nine o’clock, we ___ a film.",
+          "input": "single",
+          "options": [
+            "watched",
+            "were watching",
+            "was watching"
+          ],
+          "answer": 1,
+          "explanation": "Действие происходило в конкретный момент: were watching."
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "prompt": "He ___ the door and went inside.",
+          "input": "single",
+          "options": [
+            "opened",
+            "was opening",
+            "were opening"
+          ],
+          "answer": 0,
+          "explanation": "Последовательность завершённых событий: opened, went."
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "prompt": "While I ___ dinner, the lights went out.",
+          "input": "single",
+          "options": [
+            "cooked",
+            "was cooking",
+            "were cooking"
+          ],
+          "answer": 1,
+          "explanation": "Процесс был прерван событием: was cooking."
+        },
+        {
+          "id": "7",
+          "number": "7",
+          "prompt": "We ___ them during our holiday last summer.",
+          "input": "single",
+          "options": [
+            "met",
+            "were meeting",
+            "was meeting"
+          ],
+          "answer": 0,
+          "explanation": "Одно завершённое событие: met."
+        },
+        {
+          "id": "8",
+          "number": "8",
+          "prompt": "What ___ when I called you?",
+          "input": "single",
+          "options": [
+            "did you do",
+            "were you doing",
+            "was you doing"
+          ],
+          "answer": 1,
+          "explanation": "Вопрос о процессе в момент звонка: were you doing."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "eyebrow": "Two actions together",
+      "title": "Background and main event",
+      "text": "Выбери правильную комбинацию времён в небольших ситуациях."
+    },
+    {
+      "type": "exercise",
+      "id": "l5-ex4",
+      "title": "4. Choose the correct pair of verb forms",
+      "instructions": "В каждом предложении выбери правильную комбинацию Past Simple и Past Continuous.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "prompt": "While Mia ___ to work, she ___ an old friend.",
+          "input": "single",
+          "options": [
+            "walked / was seeing",
+            "was walking / saw",
+            "was walking / was seeing"
+          ],
+          "answer": 1,
+          "explanation": "Фон: was walking. Короткое событие: saw."
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "prompt": "They ___ outside when the bus ___.",
+          "input": "single",
+          "options": [
+            "were talking / arrived",
+            "talked / was arriving",
+            "were talking / was arriving"
+          ],
+          "answer": 0,
+          "explanation": "Процесс + событие: were talking / arrived."
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "prompt": "It ___ to rain while we ___ a picnic.",
+          "input": "single",
+          "options": [
+            "was starting / had",
+            "started / were having",
+            "started / had"
+          ],
+          "answer": 1,
+          "explanation": "Короткое событие interrupted ongoing action."
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "prompt": "I ___ for my keys when I ___ an old photo.",
+          "input": "single",
+          "options": [
+            "looked / was finding",
+            "was looking / found",
+            "was looking / was finding"
+          ],
+          "answer": 1,
+          "explanation": "was looking — процесс; found — результативное событие."
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "prompt": "Mark ___ a cup while he ___ the dishes.",
+          "input": "single",
+          "options": [
+            "broke / was washing",
+            "was breaking / washed",
+            "broke / washed"
+          ],
+          "answer": 0,
+          "explanation": "broke — короткое событие; was washing — фон."
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "prompt": "The children ___ when the thunder ___ them up.",
+          "input": "single",
+          "options": [
+            "slept / was waking",
+            "were sleeping / woke",
+            "were sleeping / was waking"
+          ],
+          "answer": 1,
+          "explanation": "were sleeping — процесс; woke — событие."
+        },
+        {
+          "id": "7",
+          "number": "7",
+          "prompt": "We ___ home when the car suddenly ___.",
+          "input": "single",
+          "options": [
+            "drove / was stopping",
+            "were driving / stopped",
+            "were driving / was stopping"
+          ],
+          "answer": 1,
+          "explanation": "were driving — фон; stopped — внезапное событие."
+        },
+        {
+          "id": "8",
+          "number": "8",
+          "prompt": "Anna ___ me while I ___ for the test.",
+          "input": "single",
+          "options": [
+            "called / was studying",
+            "was calling / studied",
+            "called / studied"
+          ],
+          "answer": 0,
+          "explanation": "called — событие; was studying — действие в процессе."
+        }
+      ]
+    }
+  ]
+}

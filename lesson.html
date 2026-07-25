@@ -51,6 +51,8 @@
     }
 
     .lesson-vocabulary-shortcut {
+      display: grid;
+      gap: 12px;
       margin-bottom: 18px;
     }
     .lesson-vocabulary-link {
@@ -72,6 +74,17 @@
       transform: translateY(-2px);
       border-color: #a78bfa;
       box-shadow: 0 14px 34px rgba(79, 70, 229, 0.14);
+    }
+    .lesson-vocabulary-link.lesson-grammar-link {
+      background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
+      border-color: #a7f3d0;
+    }
+    .lesson-vocabulary-link.lesson-grammar-link:hover {
+      border-color: #34d399;
+      box-shadow: 0 14px 34px rgba(5, 150, 105, 0.12);
+    }
+    .lesson-vocabulary-link.lesson-grammar-link .lesson-vocabulary-icon {
+      background: #d1fae5;
     }
     .lesson-vocabulary-link:focus-visible {
       outline: 3px solid rgba(124, 58, 237, 0.25);
@@ -135,7 +148,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="config.js" defer></script>
   <script src="data/vocabulary-data.js" defer></script>
-  <script src="data/grammar-data.js" defer></script>
+  <script src="data/grammar-data.js?v=2" defer></script>
   <script src="app.js?v=3" defer></script>
 </head>
 <body class="has-bottom-nav" data-page="homework" data-view="lesson">
@@ -231,36 +244,69 @@
           applyImages();
 
           const shortcut = document.getElementById('lesson-vocabulary-shortcut');
-          const vocabularyId = String(data.vocabularyId || '').trim();
-          if (shortcut && vocabularyId && /^[a-zA-Z0-9_-]+$/.test(vocabularyId)) {
-            const link = document.createElement('a');
-            link.className = 'lesson-vocabulary-link';
-            link.href = `vocabulary.html?id=${encodeURIComponent(vocabularyId)}`;
-            link.setAttribute('aria-label', 'Перейти к словарю этого урока');
+          if (shortcut) {
+            const resourceLinks = [];
+            const makeResourceLink = ({ href, label, title, subtitle, icon, extraClass = '' }) => {
+              const link = document.createElement('a');
+              link.className = `lesson-vocabulary-link ${extraClass}`.trim();
+              link.href = href;
+              link.setAttribute('aria-label', label);
 
-            const copy = document.createElement('span');
-            copy.className = 'lesson-vocabulary-copy';
-            const icon = document.createElement('span');
-            icon.className = 'lesson-vocabulary-icon';
-            icon.setAttribute('aria-hidden', 'true');
-            icon.textContent = '💥';
-            const text = document.createElement('span');
-            text.className = 'lesson-vocabulary-text';
-            const title = document.createElement('strong');
-            title.textContent = 'Словарь к уроку';
-            const subtitle = document.createElement('span');
-            subtitle.textContent = 'Сначала повтори ключевые слова и выражения';
-            text.append(title, subtitle);
-            copy.append(icon, text);
+              const copy = document.createElement('span');
+              copy.className = 'lesson-vocabulary-copy';
+              const iconNode = document.createElement('span');
+              iconNode.className = 'lesson-vocabulary-icon';
+              iconNode.setAttribute('aria-hidden', 'true');
+              iconNode.textContent = icon;
+              const text = document.createElement('span');
+              text.className = 'lesson-vocabulary-text';
+              const titleNode = document.createElement('strong');
+              titleNode.textContent = title;
+              const subtitleNode = document.createElement('span');
+              subtitleNode.textContent = subtitle;
+              text.append(titleNode, subtitleNode);
+              copy.append(iconNode, text);
 
-            const arrow = document.createElement('span');
-            arrow.className = 'lesson-vocabulary-arrow';
-            arrow.setAttribute('aria-hidden', 'true');
-            arrow.textContent = '→';
+              const arrow = document.createElement('span');
+              arrow.className = 'lesson-vocabulary-arrow';
+              arrow.setAttribute('aria-hidden', 'true');
+              arrow.textContent = '→';
+              link.append(copy, arrow);
+              return link;
+            };
 
-            link.append(copy, arrow);
-            shortcut.replaceChildren(link);
-            shortcut.hidden = false;
+            const vocabularyId = String(data.vocabularyId || '').trim();
+            if (vocabularyId && /^[a-zA-Z0-9_-]+$/.test(vocabularyId)) {
+              resourceLinks.push(makeResourceLink({
+                href: `vocabulary.html?id=${encodeURIComponent(vocabularyId)}`,
+                label: 'Перейти к словарю этого урока',
+                title: 'Словарь к уроку',
+                subtitle: 'Сначала повтори ключевые слова и выражения',
+                icon: '💥'
+              }));
+            }
+
+            const grammarIds = Array.isArray(data.grammarIds) ? data.grammarIds : [];
+            grammarIds.forEach((grammarId) => {
+              const safeId = String(grammarId || '').trim();
+              if (!safeId || !/^[a-zA-Z0-9_-]+$/.test(safeId)) return;
+              const topic = Array.isArray(window.GRAMMAR_DATA)
+                ? window.GRAMMAR_DATA.find((item) => item.id === safeId)
+                : null;
+              resourceLinks.push(makeResourceLink({
+                href: `grammar-topic.html?id=${encodeURIComponent(safeId)}`,
+                label: `Перейти к теории: ${topic?.title || 'грамматика урока'}`,
+                title: topic?.title ? `Теория: ${topic.title}` : 'Теория к уроку',
+                subtitle: 'Повтори правило и примеры перед выполнением упражнений',
+                icon: '📐',
+                extraClass: 'lesson-grammar-link'
+              }));
+            });
+
+            if (resourceLinks.length) {
+              shortcut.replaceChildren(...resourceLinks);
+              shortcut.hidden = false;
+            }
           }
         })
         .catch((error) => console.warn('Lesson images were not loaded.', error));
