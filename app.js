@@ -1077,7 +1077,7 @@
   function renderExerciseItem(item, blockId, index) {
     const itemId = safeText(item.id, `${index + 1}`);
     const number = item.number === undefined ? index + 1 : item.number;
-    const prompt = escapeHtml(item.prompt || '');
+    const prompt = escapeHtml(item.prompt || '').replaceAll('\n', '<br>');
     const inputId = `exercise-${blockId}-${itemId}`.replace(/[^a-zA-Z0-9_-]/g, '-');
     const numberMarkup = number === '' || number === null ? '' : `<span class="exercise-number">${escapeHtml(number)}</span>`;
 
@@ -1131,8 +1131,10 @@
         ? `<div class="word-bank" aria-label="Word bank"><strong class="word-bank-label">Word bank</strong>${block.wordBank.map((word) => `<span>${escapeHtml(word)}</span>`).join('')}</div>`
         : '';
       const player = block.audio ? `<audio class="audio-player" controls preload="none" src="${escapeHtml(block.audio)}"></audio>` : '';
+      const exerciseImage = block.image ? `<figure class="exercise-source-image"><img src="${escapeHtml(block.image)}" alt="${escapeHtml(block.imageAlt || '')}" loading="lazy" decoding="async"></figure>` : '';
       return `<article class="card lesson-block exercise-card" data-task="${escapeHtml(id)}" data-type="exercise">
         <div class="exercise-heading"><span class="eyebrow">Exercise</span><h3>${title}</h3>${block.instructions ? `<p class="muted exercise-instructions">${escapeHtml(block.instructions)}</p>` : ''}${player}${wordBank}</div>
+        ${exerciseImage}
         <div class="exercise-items">${items.map((item, itemIndex) => renderExerciseItem(item, id, itemIndex)).join('')}</div>
       </article>`;
     }

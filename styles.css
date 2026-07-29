@@ -2164,3 +2164,18 @@ body[data-view="lesson"] #lesson-root {
     grid-template-columns: 1fr;
   }
 }
+
+
+.exercise-source-image {
+  margin: 18px 0 22px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+.exercise-source-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
