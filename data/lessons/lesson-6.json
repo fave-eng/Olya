@@ -19,6 +19,13 @@
       "title": "at, in, on"
     },
     {
+      "type": "grammar-link",
+      "title": "Сначала разберись с правилом at, in, on",
+      "text": "Короткое объяснение для времени и места, понятная схема и 4 задания от лёгкого к сложному.",
+      "href": "grammar-topic.html?id=grammar-at-in-on",
+      "label": "Открыть тему в Grammar"
+    },
+    {
       "type": "exercise",
       "id": "l6-1a",
       "title": "a. Complete the sentences with prepositions of time: at, in, or on.",

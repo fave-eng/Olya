@@ -649,6 +649,7 @@
         (grammarResponse.data || []).forEach((row) => {
           const local = grammar.topics[row.topic_id] || {};
           grammar.topics[row.topic_id] = {
+            ...local,
             passed: Boolean(local.passed || row.passed),
             passedAt: local.passedAt || row.passed_at || null,
             attempts: Math.max(Number(local.attempts || 0), Number(row.attempts || 0)),
@@ -1120,6 +1121,14 @@
       return `<header id="lesson-section-${index}" class="lesson-section-title lesson-block" data-lesson-section><span class="lesson-section-step">${escapeHtml(block.__sectionNumber || index + 1)}</span><div><span class="eyebrow">${escapeHtml(block.eyebrow || 'Материал')}</span><h2>${title}</h2>${text ? `<p class="muted">${text}</p>` : ''}</div></header>`;
     }
     if (block.type === 'info') return `<article class="card info-card lesson-block"><h3>${title}</h3><p>${text}</p></article>`;
+    if (block.type === 'grammar-link') {
+      const href = escapeHtml(block.href || 'grammar.html');
+      return `<a class="card lesson-block grammar-link-card interactive" href="${href}">
+        <span class="grammar-link-icon" aria-hidden="true">📐</span>
+        <span class="grammar-link-copy"><span class="eyebrow">Grammar</span><strong>${title}</strong>${text ? `<span>${text}</span>` : ''}</span>
+        <span class="grammar-link-action">${escapeHtml(block.label || 'Открыть тему')} →</span>
+      </a>`;
+    }
     if (block.type === 'tip') return `<article class="card tip-card lesson-block"><h3>${title}</h3><p>${text}</p></article>`;
     if (block.type === 'reading') {
       const sectionCount = Array.isArray(block.sections) ? block.sections.length : 0;
@@ -1518,10 +1527,11 @@
     };
   }
 
-  function grammarStatusMarkup(topic, state) {
+  function grammarStatusMarkup(topic, state, questionCount = 4) {
     const passed = Boolean(state.passed || topic.passed);
     const attempts = Math.max(0, Number(state.attempts || 0));
     const bestScore = Math.max(0, Number(state.bestScore || 0));
+    const total = Math.max(1, Number(questionCount || 4));
 
     return `<div class="grammar-status-card ${passed ? 'is-passed' : ''}" id="grammar-topic-status">
       <div class="grammar-status-icon" aria-hidden="true">${passed ? '✓' : '◎'}</div>
@@ -1531,10 +1541,135 @@
           ? `Лучший результат: ${bestScore}% · попыток: ${attempts}`
           : attempts
             ? `Лучший результат: ${bestScore}% · попыток: ${attempts}`
-            : 'Изучи схему и сдай мини-тест из 4 заданий.'}</span>
+            : `Изучи объяснение и выполни мини-тест из ${total} заданий.`}</span>
       </div>
-      <span class="grammar-status-badge">${passed ? 'Засчитано' : 'Нужно 4 / 4'}</span>
+      <span class="grammar-status-badge">${passed ? 'Засчитано' : `Нужно ${total} / ${total}`}</span>
     </div>`;
+  }
+
+  function grammarQuestionType(question) {
+    return safeText(question.type || 'single').toLowerCase();
+  }
+
+  function renderGrammarQuestionInput(question, index) {
+    const type = grammarQuestionType(question);
+    const options = Array.isArray(question.options) ? question.options : [];
+
+    if (type === 'select') {
+      return `<label class="grammar-select-wrap">
+        <span class="field-label">Выбери один вариант</span>
+        <select class="grammar-select" data-grammar-control>
+          <option value="">Выберите ответ</option>
+          ${options.map((option, optionIndex) => `<option value="${optionIndex}">${escapeHtml(option)}</option>`).join('')}
+        </select>
+      </label>`;
+    }
+
+    if (type === 'multiple') {
+      return `<p class="grammar-multiple-note">Можно выбрать несколько вариантов.</p>
+        <div class="option-list">${options.map((option, optionIndex) => `<label class="option grammar-option">
+          <input type="checkbox" name="grammar-${index}" value="${optionIndex}" data-grammar-control>
+          <span>${escapeHtml(option)}</span>
+        </label>`).join('')}</div>`;
+    }
+
+    if (type === 'gaps') {
+      const segments = Array.isArray(question.segments) ? question.segments : [];
+      const answerCount = Array.isArray(question.answers) ? question.answers.length : Math.max(0, segments.length - 1);
+      if (!segments.length || !answerCount) return '';
+      let sentence = '';
+      for (let gapIndex = 0; gapIndex < answerCount; gapIndex += 1) {
+        sentence += `${escapeHtml(segments[gapIndex] || '')}<input class="grammar-gap-input" type="text" inputmode="text" autocomplete="off" spellcheck="false" maxlength="8" data-grammar-gap="${gapIndex}" data-grammar-control aria-label="Пропуск ${gapIndex + 1}">`;
+      }
+      sentence += escapeHtml(segments[answerCount] || '');
+      return `<div class="grammar-gap-sentence">${sentence}</div>`;
+    }
+
+    return `<div class="option-list">${options.map((option, optionIndex) => `<label class="option grammar-option">
+      <input type="radio" name="grammar-${index}" value="${optionIndex}" data-grammar-control>
+      <span>${escapeHtml(option)}</span>
+    </label>`).join('')}</div>`;
+  }
+
+  function grammarQuestionAnswered(question, node) {
+    const type = grammarQuestionType(question);
+    if (type === 'select') return (node.querySelector('select')?.value || '') !== '';
+    if (type === 'multiple') return Boolean(node.querySelector('input:checked'));
+    if (type === 'gaps') {
+      const inputs = [...node.querySelectorAll('[data-grammar-gap]')];
+      return inputs.length > 0 && inputs.every((input) => normalizeAnswer(input.value) !== '');
+    }
+    return Boolean(node.querySelector('input:checked'));
+  }
+
+  function readGrammarQuestionAnswer(question, node, markGaps = false) {
+    const type = grammarQuestionType(question);
+
+    if (type === 'select') {
+      const actual = node.querySelector('select')?.value ?? '';
+      return { actual, correct: actual !== '' && Number(actual) === Number(question.answer) };
+    }
+
+    if (type === 'multiple') {
+      const actual = [...node.querySelectorAll('input:checked')].map((input) => Number(input.value)).sort((a, b) => a - b);
+      const expected = [...(Array.isArray(question.answer) ? question.answer : [])].map(Number).sort((a, b) => a - b);
+      return { actual, correct: expected.length > 0 && JSON.stringify(actual) === JSON.stringify(expected) };
+    }
+
+    if (type === 'gaps') {
+      const inputs = [...node.querySelectorAll('[data-grammar-gap]')];
+      const actual = inputs.map((input) => input.value);
+      const expected = Array.isArray(question.answers) ? question.answers : [];
+      const gapResults = inputs.map((input, gapIndex) => {
+        const accepted = Array.isArray(expected[gapIndex]) ? expected[gapIndex] : [expected[gapIndex]];
+        return accepted.some((variant) => normalizeAnswer(variant) !== '' && normalizeAnswer(variant) === normalizeAnswer(input.value));
+      });
+      if (markGaps) {
+        inputs.forEach((input, gapIndex) => {
+          input.classList.toggle('is-valid', Boolean(gapResults[gapIndex]));
+          input.classList.toggle('is-invalid', !gapResults[gapIndex]);
+        });
+      }
+      return { actual, correct: expected.length > 0 && gapResults.length === expected.length && gapResults.every(Boolean) };
+    }
+
+    const actual = node.querySelector('input:checked')?.value ?? '';
+    return { actual, correct: actual !== '' && Number(actual) === Number(question.answer) };
+  }
+
+  function restoreGrammarAnswers(quizRoot, quiz, savedAnswers) {
+    if (!Array.isArray(savedAnswers)) return;
+    quiz.forEach((question, index) => {
+      const node = quizRoot.querySelector(`[data-grammar-question="${index}"]`);
+      if (!node || savedAnswers[index] === undefined) return;
+      const type = grammarQuestionType(question);
+      const value = savedAnswers[index];
+
+      if (type === 'select') {
+        const select = node.querySelector('select');
+        if (select) select.value = safeText(value);
+      } else if (type === 'multiple') {
+        const selected = new Set(Array.isArray(value) ? value.map(Number) : []);
+        node.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+          input.checked = selected.has(Number(input.value));
+        });
+      } else if (type === 'gaps') {
+        const values = Array.isArray(value) ? value : [];
+        node.querySelectorAll('[data-grammar-gap]').forEach((input, gapIndex) => {
+          input.value = safeText(values[gapIndex]);
+        });
+      } else {
+        const input = node.querySelector(`input[value="${CSS.escape(safeText(value))}"]`);
+        if (input) input.checked = true;
+      }
+    });
+  }
+
+  function lockGrammarQuiz(quizRoot) {
+    quizRoot.classList.add('grammar-quiz-locked');
+    quizRoot.querySelectorAll('input, select, textarea').forEach((control) => {
+      control.disabled = true;
+    });
   }
 
   function renderGrammarTopic() {
@@ -1563,9 +1698,10 @@
     const subjects = Array.isArray(overview.subjects) ? overview.subjects : [];
     const pattern = Array.isArray(builder.pattern) ? builder.pattern : [];
     const memorySteps = Array.isArray(memoryRule.steps) ? memoryRule.steps : [];
+    const quizCount = Math.max(1, quiz.length);
 
     root.innerHTML = `<div class="grammar-topic-shell">
-      ${grammarStatusMarkup(topic, state)}
+      ${grammarStatusMarkup(topic, state, quizCount)}
 
       <article class="card grammar-lead-card">
         <div class="grammar-lead-head">
@@ -1583,13 +1719,13 @@
             ${overview.example ? `<span>${escapeHtml(overview.example)}</span>` : ''}
           </div>
         </div>
-        ${subjects.length ? `<div class="grammar-subject-row" aria-label="Подлежащие">${subjects.map((subject) => `<span>${escapeHtml(subject)}</span>`).join('')}</div>` : ''}
+        ${subjects.length ? `<div class="grammar-subject-row" aria-label="Ключевые ориентиры">${subjects.map((subject) => `<span>${escapeHtml(subject)}</span>`).join('')}</div>` : ''}
       </article>
 
       ${uses.length ? `<section class="grammar-content-section" aria-labelledby="grammar-use-title">
         <div class="grammar-section-heading">
           <span class="grammar-section-number">1</span>
-          <div><h2 id="grammar-use-title">Когда используем</h2><p>Три основных случая для уровня A2.2</p></div>
+          <div><h2 id="grammar-use-title">${escapeHtml(topic.usesTitle || 'Когда используем')}</h2><p>${escapeHtml(topic.usesSubtitle || 'Основные случаи для этого правила')}</p></div>
         </div>
         <div class="grammar-use-grid">${uses.map((item) => `<article class="grammar-use-card">
           <span class="grammar-use-icon" aria-hidden="true">${escapeHtml(item.icon || '•')}</span>
@@ -1602,7 +1738,7 @@
       ${forms.length ? `<section class="grammar-content-section" aria-labelledby="grammar-forms-title">
         <div class="grammar-section-heading">
           <span class="grammar-section-number">2</span>
-          <div><h2 id="grammar-forms-title">Четыре формы</h2><p>Сначала запомни структуру, затем смотри на пример</p></div>
+          <div><h2 id="grammar-forms-title">${escapeHtml(topic.formsTitle || 'Формы и схемы')}</h2><p>${escapeHtml(topic.formsSubtitle || 'Сначала запомни структуру, затем смотри на пример')}</p></div>
         </div>
         <div class="grammar-form-grid">${forms.map((form) => `<article class="grammar-form-card grammar-form-${escapeHtml(form.id || 'default')}">
           <div class="grammar-form-head">
@@ -1621,7 +1757,7 @@
       ${contrast.ordinary && contrast.be ? `<section class="grammar-content-section" aria-labelledby="grammar-contrast-title">
         <div class="grammar-section-heading">
           <span class="grammar-section-number">3</span>
-          <div><h2 id="grammar-contrast-title">${escapeHtml(contrast.title || 'Обычный глагол или be?')}</h2><p>${escapeHtml(contrast.intro || '')}</p></div>
+          <div><h2 id="grammar-contrast-title">${escapeHtml(contrast.title || 'Сравнение')}</h2><p>${escapeHtml(contrast.intro || '')}</p></div>
         </div>
         <div class="grammar-contrast-grid">
           <article class="grammar-contrast-card ordinary">
@@ -1688,10 +1824,10 @@
         <div class="grammar-test-intro">
           <div>
             <span class="eyebrow">Мини-тест</span>
-            <h2 id="mini-test-title">4 задания: от лёгкого к сложному</h2>
-            <p>Ответь на все вопросы. Для зачёта нужно 4 из 4. Тест можно переделывать.</p>
+            <h2 id="mini-test-title">${quizCount} задания: от лёгкого к сложному</h2>
+            <p>Ответь на все задания. Для зачёта нужно ${quizCount} из ${quizCount}. ${topic.revealAnswerOnError === false ? 'При ошибке правильный ответ не показывается.' : 'Тест можно переделывать.'}</p>
           </div>
-          <span class="grammar-test-goal">4 / 4</span>
+          <span class="grammar-test-goal">${quizCount} / ${quizCount}</span>
         </div>
         <div id="grammar-quiz"></div>
       </section>
@@ -1706,6 +1842,8 @@
 
     const renderQuiz = () => {
       const { state: currentState } = grammarProgressState(topic);
+      const alreadyPassed = Boolean(currentState.passed || topic.passed);
+      const lockedPassed = alreadyPassed && topic.lockOnPass === true;
 
       quizRoot.innerHTML = `${quiz.map((question, index) => `<article class="card grammar-question-card" data-grammar-question="${index}">
         <div class="grammar-question-meta">
@@ -1713,62 +1851,94 @@
           <span>${escapeHtml(question.skill || '')}</span>
         </div>
         <h3>${index + 1}. ${escapeHtml(question.prompt)}</h3>
-        <div class="option-list">${(question.options || []).map((option, optionIndex) => `<label class="option grammar-option">
-          <input type="radio" name="grammar-${index}" value="${optionIndex}">
-          <span>${escapeHtml(option)}</span>
-        </label>`).join('')}</div>
+        ${renderGrammarQuestionInput(question, index)}
         <div class="feedback"></div>
       </article>`).join('')}
       <article class="card grammar-test-actions">
         <div id="grammar-result" aria-live="polite">
-          <strong>${currentState.passed ? 'Тема уже засчитана.' : 'Выбери ответы во всех четырёх заданиях.'}</strong>
-          <span>${currentState.passed ? `Лучший результат: ${Number(currentState.bestScore || 0)}%` : 'Кнопка проверки станет активной после заполнения теста.'}</span>
+          <strong>${lockedPassed ? 'Тема уже засчитана.' : alreadyPassed ? 'Тема засчитана, но тест можно пройти ещё раз.' : `Заполни все ${quiz.length} задания.`}</strong>
+          <span>${lockedPassed ? 'Ответы сохранены, поля заблокированы.' : 'Кнопка проверки станет активной после заполнения теста.'}</span>
         </div>
         <div class="button-row">
-          <button class="btn btn-primary" type="button" id="check-grammar" disabled>Проверить тест</button>
-          <button class="btn btn-secondary" type="button" id="retry-grammar">Начать заново</button>
+          <button class="btn btn-primary" type="button" id="check-grammar" disabled>${lockedPassed ? 'Тема изучена' : 'Проверить задания'}</button>
+          <button class="btn btn-secondary" type="button" id="retry-grammar" ${lockedPassed ? 'hidden' : ''}>Очистить ответы</button>
         </div>
       </article>`;
 
       const checkButton = byId('check-grammar');
       const retryButton = byId('retry-grammar');
+      restoreGrammarAnswers(quizRoot, quiz, currentState.answers);
 
       const updateCheckState = () => {
-        const answered = quiz.filter((_, index) =>
-          quizRoot.querySelector(`[data-grammar-question="${index}"] input:checked`)
-        ).length;
+        if (lockedPassed) {
+          checkButton.disabled = true;
+          checkButton.textContent = 'Тема изучена';
+          return;
+        }
+        const answered = quiz.filter((question, index) => {
+          const node = quizRoot.querySelector(`[data-grammar-question="${index}"]`);
+          return node && grammarQuestionAnswered(question, node);
+        }).length;
         checkButton.disabled = answered !== quiz.length;
         checkButton.textContent = answered === quiz.length
-          ? 'Проверить тест'
+          ? 'Проверить задания'
           : `Ответы: ${answered} / ${quiz.length}`;
       };
 
-      quizRoot.querySelectorAll('input[type="radio"]').forEach((input) => {
-        input.addEventListener('change', updateCheckState);
+      quizRoot.querySelectorAll('[data-grammar-control]').forEach((control) => {
+        const eventName = control.tagName === 'INPUT' && control.type === 'text' ? 'input' : 'change';
+        control.addEventListener(eventName, () => {
+          const questionNode = control.closest('[data-grammar-question]');
+          questionNode?.classList.remove('is-correct', 'is-wrong');
+          control.classList.remove('is-valid', 'is-invalid');
+          const feedback = questionNode?.querySelector('.feedback');
+          if (feedback) {
+            feedback.className = 'feedback';
+            feedback.textContent = '';
+          }
+          updateCheckState();
+        });
       });
+
+      if (lockedPassed) {
+        quiz.forEach((question, index) => {
+          const node = quizRoot.querySelector(`[data-grammar-question="${index}"]`);
+          if (!node || !grammarQuestionAnswered(question, node)) return;
+          const result = readGrammarQuestionAnswer(question, node, true);
+          node.classList.toggle('is-correct', result.correct);
+          const feedback = node.querySelector('.feedback');
+          if (feedback && result.correct) {
+            feedback.className = 'feedback show good';
+            feedback.textContent = 'Верно.';
+          }
+        });
+        lockGrammarQuiz(quizRoot);
+        updateCheckState();
+        return;
+      }
+
       updateCheckState();
 
       checkButton.addEventListener('click', () => {
         let correct = 0;
+        const answers = [];
 
         quiz.forEach((question, index) => {
           const node = quizRoot.querySelector(`[data-grammar-question="${index}"]`);
-          const selected = node.querySelector('input:checked');
-          const isCorrect = selected && Number(selected.value) === Number(question.answer);
-          if (isCorrect) correct += 1;
+          const result = readGrammarQuestionAnswer(question, node, true);
+          answers[index] = result.actual;
+          if (result.correct) correct += 1;
 
-          node.classList.toggle('is-correct', Boolean(isCorrect));
-          node.classList.toggle('is-wrong', !isCorrect);
-
-          node.querySelectorAll('input').forEach((input) => {
-            input.disabled = true;
-          });
+          node.classList.toggle('is-correct', result.correct);
+          node.classList.toggle('is-wrong', !result.correct);
 
           const feedback = node.querySelector('.feedback');
-          feedback.className = `feedback show ${isCorrect ? 'good' : 'bad'}`;
-          feedback.textContent = isCorrect
+          feedback.className = `feedback show ${result.correct ? 'good' : 'bad'}`;
+          feedback.textContent = result.correct
             ? 'Верно.'
-            : safeText(question.explanation, 'Проверь правило и попробуй ещё раз.');
+            : topic.revealAnswerOnError === false
+              ? safeText(question.errorFeedback, 'Есть ошибка. Вернись к правилу и исправь ответ.')
+              : safeText(question.explanation, 'Проверь правило и попробуй ещё раз.');
         });
 
         const percent = safePercent(correct, quiz.length);
@@ -1776,34 +1946,48 @@
         const passedNow = percent >= passScore;
         const progress = window.ProgressService.loadGrammarProgress();
         const previous = progress.topics[topic.id] || {};
-        const passed = Boolean(previous.passed || passedNow);
-        const passedAt = previous.passedAt || (passedNow ? new Date().toISOString() : null);
 
-        progress.topics[topic.id] = {
-          passed,
-          passedAt,
-          attempts: Number(previous.attempts || 0) + 1,
-          bestScore: Math.max(Number(previous.bestScore || 0), percent),
-          updatedAt: new Date().toISOString()
-        };
-        window.ProgressService.saveGrammarProgress(progress);
+        if (passedNow || topic.saveOnlyOnPass !== true) {
+          progress.topics[topic.id] = {
+            ...previous,
+            passed: Boolean(previous.passed || passedNow),
+            passedAt: previous.passedAt || (passedNow ? new Date().toISOString() : null),
+            attempts: Number(previous.attempts || 0) + 1,
+            bestScore: Math.max(Number(previous.bestScore || 0), percent),
+            answers: passedNow ? answers : previous.answers,
+            updatedAt: new Date().toISOString()
+          };
+          window.ProgressService.saveGrammarProgress(progress);
+        }
 
         const result = byId('grammar-result');
         result.className = `grammar-result-box ${passedNow ? 'is-passed' : 'is-retry'}`;
         result.innerHTML = passedNow
-          ? `<strong>Тема засчитана ✓</strong><span>${correct} из ${quiz.length} · ${percent}%. Отличная работа!</span>`
-          : `<strong>${correct} из ${quiz.length} · ${percent}%</strong><span>Для зачёта нужно 4 из 4. Посмотри объяснения и попробуй ещё раз.</span>`;
+          ? `<strong>Тема засчитана ✓</strong><span>${correct} из ${quiz.length} · ${percent}%. ${topic.lockOnPass ? 'Прогресс сохранён, ответы заблокированы.' : 'Отличная работа!'}</span>`
+          : `<strong>Есть ошибки: ${correct} из ${quiz.length}</strong><span>Исправь отмеченные задания и проверь ещё раз. Правильные ответы не раскрываются${topic.saveOnlyOnPass === true ? '; прогресс сохранится после результата 100%.' : '.'}</span>`;
 
-        checkButton.disabled = true;
-        checkButton.textContent = passedNow ? 'Тест сдан' : 'Проверено';
-        retryButton.textContent = passedNow ? 'Пройти ещё раз' : 'Исправить ответы';
-
-        const statusNode = byId('grammar-topic-status');
-        if (statusNode) {
-          statusNode.outerHTML = grammarStatusMarkup(topic, progress.topics[topic.id]);
+        if (passedNow) {
+          checkButton.disabled = true;
+          checkButton.textContent = 'Тема изучена';
+          if (topic.lockOnPass) {
+            lockGrammarQuiz(quizRoot);
+            retryButton.hidden = true;
+          } else {
+            retryButton.textContent = 'Пройти ещё раз';
+          }
+        } else {
+          checkButton.disabled = false;
+          checkButton.textContent = 'Проверить ещё раз';
+          retryButton.textContent = 'Очистить ответы';
         }
 
-        showToast(passedNow ? 'Тема засчитана.' : 'Попробуй ещё раз: результат сохранён.');
+        const savedState = passedNow
+          ? window.ProgressService.loadGrammarProgress().topics[topic.id]
+          : previous;
+        const statusNode = byId('grammar-topic-status');
+        if (statusNode) statusNode.outerHTML = grammarStatusMarkup(topic, savedState || {}, quiz.length);
+
+        showToast(passedNow ? 'Тема засчитана, ответы заблокированы.' : 'Есть ошибки — исправь отмеченные задания.');
       });
 
       retryButton.addEventListener('click', () => {
@@ -1814,6 +1998,7 @@
 
     renderQuiz();
   }
+
 
   function getTopicProgress(progress, topicId) {
     if (!progress.topics[topicId]) progress.topics[topicId] = { tests: [] };

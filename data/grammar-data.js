@@ -689,5 +689,195 @@ window.GRAMMAR_DATA = [
       }
     ],
     "linkedLessonId": "lesson-5"
+  },
+  {
+    "id": "grammar-at-in-on",
+    "order": 7,
+    "title": "Предлоги at, in, on: время и место",
+    "level": "A2",
+    "status": "available",
+    "page": "grammar-topic.html?id=grammar-at-in-on",
+    "passScore": 100,
+    "saveOnlyOnPass": true,
+    "lockOnPass": true,
+    "revealAnswerOnError": false,
+    "usesTitle": "Один принцип для времени и места",
+    "usesSubtitle": "Меняй масштаб: точка → линия или поверхность → пространство",
+    "formsTitle": "Шпаргалка: AT, ON, IN",
+    "formsSubtitle": "Не переводи предлог отдельно — сначала определи масштаб",
+    "overview": {
+      "lead": "Представь, что ты смотришь на карту или календарь и меняешь масштаб. AT — маленькая точка. ON — линия, день или поверхность. IN — пространство с границами или большой период. Эта картинка помогает выбрать предлог и для времени, и для места.",
+      "keyRule": "AT = точка; ON = день или поверхность; IN = внутри пространства или большого периода.",
+      "subjects": [
+        "AT → точка",
+        "ON → линия / поверхность",
+        "IN → внутри"
+      ],
+      "example": "at 8:00 · on Monday · in July"
+    },
+    "uses": [
+      {
+        "icon": "🕐",
+        "title": "Время",
+        "text": "Точный момент — at; день или дата — on; месяц, год, сезон и часть дня — in.",
+        "example": "at 7:30 · on Friday · in August"
+      },
+      {
+        "icon": "📍",
+        "title": "Место",
+        "text": "Точка или событие — at; поверхность — on; пространство с границами — in.",
+        "example": "at the station · on the wall · in the room"
+      },
+      {
+        "icon": "🚌",
+        "title": "Транспорт и устойчивые пары",
+        "text": "На большом транспорте обычно on, в машине или такси — in. Некоторые сочетания запоминаем целиком.",
+        "example": "on the bus · in a car · at home"
+      }
+    ],
+    "forms": [
+      {
+        "id": "at",
+        "icon": "•",
+        "title": "AT — точка",
+        "formula": "точное время · конкретная точка · событие",
+        "example": "at 8:00 · at night · at the station · at a party",
+        "translation": "в 8:00 · ночью · на станции · на вечеринке",
+        "note": "Представь булавку на карте или одну точку на часах."
+      },
+      {
+        "id": "on",
+        "icon": "—",
+        "title": "ON — линия или поверхность",
+        "formula": "день / дата · поверхность · автобус / поезд / самолёт",
+        "example": "on Monday · on 29 July · on the table · on the train",
+        "translation": "в понедельник · 29 июля · на столе · в поезде",
+        "note": "День — отдельная клетка календаря; предмет касается поверхности."
+      },
+      {
+        "id": "in",
+        "icon": "□",
+        "title": "IN — внутри",
+        "formula": "месяц / год / сезон · закрытое пространство · машина / такси",
+        "example": "in July · in 2026 · in the kitchen · in a taxi",
+        "translation": "в июле · в 2026 году · на кухне · в такси",
+        "note": "Есть границы: комнаты, города, страны или большого периода времени."
+      },
+      {
+        "id": "exceptions",
+        "icon": "★",
+        "title": "Полезные сочетания",
+        "formula": "at home / work / school · in the morning · on Monday morning",
+        "example": "I work at home in the morning, but on Monday morning I go to the office.",
+        "translation": "Я работаю дома по утрам, но утром в понедельник еду в офис.",
+        "note": "Когда появляется конкретный день, используем on: on Friday evening."
+      }
+    ],
+    "memoryRule": {
+      "title": "Пять шагов без зубрёжки",
+      "steps": [
+        "Это точное время? Выбирай AT: at 6:15, at noon, at night.",
+        "Это день или дата? Выбирай ON: on Tuesday, on 1 May, on Tuesday morning.",
+        "Это большой период? Выбирай IN: in March, in 2026, in winter, in the evening.",
+        "Для места спроси: точка — AT, поверхность — ON, внутри границ — IN.",
+        "Проверь транспорт: on a bus / train / plane, но in a car / taxi."
+      ]
+    },
+    "commonMistakes": [
+      {
+        "wrong": "in Monday",
+        "right": "on Monday",
+        "reason": "День недели — отдельная клетка календаря, поэтому on."
+      },
+      {
+        "wrong": "at the morning",
+        "right": "in the morning",
+        "reason": "Часть дня — период, поэтому in. Исключение: at night."
+      },
+      {
+        "wrong": "in the bus",
+        "right": "on the bus",
+        "reason": "С автобусом, поездом и самолётом обычно используется on."
+      },
+      {
+        "wrong": "on the airport",
+        "right": "at the airport",
+        "reason": "Аэропорт здесь воспринимается как точка назначения."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "single",
+        "difficulty": "1 · Легко",
+        "skill": "Точное время",
+        "prompt": "The lesson starts ___ 18:30.",
+        "options": [
+          "in",
+          "on",
+          "at"
+        ],
+        "answer": 2,
+        "errorFeedback": "Есть ошибка. Подумай, какой предлог нужен для точного времени."
+      },
+      {
+        "type": "select",
+        "difficulty": "2 · Базовый уровень",
+        "skill": "День и часть дня",
+        "prompt": "We have a meeting ___ Friday afternoon.",
+        "options": [
+          "at",
+          "in",
+          "on"
+        ],
+        "answer": 2,
+        "errorFeedback": "Есть ошибка. Сначала найди конкретный день, а затем уточнение времени суток."
+      },
+      {
+        "type": "multiple",
+        "difficulty": "3 · Средне",
+        "skill": "Время, место и транспорт",
+        "prompt": "Выбери все грамматически правильные предложения.",
+        "options": [
+          "My keys are on the table.",
+          "We arrived in the airport at 6:00.",
+          "She was born in 1992.",
+          "I usually read in the bus."
+        ],
+        "answer": [
+          0,
+          2
+        ],
+        "errorFeedback": "Есть ошибка. Проверь каждое предложение отдельно: точка, поверхность, транспорт или пространство с границами."
+      },
+      {
+        "type": "gaps",
+        "difficulty": "4 · Сложно",
+        "skill": "Смешанный контекст",
+        "prompt": "Впиши at, in или on в каждый пропуск.",
+        "segments": [
+          "",
+          " Saturday morning, Anna arrived ",
+          " the station ",
+          " 8:15. Her ticket was ",
+          " her bag, but her phone was ",
+          " the car. She met Mark ",
+          " the platform, and they had lunch ",
+          " a small café ",
+          " the city centre."
+        ],
+        "answers": [
+          "on",
+          "at",
+          "at",
+          "in",
+          "in",
+          "on",
+          "at",
+          "in"
+        ],
+        "errorFeedback": "Есть ошибка в одном или нескольких окошках. Красная рамка показывает место ошибки; правильный ответ не показывается."
+      }
+    ],
+    "linkedLessonId": "lesson-6"
   }
 ];

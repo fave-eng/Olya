@@ -2179,3 +2179,146 @@ body[data-view="lesson"] #lesson-root {
   width: 100%;
   height: auto;
 }
+
+/* Grammar link inside homework */
+.grammar-link-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border-color: #c7d2fe;
+  background: linear-gradient(135deg, #eef2ff, #ffffff);
+  text-decoration: none;
+}
+
+.grammar-link-icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 8px 18px rgba(79, 70, 229, .10);
+  font-size: 1.35rem;
+}
+
+.grammar-link-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.grammar-link-copy strong {
+  color: var(--dark);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  line-height: 1.35;
+}
+
+.grammar-link-copy > span:last-child {
+  color: var(--muted);
+  font-size: .82rem;
+  line-height: 1.5;
+}
+
+.grammar-link-action {
+  color: var(--indigo);
+  font-size: .8rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+/* Mixed grammar quiz controls */
+.grammar-form-at { border-top: 4px solid #7c3aed; }
+.grammar-form-on { border-top: 4px solid #0ea5e9; }
+.grammar-form-in { border-top: 4px solid #16a34a; }
+.grammar-form-exceptions { border-top: 4px solid #f59e0b; }
+
+.grammar-select-wrap {
+  display: grid;
+  gap: 7px;
+  max-width: 360px;
+}
+
+.grammar-select {
+  width: 100%;
+  min-height: 48px;
+  border: 1.5px solid var(--border);
+  border-radius: 13px;
+  padding: 10px 12px;
+  color: var(--dark);
+  background: white;
+  font: inherit;
+}
+
+.grammar-multiple-note {
+  margin: -4px 0 10px;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.grammar-gap-sentence {
+  color: #334155;
+  font-size: .98rem;
+  font-weight: 600;
+  line-height: 2.65;
+}
+
+.grammar-gap-input {
+  width: 68px;
+  min-height: 38px;
+  margin: 0 5px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 6px 8px;
+  color: var(--dark);
+  background: white;
+  font: inherit;
+  font-weight: 800;
+  text-align: center;
+  text-transform: lowercase;
+  transition: border-color .16s ease, background .16s ease, box-shadow .16s ease;
+}
+
+.grammar-gap-input:focus,
+.grammar-select:focus {
+  border-color: #818cf8;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, .14);
+}
+
+.grammar-gap-input.is-invalid {
+  border-color: #fb7185;
+  background: #fff1f2;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, .10);
+}
+
+.grammar-gap-input.is-valid {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.grammar-quiz-locked .grammar-question-card {
+  cursor: default;
+}
+
+.grammar-quiz-locked input:disabled,
+.grammar-quiz-locked select:disabled {
+  cursor: not-allowed;
+  opacity: .82;
+}
+
+@media (max-width: 620px) {
+  .grammar-link-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .grammar-link-action {
+    grid-column: 2;
+    white-space: normal;
+  }
+
+  .grammar-gap-sentence {
+    line-height: 2.85;
+  }
+}
