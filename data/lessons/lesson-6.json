@@ -9,7 +9,7 @@
   "publishedAt": "2026-07-29",
   "totalPoints": 41,
   "notification": {
-    "enabled": false,
+    "enabled": true,
     "version": 1
   },
   "blocks": [
@@ -603,7 +603,7 @@
           "number": "6",
           "prompt": "What were you doing at 5.30 yesterday?\nI ___.",
           "input": "text",
-          "scored": false
+          "scored": true
         }
       ]
     }
