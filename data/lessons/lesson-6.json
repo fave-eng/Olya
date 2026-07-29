@@ -596,7 +596,7 @@
           "number": "6",
           "prompt": "What were you doing at 5.30 yesterday?\nI ___.",
           "input": "text",
-          "scored": false
+          "scored": true
         }
       ]
     }
