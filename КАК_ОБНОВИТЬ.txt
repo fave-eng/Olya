@@ -1,0 +1,19 @@
+Исправление совместимости homework_progress + диагностика v3
+
+1. Загрузите/замените файлы из архива с сохранением структуры папок.
+2. В GitHub откройте Actions → 1 - Setup Telegram notifications → Run workflow.
+   Это заново развернёт Supabase Edge Function notify-telegram версии olya-diagnostics-v3.
+3. После зелёного workflow откройте diagnostics.html с принудительным обновлением страницы.
+4. Нажмите «Проверить всё».
+5. Нажмите «Проверить полный путь homework_progress».
+   Ожидаемый путь: browser draft → submitted_pending_report → submitted → cleanup.
+6. Затем при необходимости нажмите «Отправить тестовый отчёт в Telegram».
+
+ВАЖНО: повторно менять RLS/SQL из предыдущего шага не нужно. Ошибка 23514 была CHECK constraint, а не RLS.
+
+Новая логика реального ДЗ:
+- после проверки: draft + report_status=not_sent;
+- после нажатия «Отправить преподавателю»: submitted_pending_report + report_status=pending;
+- после успешной отправки Telegram Edge Function переводит запись в submitted + report_status=sent.
+
+Старые мигрированные записи не перезаписываются.

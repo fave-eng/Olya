@@ -67,7 +67,7 @@ jobs:
               --header "x-notify-secret: ${NOTIFY_WEBHOOK_SECRET}" \
               --data '{"action":"diagnostics"}')"; then
               echo "$RESULT"
-              node -e 'const r=JSON.parse(process.argv[1]); if(!r.ok || r.diagnosticVersion!=="olya-diagnostics-v2"){console.error("Diagnostics failed or wrong version", r); process.exit(1)}' "$RESULT" && exit 0
+              node -e 'const r=JSON.parse(process.argv[1]); if(!r.ok || r.diagnosticVersion!=="olya-diagnostics-v3"){console.error("Diagnostics failed or wrong version", r); process.exit(1)}' "$RESULT" && exit 0
             fi
             echo "Diagnostics attempt $attempt failed; retrying..."
             sleep 4

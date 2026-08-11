@@ -2,7 +2,7 @@
   'use strict';
 
   const EXPECTED_THREAD_ID = 5;
-  const EXPECTED_DIAGNOSTIC_VERSION = 'olya-diagnostics-v2';
+  const EXPECTED_DIAGNOSTIC_VERSION = 'olya-diagnostics-v3';
   const config = window.APP_CONFIG || {};
   const student = config.student || {};
   const studentId = String(student.id || 'olya').trim().toLowerCase();
@@ -100,6 +100,12 @@
     if (!error) return 'Неизвестная ошибка';
     const code = error.code ? `${error.code}: ` : '';
     const message = error.message || error.error_description || String(error);
+    if (/homework_progress_final_dates_check/i.test(message)) {
+      return `${code}${message}. Нарушено правило финальной отправки: для отправленной работы Supabase требует submitted_at и locked_at.`;
+    }
+    if (/homework_progress_report_check/i.test(message)) {
+      return `${code}${message}. Нарушена state machine отчёта: draft/not_sent → submitted_pending_report/pending|failed → submitted/sent.`;
+    }
     if (/Final homework submission is immutable|Submitted homework cannot be changed|Invalid homework status transition/i.test(message)) {
       return `${code}${message}. Сработала защита от изменения уже отправленной домашней работы.`;
     }
@@ -128,7 +134,7 @@
       const homeworkTable = config.supabase?.tables?.homework || 'homework_progress';
       const readResponse = await client
         .from(homeworkTable)
-        .select('student_id,lesson_id,lesson_title,status,checked_at,submitted_at,score_correct,score_total,score_percent,answers,legacy_answers,migrated_from_legacy')
+        .select('student_id,lesson_id,lesson_title,status,checked_at,submitted_at,locked_at,report_status,report_sent_at,report_error,score_correct,score_total,score_percent,answers,legacy_answers,migrated_from_legacy')
         .eq('student_id', studentId)
         .order('lesson_id', { ascending: false })
         .limit(20);
@@ -160,18 +166,36 @@
         addCheck('4. Supabase Edge Function notify-telegram', 'ok', `Задеплоена нужная версия: ${edgeResult.data.diagnosticVersion}.`);
 
         const h = edgeResult.data;
-        addCheck('5. Edge Function → Supabase (service role)', h.database?.ok ? 'ok' : 'bad', h.database?.ok ? `Сервер читает таблицы Supabase. Строк ДЗ: ${h.database.homeworkRows}.` : (h.database?.error || 'Сервер не может читать Supabase.'));
-        addCheck('6. Получатель Telegram', h.recipient?.ok ? 'ok' : 'bad', h.recipient?.ok ? `Получатель найден и включён. thread_id=${h.recipient.threadId ?? 'NULL'}.` : (h.recipient?.error || 'Получатель не найден/выключен.'));
+        const browserRows = Array.isArray(lastReport.directRows) ? lastReport.directRows.length : 0;
+        const serviceRows = Number(h.database?.homeworkRows || 0);
+        const visibilityOk = !readResponse.error && browserRows === serviceRows;
+        addCheck(
+          '5. RLS / одинаковое чтение browser и service role',
+          visibilityOk ? 'ok' : 'bad',
+          visibilityOk
+            ? `Браузер и сервер видят одинаковое количество строк ДЗ: ${browserRows}.`
+            : `Браузер видит ${browserRows}, Edge Function видит ${serviceRows}. Проверь SELECT policy для student_id=${studentId}.`
+        );
+
+        addCheck('6. Edge Function → Supabase (service role)', h.database?.ok ? 'ok' : 'bad', h.database?.ok ? `Сервер читает таблицы Supabase. Строк ДЗ: ${h.database.homeworkRows}.` : (h.database?.error || 'Сервер не может читать Supabase.'));
+        addCheck('7. Получатель Telegram', h.recipient?.ok ? 'ok' : 'bad', h.recipient?.ok ? `Получатель найден и включён. thread_id=${h.recipient.threadId ?? 'NULL'}.` : (h.recipient?.error || 'Получатель не найден/выключен.'));
 
         const threadOk = Number(h.recipient?.threadId) === EXPECTED_THREAD_ID;
-        addCheck('7. Тема Telegram', threadOk ? 'ok' : 'bad', threadOk ? `message_thread_id=${EXPECTED_THREAD_ID} — как настроено для уведомлений и отчётов.` : `Сейчас message_thread_id=${h.recipient?.threadId ?? 'NULL'}, ожидалось ${EXPECTED_THREAD_ID}.`);
-        addCheck('8. Telegram Bot API / бот', h.telegram?.bot?.ok ? 'ok' : 'bad', h.telegram?.bot?.ok ? `Telegram видит бота @${h.telegram.bot.username || 'без username'}.` : (h.telegram?.bot?.error || 'getMe завершился ошибкой.'));
-        addCheck('9. Telegram Bot API / группа', h.telegram?.chat?.ok ? 'ok' : 'bad', h.telegram?.chat?.ok ? `Бот имеет доступ к целевой группе (${h.telegram.chat.type || 'chat'}).` : (h.telegram?.chat?.error || 'Бот не имеет доступа к группе.'));
+        addCheck('8. Тема Telegram', threadOk ? 'ok' : 'bad', threadOk ? `message_thread_id=${EXPECTED_THREAD_ID} — как настроено для уведомлений и отчётов.` : `Сейчас message_thread_id=${h.recipient?.threadId ?? 'NULL'}, ожидалось ${EXPECTED_THREAD_ID}.`);
+        addCheck('9. Telegram Bot API / бот', h.telegram?.bot?.ok ? 'ok' : 'bad', h.telegram?.bot?.ok ? `Telegram видит бота @${h.telegram.bot.username || 'без username'}.` : (h.telegram?.bot?.error || 'getMe завершился ошибкой.'));
+        addCheck('10. Telegram Bot API / группа', h.telegram?.chat?.ok ? 'ok' : 'bad', h.telegram?.chat?.ok ? `Бот имеет доступ к целевой группе (${h.telegram.chat.type || 'chat'}).` : (h.telegram?.chat?.error || 'Бот не имеет доступа к группе.'));
 
         if (Array.isArray(h.database?.suspiciousHomework) && h.database.suspiciousHomework.length) {
-          addCheck('10. Состояние сохранённых ДЗ', 'warn', `Есть старые/несогласованные записи по текущей state machine: ${h.database.suspiciousHomework.join(', ')}. Это не обязательно текущая ошибка, но их стоит проверить.`);
+          addCheck('11. Состояние сохранённых ДЗ', 'warn', `Есть несогласованные записи по текущей state machine: ${h.database.suspiciousHomework.join(', ')}. Их стоит проверить.`);
         } else {
-          addCheck('10. Состояние сохранённых ДЗ', 'ok', 'Текущие записи соответствуют ожидаемым статусам checked / submitted.');
+          const legacyCount = Array.isArray(h.database?.legacyHomework) ? h.database.legacyHomework.length : 0;
+          addCheck(
+            '11. Состояние сохранённых ДЗ',
+            'ok',
+            legacyCount
+              ? `Новые записи используют draft → submitted_pending_report → submitted. Старых мигрированных записей: ${legacyCount}; они не изменяются.`
+              : 'Новые записи соответствуют state machine draft → submitted_pending_report → submitted.'
+          );
         }
 
         telegramInfoEl.innerHTML = '';
@@ -213,13 +237,14 @@
     const probeId = `__diagnostic_probe__${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
     try {
-      // Stage 1: real browser/anon/RLS insert of a harmless checked row.
+      // Stage 1: real browser/anon/RLS insert using the same draft state
+      // as a checked but not yet submitted homework.
       const { error: insertError } = await client.from(table).insert({
         student_id: studentId,
         student_name: student.nameRu || student.nameEn || studentId,
         lesson_id: probeId,
         lesson_title: 'Diagnostics homework write probe',
-        status: 'checked',
+        status: 'draft',
         answers: {},
         legacy_answers: null,
         migrated_from_legacy: false,
@@ -227,14 +252,18 @@
         score_total: null,
         score_percent: null,
         checked_at: null,
-        submitted_at: null
+        submitted_at: null,
+        locked_at: null,
+        report_status: 'not_sent',
+        report_sent_at: null,
+        report_error: null
       });
 
       if (insertError) {
-        throw new Error(`browser_checked_insert: ${formatError(insertError)}`);
+        throw new Error(`browser_draft_insert: ${formatError(insertError)}`);
       }
 
-      // Stage 2: Edge Function exercises the current Olya homework submission path
+      // Stage 2: Edge Function exercises the exact database/report state machine
       // without sending Telegram, then deletes the technical row.
       const probe = await invokeDiagnostic({
         kind: 'diagnostics_homework_probe',
@@ -246,7 +275,7 @@
         throw new Error(probe.data?.error || explainFunctionFailure(probe));
       }
 
-      dbWriteResultEl.innerHTML = `<div class="summary ok">✓ Полный путь homework_progress работает: browser checked → submitted → cleanup. Реальные ДЗ не изменялись.</div>`;
+      dbWriteResultEl.innerHTML = `<div class="summary ok">✓ Полный путь homework_progress работает: browser draft → submitted_pending_report → submitted → cleanup. Реальные ДЗ не изменялись.</div>`;
       lastReport.databaseWriteProbe = {
         ok: true,
         lessonId: probeId,

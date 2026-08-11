@@ -635,13 +635,18 @@
           } else if (cloudLegacyAnswers && !localResult.legacyAnswers) {
             homework.results[row.lesson_id] = { ...localResult, legacyAnswers: cloudLegacyAnswers };
           }
-          if (row.status === 'submitted' || row.migrated_from_legacy) {
+          const cloudSubmitted = ['submitted_pending_report', 'submitted'].includes(safeText(row.status));
+          if (cloudSubmitted || row.migrated_from_legacy) {
             homework.submissions[row.lesson_id] = {
-              savedAt: row.submitted_at || row.updated_at,
-              status: row.migrated_from_legacy ? 'migrated-cloud' : 'cloud'
+              savedAt: row.submitted_at || row.locked_at || row.updated_at,
+              status: row.migrated_from_legacy
+                ? 'migrated-cloud'
+                : row.status === 'submitted'
+                  ? 'cloud'
+                  : 'pending-report'
             };
           }
-          if (row.status === 'submitted' || row.migrated_from_legacy) {
+          if (cloudSubmitted || row.migrated_from_legacy) {
             homework.completedIds.push(row.lesson_id);
           }
         });
@@ -706,28 +711,64 @@
       if (sections.includes('homework')) {
         const progress = this.loadHomeworkProgress();
         const lessonIds = unique([...Object.keys(progress.results), ...Object.keys(progress.submissions)]);
-        const rows = lessonIds.map((lessonId) => {
-          const result = progress.results[lessonId] || {};
-          const submission = progress.submissions[lessonId];
-          const lesson = HOMEWORK_DATA.find((item) => item.id === lessonId) || {};
-          const total = Number(result.total || 0);
-          const correct = Number(result.correct || 0);
-          return {
-            student_id: studentId,
-            student_name: safeText(student.nameRu || student.nameEn),
-            lesson_id: lessonId,
-            lesson_title: safeText(lesson.title, lessonId),
-            status: submission ? 'submitted' : 'checked',
-            answers: result.answers && typeof result.answers === 'object' ? result.answers : {},
-            legacy_answers: result.legacyAnswers && typeof result.legacyAnswers === 'object' ? result.legacyAnswers : null,
-            migrated_from_legacy: Boolean(result.migratedAt || result.legacyAnswers),
-            score_correct: total > 0 ? correct : null,
-            score_total: total > 0 ? total : null,
-            score_percent: total > 0 ? safePercent(correct, total) : null,
-            checked_at: result.checkedAt || null,
-            submitted_at: submission?.savedAt || null
-          };
-        });
+
+        // The shared Supabase table uses the stricter report state machine:
+        // draft/not_sent → submitted_pending_report/pending|failed → submitted/sent.
+        // Never overwrite a row that the server has already finalized.
+        const finalizedIds = new Set();
+        const pendingReportIds = new Set();
+        const legacyIds = new Set();
+        if (lessonIds.length) {
+          const { data: cloudRows, error: cloudRowsError } = await client
+            .from(tables.homework)
+            .select('lesson_id,status,report_status,migrated_from_legacy')
+            .eq('student_id', studentId)
+            .in('lesson_id', lessonIds);
+          if (cloudRowsError) throw cloudRowsError;
+          (cloudRows || []).forEach((row) => {
+            if (row.migrated_from_legacy) legacyIds.add(row.lesson_id);
+            if (row.status === 'submitted_pending_report' && ['pending', 'failed'].includes(row.report_status)) pendingReportIds.add(row.lesson_id);
+            if (row.status === 'submitted' && row.report_status === 'sent') finalizedIds.add(row.lesson_id);
+          });
+        }
+
+        const rows = lessonIds
+          .filter((lessonId) => {
+            const submission = progress.submissions[lessonId];
+            return !finalizedIds.has(lessonId)
+              && !pendingReportIds.has(lessonId)
+              && !legacyIds.has(lessonId)
+              && submission?.status !== 'cloud'
+              && submission?.status !== 'migrated-cloud';
+          })
+          .map((lessonId) => {
+            const result = progress.results[lessonId] || {};
+            const submission = progress.submissions[lessonId];
+            const lesson = HOMEWORK_DATA.find((item) => item.id === lessonId) || {};
+            const total = Number(result.total || 0);
+            const correct = Number(result.correct || 0);
+            const isSubmitted = Boolean(submission);
+            const submittedAt = isSubmitted ? (submission.savedAt || new Date().toISOString()) : null;
+            return {
+              student_id: studentId,
+              student_name: safeText(student.nameRu || student.nameEn),
+              lesson_id: lessonId,
+              lesson_title: safeText(lesson.title, lessonId),
+              status: isSubmitted ? 'submitted_pending_report' : 'draft',
+              answers: result.answers && typeof result.answers === 'object' ? result.answers : {},
+              legacy_answers: result.legacyAnswers && typeof result.legacyAnswers === 'object' ? result.legacyAnswers : null,
+              migrated_from_legacy: false,
+              score_correct: total > 0 ? correct : null,
+              score_total: total > 0 ? total : null,
+              score_percent: total > 0 ? safePercent(correct, total) : null,
+              checked_at: result.checkedAt || null,
+              submitted_at: submittedAt,
+              locked_at: submittedAt,
+              report_status: isSubmitted ? 'pending' : 'not_sent',
+              report_sent_at: null,
+              report_error: null
+            };
+          });
         if (rows.length) {
           const { error } = await client.from(tables.homework).upsert(rows, { onConflict: 'student_id,lesson_id' });
           if (error) throw error;

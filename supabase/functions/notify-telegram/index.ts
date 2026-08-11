@@ -7,7 +7,7 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
-const DIAGNOSTIC_VERSION = 'olya-diagnostics-v2'
+const DIAGNOSTIC_VERSION = 'olya-diagnostics-v3'
 const DIAGNOSTIC_STUDENT_ID = 'olya'
 const DIAGNOSTIC_THREAD_ID = 5
 const DIAGNOSTIC_COOLDOWN_MS = 30_000
@@ -342,15 +342,36 @@ async function sendHomeworkReport(ctx: any, payload: any) {
 
   const { data: row, error: rowError } = await ctx.supabaseAdmin
     .from('homework_progress')
-    .select('student_id, student_name, lesson_id, lesson_title, status, score_correct, score_total, score_percent, submitted_at')
+    .select('student_id, student_name, lesson_id, lesson_title, status, report_status, report_sent_at, report_error, score_correct, score_total, score_percent, submitted_at, locked_at')
     .eq('student_id', studentId)
     .eq('lesson_id', lessonId)
     .maybeSingle()
 
   if (rowError) return json({ ok: false, stage: 'supabase-homework', error: rowError.message }, 500)
   if (!row) return json({ ok: false, stage: 'supabase-homework', error: 'Submitted homework row was not found' }, 404)
-  if (row.status !== 'submitted' || !row.submitted_at) {
-    return json({ ok: false, stage: 'supabase-homework', error: 'Homework is not marked as submitted yet' }, 409)
+
+  // A finalized row is authoritative: never send a duplicate Telegram report.
+  if (row.status === 'submitted' && row.report_status === 'sent') {
+    return json({
+      ok: true,
+      skipped: true,
+      reason: 'already_sent',
+      telegramMessageId: null,
+      messageThreadId: null,
+    })
+  }
+
+  if (
+    row.status !== 'submitted_pending_report'
+    || !['pending', 'failed'].includes(String(row.report_status || ''))
+    || !row.submitted_at
+    || !row.locked_at
+  ) {
+    return json({
+      ok: false,
+      stage: 'supabase-homework',
+      error: `Homework report state is invalid: status=${row.status || 'NULL'}, report_status=${row.report_status || 'NULL'}`,
+    }, 409)
   }
 
   let recipient
@@ -366,7 +387,7 @@ async function sendHomeworkReport(ctx: any, payload: any) {
 
   const { data: existing, error: existingError } = await ctx.supabaseAdmin
     .from('material_publications')
-    .select('id, status, telegram_message_id')
+    .select('id, status, telegram_message_id, sent_at')
     .eq('student_id', studentId)
     .eq('material_type', materialType)
     .eq('material_id', materialId)
@@ -374,7 +395,26 @@ async function sendHomeworkReport(ctx: any, payload: any) {
     .maybeSingle()
 
   if (existingError) return json({ ok: false, stage: 'publication-log', error: existingError.message }, 500)
+
+  // If Telegram was already logged as sent but the homework row was not finalized,
+  // repair the row without sending a second message.
   if (existing?.status === 'sent') {
+    const reportSentAt = existing.sent_at || row.report_sent_at || new Date().toISOString()
+    const { error: finalizeError } = await ctx.supabaseAdmin
+      .from('homework_progress')
+      .update({
+        status: 'submitted',
+        report_status: 'sent',
+        report_sent_at: reportSentAt,
+        report_error: null,
+      })
+      .eq('student_id', studentId)
+      .eq('lesson_id', lessonId)
+
+    if (finalizeError) {
+      return json({ ok: false, stage: 'supabase-homework-finalize', error: finalizeError.message }, 500)
+    }
+
     return json({
       ok: true,
       skipped: true,
@@ -382,6 +422,16 @@ async function sendHomeworkReport(ctx: any, payload: any) {
       telegramMessageId: existing.telegram_message_id,
       messageThreadId: recipient.messageThreadId,
     })
+  }
+
+  // A failed report may be retried. Move it back to pending before sending.
+  if (row.report_status !== 'pending') {
+    const { error: pendingError } = await ctx.supabaseAdmin
+      .from('homework_progress')
+      .update({ report_status: 'pending', report_error: null })
+      .eq('student_id', studentId)
+      .eq('lesson_id', lessonId)
+    if (pendingError) return json({ ok: false, stage: 'supabase-homework-pending', error: pendingError.message }, 500)
   }
 
   let publicationId = existing?.id as string | undefined
@@ -419,40 +469,70 @@ async function sendHomeworkReport(ctx: any, payload: any) {
     publicationId = created.id
   }
 
+  let telegramMessage: any
   try {
-    const telegramMessage = await sendTelegramMessage(
+    telegramMessage = await sendTelegramMessage(
       token,
       recipient.chatId,
       recipient.messageThreadId,
       buildHomeworkReport(row),
     )
-
-    const { error: updateError } = await ctx.supabaseAdmin
-      .from('material_publications')
-      .update({
-        status: 'sent',
-        telegram_message_id: telegramMessage.message_id,
-        sent_at: new Date().toISOString(),
-        error_message: null,
-      })
-      .eq('id', publicationId)
-
-    if (updateError) throw new Error(`Telegram sent, but log update failed: ${updateError.message}`)
-
-    return json({
-      ok: true,
-      skipped: false,
-      telegramMessageId: telegramMessage.message_id,
-      messageThreadId: recipient.messageThreadId,
-    })
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     await ctx.supabaseAdmin
       .from('material_publications')
       .update({ status: 'failed', error_message: message })
       .eq('id', publicationId)
+    await ctx.supabaseAdmin
+      .from('homework_progress')
+      .update({ report_status: 'failed', report_error: message })
+      .eq('student_id', studentId)
+      .eq('lesson_id', lessonId)
     return json({ ok: false, stage: 'telegram-send-report', error: message }, 502)
   }
+
+  const reportSentAt = new Date().toISOString()
+  const errors: string[] = []
+
+  const { error: publicationUpdateError } = await ctx.supabaseAdmin
+    .from('material_publications')
+    .update({
+      status: 'sent',
+      telegram_message_id: telegramMessage.message_id,
+      sent_at: reportSentAt,
+      error_message: null,
+    })
+    .eq('id', publicationId)
+  if (publicationUpdateError) errors.push(`publication log: ${publicationUpdateError.message}`)
+
+  const { error: homeworkFinalizeError } = await ctx.supabaseAdmin
+    .from('homework_progress')
+    .update({
+      status: 'submitted',
+      report_status: 'sent',
+      report_sent_at: reportSentAt,
+      report_error: null,
+    })
+    .eq('student_id', studentId)
+    .eq('lesson_id', lessonId)
+  if (homeworkFinalizeError) errors.push(`homework finalize: ${homeworkFinalizeError.message}`)
+
+  if (errors.length) {
+    return json({
+      ok: false,
+      stage: 'post-telegram-finalize',
+      error: `Telegram message ${telegramMessage.message_id} was sent, but finalization failed: ${errors.join(' | ')}`,
+      telegramMessageId: telegramMessage.message_id,
+      messageThreadId: recipient.messageThreadId,
+    }, 500)
+  }
+
+  return json({
+    ok: true,
+    skipped: false,
+    telegramMessageId: telegramMessage.message_id,
+    messageThreadId: recipient.messageThreadId,
+  })
 }
 
 
@@ -466,30 +546,54 @@ async function diagnosticsHealthV2(ctx: any, payload: any) {
     ok: false,
     homeworkRows: 0,
     suspiciousHomework: [],
+    legacyHomework: [],
   }
 
   try {
     const { data, error } = await ctx.supabaseAdmin
       .from('homework_progress')
-      .select('lesson_id,status,checked_at,submitted_at')
+      .select('lesson_id,status,checked_at,submitted_at,locked_at,report_status,report_sent_at,report_error,migrated_from_legacy')
       .eq('student_id', DIAGNOSTIC_STUDENT_ID)
       .order('lesson_id', { ascending: false })
       .limit(100)
     if (error) throw error
 
     const rows = data || []
-    const suspicious = rows
-      .filter((row: any) => {
-        if (!['checked', 'submitted'].includes(String(row.status || ''))) return true
-        if (row.status === 'submitted' && !row.submitted_at) return true
-        if (row.status === 'checked' && row.submitted_at) return true
-        return false
-      })
-      .map((row: any) => String(row.lesson_id || 'unknown'))
+    const suspicious: string[] = []
+    const legacy: string[] = []
+
+    rows.forEach((row: any) => {
+      const lessonId = String(row.lesson_id || 'unknown')
+      const status = String(row.status || '')
+      const reportStatus = String(row.report_status || '')
+
+      if (row.migrated_from_legacy || status === 'checked') {
+        legacy.push(lessonId)
+        return
+      }
+
+      if (status === 'draft') {
+        if (reportStatus !== 'not_sent' || row.submitted_at || row.locked_at || row.report_sent_at) suspicious.push(lessonId)
+        return
+      }
+
+      if (status === 'submitted_pending_report') {
+        if (!['pending', 'failed'].includes(reportStatus) || !row.submitted_at || !row.locked_at || row.report_sent_at) suspicious.push(lessonId)
+        return
+      }
+
+      if (status === 'submitted') {
+        if (reportStatus !== 'sent' || !row.submitted_at || !row.locked_at || !row.report_sent_at) suspicious.push(lessonId)
+        return
+      }
+
+      suspicious.push(lessonId)
+    })
 
     database.ok = true
     database.homeworkRows = rows.length
-    database.suspiciousHomework = suspicious
+    database.suspiciousHomework = [...new Set(suspicious)]
+    database.legacyHomework = [...new Set(legacy)]
   } catch (error) {
     database.error = error instanceof Error ? error.message : String(error)
   }
@@ -560,7 +664,7 @@ async function diagnosticsHomeworkProbeV2(ctx: any, payload: any) {
   try {
     const { data: row, error: readError } = await ctx.supabaseAdmin
       .from('homework_progress')
-      .select('student_id,lesson_id,status,submitted_at')
+      .select('student_id,lesson_id,status,report_status,submitted_at,locked_at,report_sent_at')
       .eq('student_id', studentId)
       .eq('lesson_id', lessonId)
       .maybeSingle()
@@ -571,32 +675,76 @@ async function diagnosticsHomeworkProbeV2(ctx: any, payload: any) {
       return json({ ok: true, stages })
     }
 
-    stages.browserInsert = `row found with status=${row.status}`
-
-    if (row.status !== 'submitted') {
-      const submittedAt = new Date().toISOString()
-      const { error: updateError } = await ctx.supabaseAdmin
-        .from('homework_progress')
-        .update({ status: 'submitted', submitted_at: submittedAt })
-        .eq('student_id', studentId)
-        .eq('lesson_id', lessonId)
-      if (updateError) throw new Error(`transition checked→submitted: ${updateError.message}`)
-      stages.transition = 'checked → submitted'
-    } else {
-      stages.transition = 'already submitted'
+    if (row.status !== 'draft' || row.report_status !== 'not_sent') {
+      throw new Error(`browser draft has unexpected state: status=${row.status}, report_status=${row.report_status}`)
     }
+    stages.browserInsert = 'draft / not_sent row found'
 
-    const { data: verified, error: verifyError } = await ctx.supabaseAdmin
+    const submittedAt = new Date().toISOString()
+    const { error: pendingError } = await ctx.supabaseAdmin
       .from('homework_progress')
-      .select('status,submitted_at')
+      .update({
+        status: 'submitted_pending_report',
+        report_status: 'pending',
+        submitted_at: submittedAt,
+        locked_at: submittedAt,
+        report_sent_at: null,
+        report_error: null,
+      })
+      .eq('student_id', studentId)
+      .eq('lesson_id', lessonId)
+    if (pendingError) throw new Error(`transition draft→submitted_pending_report: ${pendingError.message}`)
+    stages.pending = 'draft/not_sent → submitted_pending_report/pending'
+
+    const { data: pendingRow, error: pendingVerifyError } = await ctx.supabaseAdmin
+      .from('homework_progress')
+      .select('status,report_status,submitted_at,locked_at,report_sent_at')
       .eq('student_id', studentId)
       .eq('lesson_id', lessonId)
       .single()
-    if (verifyError) throw new Error(`verify submitted row: ${verifyError.message}`)
-    if (verified?.status !== 'submitted' || !verified?.submitted_at) {
-      throw new Error('Submitted row did not persist expected status/submitted_at')
+    if (pendingVerifyError) throw new Error(`verify pending row: ${pendingVerifyError.message}`)
+    if (
+      pendingRow?.status !== 'submitted_pending_report'
+      || pendingRow?.report_status !== 'pending'
+      || !pendingRow?.submitted_at
+      || !pendingRow?.locked_at
+      || pendingRow?.report_sent_at
+    ) {
+      throw new Error('Pending-report row did not persist the expected state')
     }
-    stages.verify = 'submitted row read back successfully'
+    stages.pendingVerify = 'submitted_pending_report row read back successfully'
+
+    const reportSentAt = new Date().toISOString()
+    const { error: finalError } = await ctx.supabaseAdmin
+      .from('homework_progress')
+      .update({
+        status: 'submitted',
+        report_status: 'sent',
+        report_sent_at: reportSentAt,
+        report_error: null,
+      })
+      .eq('student_id', studentId)
+      .eq('lesson_id', lessonId)
+    if (finalError) throw new Error(`transition submitted_pending_report→submitted: ${finalError.message}`)
+    stages.final = 'submitted_pending_report/pending → submitted/sent'
+
+    const { data: finalRow, error: finalVerifyError } = await ctx.supabaseAdmin
+      .from('homework_progress')
+      .select('status,report_status,submitted_at,locked_at,report_sent_at')
+      .eq('student_id', studentId)
+      .eq('lesson_id', lessonId)
+      .single()
+    if (finalVerifyError) throw new Error(`verify submitted row: ${finalVerifyError.message}`)
+    if (
+      finalRow?.status !== 'submitted'
+      || finalRow?.report_status !== 'sent'
+      || !finalRow?.submitted_at
+      || !finalRow?.locked_at
+      || !finalRow?.report_sent_at
+    ) {
+      throw new Error('Submitted row did not persist the expected final state')
+    }
+    stages.finalVerify = 'submitted/sent row read back successfully'
 
     const { error: deleteError } = await ctx.supabaseAdmin
       .from('homework_progress')
