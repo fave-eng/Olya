@@ -1,319 +1,318 @@
 (() => {
   'use strict';
 
+  const EXPECTED_THREAD_ID = 5;
+  const EXPECTED_DIAGNOSTIC_VERSION = 'olya-diagnostics-v2';
   const config = window.APP_CONFIG || {};
-  const resultsRoot = document.getElementById('diagnostics-results');
-  const summaryRoot = document.getElementById('diagnostics-summary');
-  const runButton = document.getElementById('run-diagnostics');
-  const clearButton = document.getElementById('clear-diagnostics');
-  const secretInput = document.getElementById('diagnostics-secret');
-  const testReportButton = document.getElementById('send-test-report');
-  const testNotificationButton = document.getElementById('send-test-notification');
-  const testOutput = document.getElementById('telegram-test-output');
-  const checks = [];
+  const student = config.student || {};
+  const studentId = String(student.id || 'olya').trim().toLowerCase();
+  const checksEl = document.getElementById('checks');
+  const summaryEl = document.getElementById('main-summary');
+  const rawEl = document.getElementById('raw-output');
+  const configInfoEl = document.getElementById('config-info');
+  const telegramInfoEl = document.getElementById('telegram-info');
+  const dbWriteResultEl = document.getElementById('db-write-result');
+  const sendResultEl = document.getElementById('send-result');
+  const runAllBtn = document.getElementById('run-all');
+  const dbWriteBtn = document.getElementById('test-db-write');
+  const sendBtn = document.getElementById('send-test-report');
+  let supabaseClient = null;
+  let lastReport = { startedAt: null, checks: [], health: null, directRows: [], errors: [] };
 
   const esc = (value) => String(value ?? '')
     .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 
-  function functionEndpoint() {
-    const base = String(config.supabase?.url || '').trim().replace(/\/+$/, '');
-    return base ? `${base}/functions/v1/notify-telegram` : '';
+  function addKV(target, key, value, mono = false) {
+    target.insertAdjacentHTML('beforeend', `<div class="kv"><span>${esc(key)}</span><strong class="${mono ? 'mono' : ''}">${esc(value)}</strong></div>`);
   }
 
-  function clearResults() {
-    checks.length = 0;
-    if (resultsRoot) resultsRoot.innerHTML = '';
-    if (summaryRoot) summaryRoot.innerHTML = '';
+  function renderConfig() {
+    configInfoEl.innerHTML = '';
+    addKV(configInfoEl, 'student_id', studentId || '—', true);
+    addKV(configInfoEl, 'Имя', student.nameRu || student.nameEn || '—');
+    addKV(configInfoEl, 'Supabase URL', config.supabase?.url || 'не задан', true);
+    addKV(configInfoEl, 'Anon key', config.supabase?.anonKey ? 'есть' : 'НЕТ');
+    addKV(configInfoEl, 'cloudSync', String(config.features?.cloudSync !== false));
+    addKV(configInfoEl, 'telegramNotifications', String(config.features?.telegramNotifications !== false));
+    addKV(configInfoEl, 'Origin', window.location.origin, true);
   }
 
-  function renderSummary() {
-    if (!summaryRoot) return;
-    const total = checks.length;
-    const failed = checks.filter((item) => item.status === 'error').length;
-    const running = checks.filter((item) => item.status === 'running').length;
-    const ok = checks.filter((item) => item.status === 'ok').length;
-    const stateClass = failed ? 'error' : (total && !running ? 'ok' : '');
-    const label = running
-      ? `Проверяется… ${ok}/${total}`
-      : failed
-        ? `Ошибок: ${failed} · успешно: ${ok}`
-        : total
-          ? `Все проверки пройдены: ${ok}/${total}`
-          : 'Нет результатов';
-    summaryRoot.innerHTML = `<span class="diag-summary-badge ${stateClass}">${esc(label)}</span>`;
+  function resetChecks() {
+    checksEl.innerHTML = '';
+    lastReport = { startedAt: new Date().toISOString(), checks: [], health: null, directRows: [], errors: [] };
   }
 
-  function addCheck({ id, label, stage, status = 'running', detail = 'Проверяется…' }) {
-    const record = { id, label, stage, status, detail };
-    checks.push(record);
-    renderChecks();
-    return record;
+  function addCheck(name, status, detail) {
+    const icon = status === 'ok' ? '✓' : status === 'bad' ? '!' : status === 'warn' ? '!' : '…';
+    checksEl.insertAdjacentHTML('beforeend', `<div class="check ${status}"><div class="ico">${icon}</div><div><div class="name">${esc(name)}</div><div class="detail">${esc(detail || '')}</div></div></div>`);
+    lastReport.checks.push({ name, status, detail: detail || '' });
   }
 
-  function updateCheck(record, status, detail) {
-    record.status = status;
-    record.detail = String(detail || '');
-    renderChecks();
+  function setSummary(status, text) {
+    summaryEl.className = `summary ${status || ''}`.trim();
+    summaryEl.textContent = text;
   }
 
-  function renderChecks() {
-    if (!resultsRoot) return;
-    resultsRoot.innerHTML = checks.map((item) => {
-      const icon = item.status === 'ok' ? '✓' : item.status === 'error' ? '!' : '…';
-      return `<article class="diag-item is-${esc(item.status)}">
-        <div class="diag-icon" aria-hidden="true">${icon}</div>
-        <div class="diag-copy">
-          <strong>${esc(item.label)}</strong>
-          <div class="diag-meta">Этап: ${esc(item.stage)}</div>
-          <p class="diag-detail">${esc(item.detail)}</p>
-        </div>
-      </article>`;
-    }).join('');
-    renderSummary();
-  }
-
-  function errorDetail(error) {
-    if (!error) return 'Неизвестная ошибка';
-    return String(error.message || error.details || error.hint || error);
-  }
-
-  async function edgeRequest(payload, secret = '', allowResultFailure = false) {
-    const endpoint = functionEndpoint();
-    if (!endpoint) throw new Error('В config.js не задан supabase.url');
-    const headers = { 'content-type': 'application/json' };
-    if (secret) headers['x-notify-secret'] = secret;
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(payload)
-    });
-    const result = await response.json().catch(() => ({ ok: false, error: `HTTP ${response.status}` }));
-    if (!response.ok || (!allowResultFailure && !result?.ok)) {
-      const stage = result?.stage ? `${result.stage}: ` : '';
-      throw new Error(`${stage}${result?.error || `HTTP ${response.status}`}`);
-    }
-    return result;
-  }
-
-  async function makeSupabaseClient() {
-    if (!window.supabase?.createClient) throw new Error('supabase-js не загрузился');
+  function getClient() {
+    if (supabaseClient) return supabaseClient;
+    if (!window.supabase?.createClient) throw new Error('Supabase JS SDK не загрузился');
     const url = String(config.supabase?.url || '').trim();
     const anonKey = String(config.supabase?.anonKey || '').trim();
-    if (!url) throw new Error('В config.js отсутствует supabase.url');
-    if (!anonKey) throw new Error('В config.js отсутствует supabase.anonKey');
-    return window.supabase.createClient(url, anonKey, {
+    if (!url || !anonKey) throw new Error('В config.js отсутствуют supabase.url или supabase.anonKey');
+    supabaseClient = window.supabase.createClient(url, anonKey, {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
     });
+    return supabaseClient;
   }
 
-  async function testLocalStorage() {
-    const check = addCheck({ id: 'local-storage', label: 'localStorage', stage: 'browser' });
-    const key = `english_space_diagnostics_${Date.now()}`;
-    try {
-      localStorage.setItem(key, 'ok');
-      if (localStorage.getItem(key) !== 'ok') throw new Error('Записанное значение не читается обратно');
-      localStorage.removeItem(key);
-      updateCheck(check, 'ok', 'Запись, чтение и удаление работают.');
-    } catch (error) {
-      updateCheck(check, 'error', errorDetail(error));
-    }
+  function functionUrl() {
+    const base = String(config.supabase?.url || '').replace(/\/+$/, '');
+    return `${base}/functions/v1/notify-telegram`;
   }
 
-  async function testSupabase() {
-    const sdk = addCheck({ id: 'supabase-sdk', label: 'Supabase SDK и config.js', stage: 'browser → supabase' });
-    let client;
-    try {
-      client = await makeSupabaseClient();
-      updateCheck(sdk, 'ok', `Клиент создан для ${new URL(config.supabase.url).hostname}.`);
-    } catch (error) {
-      updateCheck(sdk, 'error', errorDetail(error));
-      return null;
-    }
-
-    const studentId = String(config.student?.id || 'olya');
-    const tables = [
-      ['homework_progress', 'lesson_id'],
-      ['vocabulary_progress', 'word_key'],
-      ['vocabulary_topic_progress', 'topic_id'],
-      ['grammar_progress', 'topic_id']
-    ];
-
-    for (const [table, selectColumn] of tables) {
-      const check = addCheck({ id: `read-${table}`, label: `Чтение ${table}`, stage: 'supabase select' });
-      try {
-        const { error } = await client.from(table).select(selectColumn).eq('student_id', studentId).limit(1);
-        if (error) throw error;
-        updateCheck(check, 'ok', 'SELECT для прогресса Оли доступен.');
-      } catch (error) {
-        updateCheck(check, 'error', errorDetail(error));
-      }
-    }
-
-    const diagnosticStudentId = `__diagnostics__-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
-    const writeCheck = addCheck({ id: 'supabase-write', label: 'Сохранение прогресса в Supabase', stage: 'supabase insert/update/read' });
-    try {
-      const now = new Date().toISOString();
-      const writeOperations = [
-        client.from('homework_progress').upsert({
-          student_id: diagnosticStudentId,
-          student_name: 'Diagnostics',
-          lesson_id: '__probe__',
-          lesson_title: 'Diagnostics insert',
-          status: 'checked',
-          answers: { probe: 1 },
-          score_correct: 0,
-          score_total: 1,
-          score_percent: 0,
-          checked_at: now
-        }, { onConflict: 'student_id,lesson_id' }),
-        client.from('vocabulary_progress').upsert({
-          student_id: diagnosticStudentId,
-          word_key: '__probe__',
-          word_id: '__probe__',
-          en: 'diagnostics',
-          ru: 'диагностика',
-          source_topic_id: '__probe__',
-          status: 'difficult'
-        }, { onConflict: 'student_id,word_key' }),
-        client.from('vocabulary_topic_progress').upsert({
-          student_id: diagnosticStudentId,
-          topic_id: '__probe__',
-          tests: [],
-          legacy_learned_count: 0,
-          legacy_total: 0,
-          legacy_source: 'diagnostics-insert'
-        }, { onConflict: 'student_id,topic_id' }),
-        client.from('grammar_progress').upsert({
-          student_id: diagnosticStudentId,
-          topic_id: '__probe__',
-          passed: false,
-          attempts: 0,
-          best_score: 0
-        }, { onConflict: 'student_id,topic_id' })
-      ];
-      const insertResults = await Promise.all(writeOperations);
-      const insertError = insertResults.find((item) => item.error)?.error;
-      if (insertError) throw insertError;
-
-      const updateOperations = [
-        client.from('homework_progress').update({ lesson_title: 'Diagnostics update', answers: { probe: 2 } }).eq('student_id', diagnosticStudentId).eq('lesson_id', '__probe__'),
-        client.from('vocabulary_progress').update({ en: 'diagnostics update' }).eq('student_id', diagnosticStudentId).eq('word_key', '__probe__'),
-        client.from('vocabulary_topic_progress').update({ legacy_source: 'diagnostics-update' }).eq('student_id', diagnosticStudentId).eq('topic_id', '__probe__'),
-        client.from('grammar_progress').update({ attempts: 1 }).eq('student_id', diagnosticStudentId).eq('topic_id', '__probe__')
-      ];
-      const updateResults = await Promise.all(updateOperations);
-      const updateError = updateResults.find((item) => item.error)?.error;
-      if (updateError) throw updateError;
-
-      const readBack = await Promise.all([
-        client.from('homework_progress').select('lesson_title,answers').eq('student_id', diagnosticStudentId).eq('lesson_id', '__probe__').single(),
-        client.from('vocabulary_progress').select('en').eq('student_id', diagnosticStudentId).eq('word_key', '__probe__').single(),
-        client.from('vocabulary_topic_progress').select('legacy_source').eq('student_id', diagnosticStudentId).eq('topic_id', '__probe__').single(),
-        client.from('grammar_progress').select('attempts').eq('student_id', diagnosticStudentId).eq('topic_id', '__probe__').single()
-      ]);
-      const readError = readBack.find((item) => item.error)?.error;
-      if (readError) throw readError;
-      if (readBack[0].data?.answers?.probe !== 2 || readBack[3].data?.attempts !== 1) {
-        throw new Error('Обновлённые значения не прочитались обратно');
-      }
-      updateCheck(writeCheck, 'ok', 'INSERT, UPDATE и повторное чтение работают во всех четырёх таблицах прогресса.');
-    } catch (error) {
-      updateCheck(writeCheck, 'error', errorDetail(error));
-    } finally {
-      const cleanup = addCheck({ id: 'supabase-cleanup', label: 'Очистка диагностических строк', stage: 'edge function → service role delete' });
-      try {
-        await edgeRequest({ action: 'diagnostics_cleanup', diagnosticStudentId });
-        updateCheck(cleanup, 'ok', 'Диагностические строки удалены; данные Оли не затронуты.');
-      } catch (error) {
-        updateCheck(cleanup, 'error', `Тестовые строки относятся только к ${diagnosticStudentId}. Очистка не выполнена: ${errorDetail(error)}`);
-      }
-    }
-
-    return client;
+  async function invokeDiagnostic(body) {
+    const anonKey = String(config.supabase?.anonKey || '').trim();
+    const response = await fetch(functionUrl(), {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'apikey': anonKey,
+        'authorization': `Bearer ${anonKey}`
+      },
+      body: JSON.stringify(body)
+    });
+    const text = await response.text();
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch { data = { raw: text }; }
+    return { ok: response.ok, status: response.status, data };
   }
 
-  async function testEdgeAndTelegram(secret) {
-    const check = addCheck({ id: 'edge-diagnostics', label: 'Supabase Edge Function', stage: 'browser → edge function' });
-    try {
-      const result = await edgeRequest({ action: 'diagnostics' }, secret, true);
-      updateCheck(check, result.ok ? 'ok' : 'error', result.ok ? 'Функция notify-telegram отвечает, все серверные проверки пройдены.' : 'Функция отвечает, но одна или несколько серверных проверок выявили ошибку.');
-      (result.checks || []).forEach((item) => {
-        const serverCheck = addCheck({
-          id: `server-${item.id}`,
-          label: item.label || item.id,
-          stage: item.stage || 'edge function',
-          status: item.ok ? 'ok' : 'error',
-          detail: item.detail || ''
-        });
-        serverCheck.status = item.ok ? 'ok' : 'error';
-      });
-      (result.recentPublications || []).forEach((item, index) => {
-        const status = String(item.status || 'unknown');
-        const isOk = status === 'sent' || status === 'skipped';
-        const kind = item.materialType === 'homework_report' ? 'Отчёт ДЗ' : item.materialType === 'lesson_bundle' ? 'Уведомление' : item.materialType || 'Отправка';
-        const message = item.error
-          ? `${status}: ${item.error}`
-          : `${status}${item.telegramMessageId ? ` · Telegram message id ${item.telegramMessageId}` : ''}${item.sentAt ? ` · ${item.sentAt}` : ''}`;
-        addCheck({
-          id: `publication-${index}`,
-          label: `${kind}: ${item.materialId || '—'}`,
-          stage: 'material_publications',
-          status: isOk ? 'ok' : 'error',
-          detail: message
-        });
-      });
-      renderChecks();
-    } catch (error) {
-      updateCheck(check, 'error', errorDetail(error));
+  function explainFunctionFailure(result) {
+    const message = String(result?.data?.error || result?.data?.message || result?.data?.raw || '').trim();
+    if (result?.status === 404) return 'Edge Function notify-telegram не найдена или не задеплоена.';
+    if (result?.status === 401 && /Unauthorized/i.test(message)) return 'В Supabase, вероятно, задеплоена старая версия notify-telegram: она не знает диагностический запрос и требует webhook secret.';
+    if (/Failed to fetch/i.test(message)) return 'Браузер не смог вызвать Edge Function: проверь сеть, URL проекта и CORS.';
+    return `HTTP ${result?.status || '—'}${message ? `: ${message}` : ''}`;
+  }
+
+  function formatError(error) {
+    if (!error) return 'Неизвестная ошибка';
+    const code = error.code ? `${error.code}: ` : '';
+    const message = error.message || error.error_description || String(error);
+    if (/Final homework submission is immutable|Submitted homework cannot be changed|Invalid homework status transition/i.test(message)) {
+      return `${code}${message}. Сработала защита от изменения уже отправленной домашней работы.`;
     }
+    if (/row-level security|permission denied|42501/i.test(message)) {
+      return `${code}${message}. Ошибка прав доступа / RLS Supabase.`;
+    }
+    return `${code}${message}`;
   }
 
   async function runAll() {
-    if (runButton) runButton.disabled = true;
-    clearResults();
-    try {
-      await testLocalStorage();
-      await testSupabase();
-      await testEdgeAndTelegram(String(secretInput?.value || '').trim());
-    } finally {
-      if (runButton) runButton.disabled = false;
-      renderSummary();
-    }
-  }
+    runAllBtn.disabled = true;
+    resetChecks();
+    setSummary('', 'Проверяю подключения…');
+    telegramInfoEl.innerHTML = '';
 
-  async function sendTelegramTest(action) {
-    const secret = String(secretInput?.value || '').trim();
-    if (!secret) {
-      testOutput.textContent = 'Ошибка authorization: введите NOTIFY_WEBHOOK_SECRET. Ключ не сохраняется.';
-      secretInput?.focus();
-      return;
-    }
-
-    const button = action === 'diagnostic_test_report' ? testReportButton : testNotificationButton;
-    if (button) button.disabled = true;
-    testOutput.textContent = 'Отправляется…';
     try {
-      const payload = { action };
-      if (action === 'diagnostic_test_notification') {
-        payload.siteUrl = new URL('homework.html', window.location.href).toString();
+      const hasConfig = Boolean(config.supabase?.url && config.supabase?.anonKey && studentId);
+      addCheck('1. config.js', hasConfig ? 'ok' : 'bad', hasConfig ? `Конфигурация загружена для ${studentId}.` : 'Не хватает student_id / Supabase URL / anon key.');
+      if (!hasConfig) throw new Error('Некорректный config.js');
+
+      const sdkOk = Boolean(window.supabase?.createClient);
+      addCheck('2. Supabase JS SDK', sdkOk ? 'ok' : 'bad', sdkOk ? 'Библиотека @supabase/supabase-js загружена.' : 'CDN Supabase JS не загрузился.');
+      if (!sdkOk) throw new Error('Supabase SDK не загрузился');
+
+      const client = getClient();
+      const homeworkTable = config.supabase?.tables?.homework || 'homework_progress';
+      const readResponse = await client
+        .from(homeworkTable)
+        .select('student_id,lesson_id,lesson_title,status,checked_at,submitted_at,score_correct,score_total,score_percent,answers,legacy_answers,migrated_from_legacy')
+        .eq('student_id', studentId)
+        .order('lesson_id', { ascending: false })
+        .limit(20);
+
+      if (readResponse.error) {
+        const detail = formatError(readResponse.error);
+        addCheck('3. Supabase Database / чтение homework_progress', 'bad', detail);
+        lastReport.errors.push({ stage: 'database_read', error: detail });
+      } else {
+        lastReport.directRows = readResponse.data || [];
+        addCheck('3. Supabase Database / чтение homework_progress', 'ok', `Доступ есть. Получено строк: ${(readResponse.data || []).length}.`);
       }
-      const result = await edgeRequest(payload, secret);
-      testOutput.textContent = [
-        'OK',
-        `Telegram message id: ${result.telegramMessageId ?? '—'}`,
-        `message_thread_id: ${result.messageThreadId ?? '—'}`,
-        'Проверьте, что сообщение появилось именно в теме 5.'
-      ].join('\n');
+
+      let edgeResult;
+      try {
+        edgeResult = await invokeDiagnostic({ kind: 'diagnostics_health', studentId });
+      } catch (error) {
+        edgeResult = { ok: false, status: 0, data: { error: error.message || String(error) } };
+      }
+
+      if (!edgeResult.ok || edgeResult.data?.diagnosticVersion !== EXPECTED_DIAGNOSTIC_VERSION) {
+        const detail = edgeResult.ok
+          ? `Функция отвечает, но версия диагностики другая: ${edgeResult.data?.diagnosticVersion || 'не указана'}. Нужен повторный deploy.`
+          : explainFunctionFailure(edgeResult);
+        addCheck('4. Supabase Edge Function notify-telegram', 'bad', detail);
+        lastReport.errors.push({ stage: 'edge_function', error: detail, response: edgeResult });
+      } else {
+        lastReport.health = edgeResult.data;
+        addCheck('4. Supabase Edge Function notify-telegram', 'ok', `Задеплоена нужная версия: ${edgeResult.data.diagnosticVersion}.`);
+
+        const h = edgeResult.data;
+        addCheck('5. Edge Function → Supabase (service role)', h.database?.ok ? 'ok' : 'bad', h.database?.ok ? `Сервер читает таблицы Supabase. Строк ДЗ: ${h.database.homeworkRows}.` : (h.database?.error || 'Сервер не может читать Supabase.'));
+        addCheck('6. Получатель Telegram', h.recipient?.ok ? 'ok' : 'bad', h.recipient?.ok ? `Получатель найден и включён. thread_id=${h.recipient.threadId ?? 'NULL'}.` : (h.recipient?.error || 'Получатель не найден/выключен.'));
+
+        const threadOk = Number(h.recipient?.threadId) === EXPECTED_THREAD_ID;
+        addCheck('7. Тема Telegram', threadOk ? 'ok' : 'bad', threadOk ? `message_thread_id=${EXPECTED_THREAD_ID} — как настроено для уведомлений и отчётов.` : `Сейчас message_thread_id=${h.recipient?.threadId ?? 'NULL'}, ожидалось ${EXPECTED_THREAD_ID}.`);
+        addCheck('8. Telegram Bot API / бот', h.telegram?.bot?.ok ? 'ok' : 'bad', h.telegram?.bot?.ok ? `Telegram видит бота @${h.telegram.bot.username || 'без username'}.` : (h.telegram?.bot?.error || 'getMe завершился ошибкой.'));
+        addCheck('9. Telegram Bot API / группа', h.telegram?.chat?.ok ? 'ok' : 'bad', h.telegram?.chat?.ok ? `Бот имеет доступ к целевой группе (${h.telegram.chat.type || 'chat'}).` : (h.telegram?.chat?.error || 'Бот не имеет доступа к группе.'));
+
+        if (Array.isArray(h.database?.suspiciousHomework) && h.database.suspiciousHomework.length) {
+          addCheck('10. Состояние сохранённых ДЗ', 'warn', `Есть старые/несогласованные записи по текущей state machine: ${h.database.suspiciousHomework.join(', ')}. Это не обязательно текущая ошибка, но их стоит проверить.`);
+        } else {
+          addCheck('10. Состояние сохранённых ДЗ', 'ok', 'Текущие записи соответствуют ожидаемым статусам checked / submitted.');
+        }
+
+        telegramInfoEl.innerHTML = '';
+        addKV(telegramInfoEl, 'Edge version', h.diagnosticVersion || '—', true);
+        addKV(telegramInfoEl, 'Recipient', h.recipient?.ok ? 'найден' : 'ошибка');
+        addKV(telegramInfoEl, 'Enabled', String(Boolean(h.recipient?.enabled)));
+        addKV(telegramInfoEl, 'message_thread_id', h.recipient?.threadId ?? 'NULL', true);
+        addKV(telegramInfoEl, 'Bot API', h.telegram?.bot?.ok ? 'OK' : 'ERROR');
+        addKV(telegramInfoEl, 'Доступ к группе', h.telegram?.chat?.ok ? 'OK' : 'ERROR');
+      }
+
+      const bad = lastReport.checks.filter((item) => item.status === 'bad');
+      const warn = lastReport.checks.filter((item) => item.status === 'warn');
+      if (bad.length) {
+        setSummary('bad', `Найдена проблема: ${bad[0].name}. Смотри первую красную строку выше.`);
+      } else if (warn.length) {
+        setSummary('warn', 'Основные подключения работают, но есть предупреждение по сохранённым данным.');
+      } else {
+        setSummary('ok', 'Все проверенные подключения работают. Теперь можно отдельно проверить запись Supabase и отправку тестового Telegram-отчёта.');
+      }
     } catch (error) {
-      testOutput.textContent = `Ошибка: ${errorDetail(error)}`;
+      const detail = formatError(error);
+      addCheck('Проверка остановлена', 'bad', detail);
+      lastReport.errors.push({ stage: 'fatal', error: detail });
+      setSummary('bad', detail);
     } finally {
-      if (button) button.disabled = false;
+      lastReport.finishedAt = new Date().toISOString();
+      rawEl.textContent = JSON.stringify(lastReport, null, 2);
+      runAllBtn.disabled = false;
     }
   }
 
-  runButton?.addEventListener('click', runAll);
-  clearButton?.addEventListener('click', clearResults);
-  testReportButton?.addEventListener('click', () => sendTelegramTest('diagnostic_test_report'));
-  testNotificationButton?.addEventListener('click', () => sendTelegramTest('diagnostic_test_notification'));
+  async function testDatabaseWrite() {
+    dbWriteBtn.disabled = true;
+    dbWriteResultEl.innerHTML = '<div class="summary">Проверяю полный путь сохранения ДЗ…</div>';
+
+    const client = getClient();
+    const table = config.supabase?.tables?.homework || 'homework_progress';
+    const probeId = `__diagnostic_probe__${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+    try {
+      // Stage 1: real browser/anon/RLS insert of a harmless checked row.
+      const { error: insertError } = await client.from(table).insert({
+        student_id: studentId,
+        student_name: student.nameRu || student.nameEn || studentId,
+        lesson_id: probeId,
+        lesson_title: 'Diagnostics homework write probe',
+        status: 'checked',
+        answers: {},
+        legacy_answers: null,
+        migrated_from_legacy: false,
+        score_correct: null,
+        score_total: null,
+        score_percent: null,
+        checked_at: null,
+        submitted_at: null
+      });
+
+      if (insertError) {
+        throw new Error(`browser_checked_insert: ${formatError(insertError)}`);
+      }
+
+      // Stage 2: Edge Function exercises the current Olya homework submission path
+      // without sending Telegram, then deletes the technical row.
+      const probe = await invokeDiagnostic({
+        kind: 'diagnostics_homework_probe',
+        studentId,
+        lessonId: probeId
+      });
+
+      if (!probe.ok || !probe.data?.ok) {
+        throw new Error(probe.data?.error || explainFunctionFailure(probe));
+      }
+
+      dbWriteResultEl.innerHTML = `<div class="summary ok">✓ Полный путь homework_progress работает: browser checked → submitted → cleanup. Реальные ДЗ не изменялись.</div>`;
+      lastReport.databaseWriteProbe = {
+        ok: true,
+        lessonId: probeId,
+        stages: probe.data.stages || null
+      };
+    } catch (error) {
+      const detail = formatError(error);
+      dbWriteResultEl.innerHTML = `<div class="summary bad">✕ Ошибка пути homework_progress: ${esc(detail)}</div>`;
+      lastReport.errors.push({ stage: 'database_write_probe', error: detail, lessonId: probeId });
+
+      // Best-effort cleanup. Server only accepts IDs with the diagnostics prefix.
+      try {
+        await invokeDiagnostic({
+          kind: 'diagnostics_homework_probe',
+          studentId,
+          lessonId: probeId
+        });
+      } catch {}
+    } finally {
+      rawEl.textContent = JSON.stringify(lastReport, null, 2);
+      dbWriteBtn.disabled = false;
+    }
+  }
+
+  async function sendTestReport() {
+    sendBtn.disabled = true;
+    sendResultEl.innerHTML = '<div class="summary">Отправляю тестовый отчёт…</div>';
+    try {
+      const result = await invokeDiagnostic({ kind: 'diagnostics_send_report', studentId, pageUrl: window.location.href });
+      if (!result.ok || !result.data?.ok) {
+        const message = result.data?.error || explainFunctionFailure(result);
+        const retry = result.data?.retryAfterSeconds ? ` Повтори через ${result.data.retryAfterSeconds} сек.` : '';
+        throw new Error(`${message}${retry}`);
+      }
+      if (result.data.skipped) {
+        const retry = Number(result.data.retryAfterSeconds || 30);
+        sendResultEl.innerHTML = `<div class="summary warn">Тест уже отправлялся совсем недавно. Повтори примерно через ${retry} сек.</div>`;
+      } else {
+        sendResultEl.innerHTML = `<div class="summary ok">✓ Telegram принял тестовый отчёт. message_id=${esc(result.data.telegramMessageId)}; thread_id=${esc(result.data.threadId)}.</div>`;
+      }
+    } catch (error) {
+      const detail = formatError(error);
+      sendResultEl.innerHTML = `<div class="summary bad">✕ Тестовый отчёт не отправлен: ${esc(detail)}</div>`;
+      lastReport.errors.push({ stage: 'telegram_test_send', error: detail });
+      rawEl.textContent = JSON.stringify(lastReport, null, 2);
+    } finally {
+      sendBtn.disabled = false;
+    }
+  }
+
+  async function copyReport() {
+    const text = rawEl.textContent || '';
+    try {
+      await navigator.clipboard.writeText(text);
+      const old = document.getElementById('copy-report').textContent;
+      document.getElementById('copy-report').textContent = 'Скопировано ✓';
+      setTimeout(() => { document.getElementById('copy-report').textContent = old; }, 1300);
+    } catch {
+      window.prompt('Скопируй отчёт вручную:', text);
+    }
+  }
+
+  document.getElementById('run-all').addEventListener('click', runAll);
+  document.getElementById('test-db-write').addEventListener('click', testDatabaseWrite);
+  document.getElementById('send-test-report').addEventListener('click', sendTestReport);
+  document.getElementById('copy-report').addEventListener('click', copyReport);
+  document.getElementById('reload-page').addEventListener('click', () => window.location.reload());
+  renderConfig();
 })();

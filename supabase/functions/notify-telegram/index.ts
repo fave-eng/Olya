@@ -7,6 +7,11 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
+const DIAGNOSTIC_VERSION = 'olya-diagnostics-v2'
+const DIAGNOSTIC_STUDENT_ID = 'olya'
+const DIAGNOSTIC_THREAD_ID = 5
+const DIAGNOSTIC_COOLDOWN_MS = 30_000
+
 function json(payload: unknown, status = 200) {
   return Response.json(payload, { status, headers: corsHeaders })
 }
@@ -155,9 +160,13 @@ async function resolveRecipient(ctx: any, studentId: string) {
   // Explicit Edge Function settings take precedence. This keeps reports and
   // manual notifications in the configured forum topic even if an old DB row
   // still points to the group without a topic.
+  const hasEnvOverride = envChatId !== null || envThreadId !== null
   const chatId = envChatId ?? parseTelegramId(recipient?.chat_id)
   const messageThreadId = envThreadId ?? parseTelegramId(recipient?.message_thread_id)
 
+  if (!hasEnvOverride && recipient && recipient.enabled === false) {
+    throw new Error('Telegram recipient is disabled')
+  }
   if (!Number.isSafeInteger(chatId)) {
     throw new Error('Telegram chat is not configured (TEACHER_CHAT_ID)')
   }
@@ -168,7 +177,8 @@ async function resolveRecipient(ctx: any, studentId: string) {
   return {
     chatId: Number(chatId),
     messageThreadId: Number(messageThreadId),
-    source: envChatId !== null || envThreadId !== null ? 'edge_function_settings' : 'database',
+    enabled: hasEnvOverride ? true : recipient?.enabled !== false,
+    source: hasEnvOverride ? 'edge_function_settings' : 'database',
   }
 }
 
@@ -289,6 +299,7 @@ async function runDiagnostics(ctx: any) {
 
   return json({
     ok: checks.every((item) => item.ok),
+    diagnosticVersion: DIAGNOSTIC_VERSION,
     checks,
     target: recipient
       ? { chatId: maskChatId(recipient.chatId), messageThreadId: recipient.messageThreadId, source: recipient.source }
@@ -441,6 +452,262 @@ async function sendHomeworkReport(ctx: any, payload: any) {
       .update({ status: 'failed', error_message: message })
       .eq('id', publicationId)
     return json({ ok: false, stage: 'telegram-send-report', error: message }, 502)
+  }
+}
+
+
+async function diagnosticsHealthV2(ctx: any, payload: any) {
+  const requestedStudentId = typeof payload?.studentId === 'string' ? payload.studentId.trim().toLowerCase() : DIAGNOSTIC_STUDENT_ID
+  if (requestedStudentId !== DIAGNOSTIC_STUDENT_ID) {
+    return json({ ok: false, error: 'Diagnostics are available only for the configured student.' }, 400)
+  }
+
+  const database: Record<string, any> = {
+    ok: false,
+    homeworkRows: 0,
+    suspiciousHomework: [],
+  }
+
+  try {
+    const { data, error } = await ctx.supabaseAdmin
+      .from('homework_progress')
+      .select('lesson_id,status,checked_at,submitted_at')
+      .eq('student_id', DIAGNOSTIC_STUDENT_ID)
+      .order('lesson_id', { ascending: false })
+      .limit(100)
+    if (error) throw error
+
+    const rows = data || []
+    const suspicious = rows
+      .filter((row: any) => {
+        if (!['checked', 'submitted'].includes(String(row.status || ''))) return true
+        if (row.status === 'submitted' && !row.submitted_at) return true
+        if (row.status === 'checked' && row.submitted_at) return true
+        return false
+      })
+      .map((row: any) => String(row.lesson_id || 'unknown'))
+
+    database.ok = true
+    database.homeworkRows = rows.length
+    database.suspiciousHomework = suspicious
+  } catch (error) {
+    database.error = error instanceof Error ? error.message : String(error)
+  }
+
+  const recipientState: Record<string, any> = { ok: false, enabled: false, threadId: null }
+  let recipient: Awaited<ReturnType<typeof resolveRecipient>> | null = null
+  try {
+    recipient = await resolveRecipient(ctx, DIAGNOSTIC_STUDENT_ID)
+    recipientState.ok = true
+    recipientState.enabled = Boolean(recipient.enabled)
+    recipientState.threadId = recipient.messageThreadId
+    recipientState.source = recipient.source
+  } catch (error) {
+    recipientState.error = error instanceof Error ? error.message : String(error)
+  }
+
+  const telegram: Record<string, any> = {
+    bot: { ok: false },
+    chat: { ok: false },
+  }
+  const token = Deno.env.get('TELEGRAM_BOT_TOKEN') ?? ''
+
+  if (!token) {
+    telegram.bot.error = 'TELEGRAM_BOT_TOKEN is not configured'
+    telegram.chat.error = 'Cannot check chat without TELEGRAM_BOT_TOKEN'
+  } else {
+    try {
+      const bot = await telegramApi(token, 'getMe')
+      telegram.bot = { ok: true, username: bot?.username || null, id: bot?.id || null }
+    } catch (error) {
+      telegram.bot = { ok: false, error: error instanceof Error ? error.message : String(error) }
+    }
+
+    if (recipient) {
+      try {
+        const chat = await telegramApi(token, 'getChat', { chat_id: recipient.chatId })
+        telegram.chat = {
+          ok: true,
+          type: chat?.type || null,
+          title: chat?.title || null,
+        }
+      } catch (error) {
+        telegram.chat = { ok: false, error: error instanceof Error ? error.message : String(error) }
+      }
+    } else {
+      telegram.chat.error = 'Recipient is not configured'
+    }
+  }
+
+  return json({
+    ok: database.ok && recipientState.ok && recipientState.enabled && recipientState.threadId === DIAGNOSTIC_THREAD_ID && telegram.bot.ok && telegram.chat.ok,
+    diagnosticVersion: DIAGNOSTIC_VERSION,
+    database,
+    recipient: recipientState,
+    telegram,
+  })
+}
+
+async function diagnosticsHomeworkProbeV2(ctx: any, payload: any) {
+  const studentId = typeof payload?.studentId === 'string' ? payload.studentId.trim().toLowerCase() : ''
+  const lessonId = typeof payload?.lessonId === 'string' ? payload.lessonId.trim() : ''
+
+  if (studentId !== DIAGNOSTIC_STUDENT_ID || !/^__diagnostic_probe__\d+_[a-z0-9]{3,16}$/i.test(lessonId)) {
+    return json({ ok: false, error: 'Invalid diagnostics homework probe identity' }, 400)
+  }
+
+  const stages: Record<string, unknown> = {}
+  try {
+    const { data: row, error: readError } = await ctx.supabaseAdmin
+      .from('homework_progress')
+      .select('student_id,lesson_id,status,submitted_at')
+      .eq('student_id', studentId)
+      .eq('lesson_id', lessonId)
+      .maybeSingle()
+    if (readError) throw new Error(`read probe: ${readError.message}`)
+
+    if (!row) {
+      stages.cleanup = 'row already absent'
+      return json({ ok: true, stages })
+    }
+
+    stages.browserInsert = `row found with status=${row.status}`
+
+    if (row.status !== 'submitted') {
+      const submittedAt = new Date().toISOString()
+      const { error: updateError } = await ctx.supabaseAdmin
+        .from('homework_progress')
+        .update({ status: 'submitted', submitted_at: submittedAt })
+        .eq('student_id', studentId)
+        .eq('lesson_id', lessonId)
+      if (updateError) throw new Error(`transition checked→submitted: ${updateError.message}`)
+      stages.transition = 'checked → submitted'
+    } else {
+      stages.transition = 'already submitted'
+    }
+
+    const { data: verified, error: verifyError } = await ctx.supabaseAdmin
+      .from('homework_progress')
+      .select('status,submitted_at')
+      .eq('student_id', studentId)
+      .eq('lesson_id', lessonId)
+      .single()
+    if (verifyError) throw new Error(`verify submitted row: ${verifyError.message}`)
+    if (verified?.status !== 'submitted' || !verified?.submitted_at) {
+      throw new Error('Submitted row did not persist expected status/submitted_at')
+    }
+    stages.verify = 'submitted row read back successfully'
+
+    const { error: deleteError } = await ctx.supabaseAdmin
+      .from('homework_progress')
+      .delete()
+      .eq('student_id', studentId)
+      .eq('lesson_id', lessonId)
+    if (deleteError) throw new Error(`cleanup probe: ${deleteError.message}`)
+    stages.cleanup = 'technical row deleted'
+
+    return json({ ok: true, stages })
+  } catch (error) {
+    // Best-effort cleanup is intentionally restricted to the diagnostics prefix.
+    await ctx.supabaseAdmin
+      .from('homework_progress')
+      .delete()
+      .eq('student_id', DIAGNOSTIC_STUDENT_ID)
+      .eq('lesson_id', lessonId)
+    return json({ ok: false, error: error instanceof Error ? error.message : String(error), stages }, 500)
+  }
+}
+
+async function diagnosticsSendReportV2(ctx: any, payload: any) {
+  const studentId = typeof payload?.studentId === 'string' ? payload.studentId.trim().toLowerCase() : ''
+  if (studentId !== DIAGNOSTIC_STUDENT_ID) {
+    return json({ ok: false, error: 'Invalid diagnostics student id' }, 400)
+  }
+
+  const token = Deno.env.get('TELEGRAM_BOT_TOKEN') ?? ''
+  if (!token) return json({ ok: false, error: 'TELEGRAM_BOT_TOKEN is not configured' }, 500)
+
+  let recipient
+  try {
+    recipient = await resolveRecipient(ctx, DIAGNOSTIC_STUDENT_ID)
+  } catch (error) {
+    return json({ ok: false, error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+
+  if (recipient.messageThreadId !== DIAGNOSTIC_THREAD_ID) {
+    return json({ ok: false, error: `Telegram thread mismatch: ${recipient.messageThreadId}; expected ${DIAGNOSTIC_THREAD_ID}` }, 409)
+  }
+
+  const nowMs = Date.now()
+  const bucket = Math.floor(nowMs / DIAGNOSTIC_COOLDOWN_MS)
+  const materialId = `diagnostics-${bucket}`
+  const retryAfterSeconds = Math.max(1, Math.ceil((DIAGNOSTIC_COOLDOWN_MS - (nowMs % DIAGNOSTIC_COOLDOWN_MS)) / 1000))
+
+  const { data: publication, error: claimError } = await ctx.supabaseAdmin
+    .from('material_publications')
+    .insert({
+      student_id: DIAGNOSTIC_STUDENT_ID,
+      material_type: 'diagnostics_report',
+      material_id: materialId,
+      notification_version: 1,
+      status: 'pending',
+      payload: {
+        kind: 'diagnostics_send_report',
+        pageUrl: isHttpUrl(payload?.pageUrl) ? payload.pageUrl : null,
+        diagnosticVersion: DIAGNOSTIC_VERSION,
+      },
+    })
+    .select('id')
+    .single()
+
+  if (claimError) {
+    if (claimError.code === '23505') {
+      return json({ ok: true, skipped: true, retryAfterSeconds })
+    }
+    return json({ ok: false, error: `publication log: ${claimError.message}` }, 500)
+  }
+
+  try {
+    const message = await sendTelegramMessage(
+      token,
+      recipient.chatId,
+      recipient.messageThreadId,
+      buildHomeworkReport({
+        student_name: 'Оля',
+        lesson_id: 'diagnostics',
+        lesson_title: 'Диагностика отправки отчёта',
+        score_correct: 4,
+        score_total: 5,
+        score_percent: 80,
+        submitted_at: new Date().toISOString(),
+      }, true),
+    )
+
+    const { error: logError } = await ctx.supabaseAdmin
+      .from('material_publications')
+      .update({
+        status: 'sent',
+        telegram_message_id: message.message_id,
+        sent_at: new Date().toISOString(),
+        error_message: null,
+      })
+      .eq('id', publication.id)
+    if (logError) throw new Error(`Telegram sent, but publication log update failed: ${logError.message}`)
+
+    return json({
+      ok: true,
+      skipped: false,
+      telegramMessageId: message.message_id,
+      threadId: recipient.messageThreadId,
+      diagnosticVersion: DIAGNOSTIC_VERSION,
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    await ctx.supabaseAdmin
+      .from('material_publications')
+      .update({ status: 'failed', error_message: message })
+      .eq('id', publication.id)
+    return json({ ok: false, error: message }, 502)
   }
 }
 
@@ -650,6 +917,11 @@ export default {
     } catch {
       return json({ ok: false, stage: 'request', error: 'Invalid JSON' }, 400)
     }
+
+    const kind = typeof payload?.kind === 'string' ? payload.kind.trim() : ''
+    if (kind === 'diagnostics_health') return diagnosticsHealthV2(ctx, payload)
+    if (kind === 'diagnostics_homework_probe') return diagnosticsHomeworkProbeV2(ctx, payload)
+    if (kind === 'diagnostics_send_report') return diagnosticsSendReportV2(ctx, payload)
 
     const action = typeof payload?.action === 'string' ? payload.action.trim() : 'material_notification'
 

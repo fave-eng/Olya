@@ -3,76 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Диагностика English Space: Supabase и Telegram">
-  <title>Диагностика · English Space</title>
-  <link rel="stylesheet" href="styles.css?v=7">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Диагностика подключений · English Space</title>
   <style>
-    .diagnostics-layout{display:grid;gap:18px}.diag-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.diag-target{display:grid;gap:5px}.diag-target code{font-size:.95rem}.diag-list{display:grid;gap:10px}.diag-item{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;padding:14px;border:1px solid #e2e8f0;border-radius:16px;background:#fff}.diag-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#f1f5f9;font-weight:800}.diag-item.is-ok .diag-icon{background:#dcfce7;color:#166534}.diag-item.is-error .diag-icon{background:#fee2e2;color:#991b1b}.diag-item.is-running .diag-icon{background:#e0f2fe;color:#075985}.diag-copy strong{display:block;margin-bottom:3px}.diag-meta{font-size:.82rem;color:#64748b;margin-bottom:5px}.diag-detail{margin:0;overflow-wrap:anywhere}.diag-secret-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:end}.diag-secret-row label{display:grid;gap:6px}.diag-secret-row input{width:100%}.diag-output{padding:12px 14px;border-radius:14px;background:#0f172a;color:#e2e8f0;font:500 .84rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;overflow-wrap:anywhere;min-height:52px}.diag-note{margin:0}.diag-summary{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.diag-summary-badge{display:inline-flex;align-items:center;min-height:30px;padding:4px 10px;border-radius:999px;font-weight:750;background:#e2e8f0}.diag-summary-badge.ok{background:#dcfce7;color:#166534}.diag-summary-badge.error{background:#fee2e2;color:#991b1b}@media(max-width:720px){.diag-secret-row{grid-template-columns:1fr}.diag-secret-row .btn{width:100%}}
+    :root{color-scheme:light;--bg:#f5f7fb;--card:#fff;--ink:#111827;--muted:#64748b;--line:#dbe3ef;--ok:#067647;--okbg:#ecfdf3;--bad:#b42318;--badbg:#fef3f2;--warn:#b54708;--warnbg:#fffaeb;--accent:#5b45e0;--dark:#101828}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
+    .wrap{width:min(1040px,calc(100% - 28px));margin:36px auto 70px}.hero{padding:28px;border-radius:24px;background:linear-gradient(135deg,#4f46e5,#8b2cf5);color:white;box-shadow:0 18px 48px rgba(58,35,154,.18)}
+    .hero h1{font-size:clamp(28px,5vw,46px);line-height:1.05;margin:8px 0 12px}.hero p{max-width:760px;margin:0;opacity:.9}.badge{display:inline-flex;padding:6px 10px;border:1px solid rgba(255,255,255,.35);border-radius:999px;font-weight:700;font-size:13px}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.btn{appearance:none;border:0;border-radius:13px;padding:12px 16px;font:inherit;font-weight:800;cursor:pointer;background:var(--accent);color:white}.btn.secondary{background:#fff;color:#344054;border:1px solid var(--line)}.btn.dark{background:var(--dark)}.btn:disabled{opacity:.55;cursor:not-allowed}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 8px 24px rgba(16,24,40,.04)}.card.wide{grid-column:1/-1}.card h2{margin:0 0 4px;font-size:20px}.card .sub{margin:0 0 16px;color:var(--muted);font-size:14px}
+    .check{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:12px 0;border-top:1px solid #edf1f6}.check:first-of-type{border-top:0}.ico{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:900;background:#eef2f6;color:#667085}.check.ok .ico{background:var(--okbg);color:var(--ok)}.check.bad .ico{background:var(--badbg);color:var(--bad)}.check.warn .ico{background:var(--warnbg);color:var(--warn)}.name{font-weight:800}.detail{font-size:13px;color:var(--muted);overflow-wrap:anywhere}.check.bad .detail{color:var(--bad)}.check.warn .detail{color:var(--warn)}
+    .summary{border-radius:16px;padding:14px 16px;margin-top:14px;background:#eef2ff;color:#3730a3;font-weight:700}.summary.ok{background:var(--okbg);color:var(--ok)}.summary.bad{background:var(--badbg);color:var(--bad)}.summary.warn{background:var(--warnbg);color:var(--warn)}
+    .kv{display:grid;grid-template-columns:minmax(150px,.7fr) 1.3fr;gap:8px 12px;padding:8px 0;border-bottom:1px solid #edf1f6;font-size:14px}.kv:last-child{border-bottom:0}.kv span:first-child{color:var(--muted)}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;overflow-wrap:anywhere}
+    pre{margin:12px 0 0;padding:14px;background:#0b1220;color:#d0d5dd;border-radius:14px;white-space:pre-wrap;overflow:auto;font-size:12px;max-height:390px}.note{padding:12px 14px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:13px;color:#475467}.errorbox{display:none;margin-top:12px;padding:14px;border-radius:14px;background:var(--badbg);color:var(--bad);white-space:pre-wrap;font-size:13px}.errorbox.show{display:block}
+    .test-result{margin-top:12px}.small{font-size:12px;color:var(--muted)}
+    @media(max-width:760px){.wrap{margin-top:18px}.grid{grid-template-columns:1fr}.card.wide{grid-column:auto}.kv{grid-template-columns:1fr}.hero{padding:22px}.btn{width:100%}}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="config.js" defer></script>
-  <script src="diagnostics.js?v=1" defer></script>
+  <script src="diagnostics.js?v=20260812-2" defer></script>
 </head>
-<body class="has-bottom-nav" data-page="diagnostics" data-view="diagnostics">
-  <a class="skip-link" href="#main">Перейти к содержанию</a>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <span class="badge">Служебная страница · не влияет на прогресс</span>
+      <h1>Диагностика подключений</h1>
+      <p>Проверяет цепочку браузер → Supabase → Edge Function → Telegram. Здесь нет тестовых домашних работ. Страницу можно использовать повторно в любое время.</p>
+    </section>
 
-  <header class="hero hero-compact">
-    <span class="star one">✦</span><span class="star two">✦</span>
-    <div class="container hero-content reveal">
-      <span class="hero-badge">✦ System check</span>
-      <h1>Диагностика</h1>
-      <p>Supabase, сохранение прогресса, Telegram-отчёты и уведомления.</p>
+    <div class="toolbar">
+      <button class="btn" id="run-all">Проверить всё</button>
+      <button class="btn secondary" id="copy-report">Скопировать отчёт</button>
+      <button class="btn secondary" id="reload-page">Перезагрузить страницу</button>
     </div>
-    <svg class="hero-wave" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true"><path fill="#f8fafc" d="M0,66 C220,102 410,10 696,52 C963,91 1115,99 1440,35 L1440,100 L0,100 Z"></path></svg>
-  </header>
 
-  <main id="main" class="main-content container diagnostics-layout">
-    <section class="card section reveal">
-      <div class="section-heading"><div><span class="eyebrow">Цель отправки</span><h2>Telegram</h2></div></div>
-      <div class="diag-target">
-        <strong>Группа: <code>-1003908088903</code></strong>
-        <strong>Тема: <code>message_thread_id = 5</code></strong>
-        <a href="https://t.me/c/3908088903/5" target="_blank" rel="noopener noreferrer">Открыть тему в Telegram ↗</a>
-      </div>
-    </section>
+    <section class="grid">
+      <article class="card wide">
+        <h2>Состояние подключения</h2>
+        <p class="sub">Проверки выполняются последовательно. Первая красная строка обычно показывает место поломки.</p>
+        <div id="checks"></div>
+        <div id="main-summary" class="summary">Нажми «Проверить всё».</div>
+      </article>
 
-    <section class="card section reveal">
-      <div class="section-heading"><div><span class="eyebrow">Полная проверка</span><h2>Подключения и сохранение</h2></div></div>
-      <p class="muted">Проверка показывает конкретный этап ошибки. Тестовые записи Supabase создаются под отдельным диагностическим student_id и после проверки удаляются серверной функцией — прогресс Оли не изменяется.</p>
-      <div class="diag-secret-row section">
-        <label>
-          <span class="field-label">Диагностический ключ</span>
-          <input id="diagnostics-secret" type="password" autocomplete="off" spellcheck="false" placeholder="NOTIFY_WEBHOOK_SECRET">
-        </label>
-        <button class="btn btn-primary" id="run-diagnostics" type="button">Проверить всё</button>
-        <button class="btn btn-secondary" id="clear-diagnostics" type="button">Очистить результаты</button>
-      </div>
-      <p class="muted diag-note">Ключ нужен только для серверной проверки Telegram и тестовых отправок. Он не сохраняется в localStorage или Supabase.</p>
-      <div class="diag-summary section" id="diagnostics-summary" aria-live="polite"></div>
-      <div class="diag-list section" id="diagnostics-results" aria-live="polite"></div>
-    </section>
+      <article class="card">
+        <h2>Текущая конфигурация</h2>
+        <p class="sub">Данные берутся из опубликованного config.js.</p>
+        <div id="config-info"></div>
+      </article>
 
-    <section class="card section reveal">
-      <div class="section-heading"><div><span class="eyebrow">Реальная отправка</span><h2>Тест Telegram</h2></div></div>
-      <p class="muted diag-note">Используется тот же диагностический ключ, который введён выше. Тестовые сообщения отправляются в реальную тему 5, но не меняют прогресс ученика.</p>
-      <div class="diag-toolbar section">
-        <button class="btn btn-primary" id="send-test-report" type="button">Отправить тестовый отчёт</button>
-        <button class="btn btn-secondary" id="send-test-notification" type="button">Отправить тестовое уведомление</button>
-      </div>
-      <div class="diag-output" id="telegram-test-output" aria-live="polite">Тест ещё не запускался.</div>
-    </section>
+      <article class="card">
+        <h2>Telegram</h2>
+        <p class="sub">Ожидаемая тема для уведомлений и отчётов: <strong>5</strong>.</p>
+        <div id="telegram-info"></div>
+        <div class="note" style="margin-top:12px">Проверка состояния не отправляет сообщений. Сообщение отправляется только отдельной кнопкой ниже.</div>
+      </article>
 
-    <section class="card section reveal">
-      <div class="section-heading"><div><span class="eyebrow">Что проверяется</span><h2>Этапы</h2></div></div>
-      <p class="muted">Браузер и localStorage → конфигурация Supabase → чтение четырёх таблиц прогресса → тест insert/update/read → очистка тестовых строк → Edge Function → серверный доступ к журналу отправок → Telegram Bot API → доступ бота к группе → наличие темы 5. Тестовые кнопки дополнительно проверяют фактическую отправку сообщения именно в тему.</p>
+      <article class="card wide">
+        <h2>Тест записи Supabase</h2>
+        <p class="sub">Создаёт временный технический draft, проверяет реальный путь browser/RLS → checked → submitted и сразу удаляет тестовую строку. Настоящие домашние работы не изменяются.</p>
+        <button class="btn dark" id="test-db-write">Проверить полный путь homework_progress</button>
+        <div id="db-write-result" class="test-result"></div>
+      </article>
+
+      <article class="card wide">
+        <h2>Тестовый Telegram-отчёт</h2>
+        <p class="sub">Отправляет служебное сообщение в тот же chat/thread, который настроен для Оли. Можно использовать многократно; защита ограничивает отправку примерно одним тестом в 30 секунд.</p>
+        <button class="btn dark" id="send-test-report">Отправить тестовый отчёт в Telegram</button>
+        <div id="send-result" class="test-result"></div>
+      </article>
+
+      <article class="card wide">
+        <h2>Последние данные диагностики</h2>
+        <p class="sub">Если что-то не работает, можно прислать скриншот этого блока или нажать «Скопировать отчёт».</p>
+        <pre id="raw-output">Проверка ещё не запускалась.</pre>
+      </article>
     </section>
   </main>
-
-  <nav class="bottom-nav" aria-label="Основная навигация">
-    <a class="nav-link" data-nav="home" href="index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
-    <a class="nav-link" data-nav="homework" href="homework.html"><span class="nav-icon">📝</span><span>HW</span></a>
-    <a class="nav-link" data-nav="grammar" href="grammar.html"><span class="nav-icon">📐</span><span>Grammar</span></a>
-    <a class="nav-link" data-nav="vocabulary" href="vocabulary-hub.html"><span class="nav-icon">💥</span><span>Vocab</span></a>
-  </nav>
 </body>
 </html>
