@@ -2322,3 +2322,213 @@ body[data-view="lesson"] #lesson-root {
     line-height: 2.85;
   }
 }
+
+/* Lesson 7: source image stays attached to the exercise on desktop. */
+.exercise-with-sticky-media {
+  display: grid;
+  grid-template-columns: minmax(300px, .95fr) minmax(0, 1.05fr);
+  align-items: start;
+  gap: 0;
+  background: #f6f8fb;
+}
+
+.exercise-with-sticky-media > .exercise-source-image {
+  position: sticky;
+  top: 84px;
+  max-height: calc(100vh - 104px);
+  margin: 16px 0 16px 16px;
+  overflow: auto;
+}
+
+.exercise-with-sticky-media > .exercise-items {
+  align-self: stretch;
+}
+
+.gap-input.is-invalid {
+  border-bottom-color: #fb7185;
+  background: #fff1f2;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, .08);
+}
+
+.gap-input.is-valid {
+  border-bottom-color: #22c55e;
+  background: #f0fdf4;
+}
+
+.stress-chart {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  background: white;
+}
+
+.stress-chart-column {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 0 14px 14px;
+}
+
+.stress-chart-column + .stress-chart-column {
+  border-left: 1px solid #cbd5e1;
+}
+
+.stress-chart-heading {
+  margin: 0 -14px;
+  padding: 10px 12px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: .85rem;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.stress-chart-example {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 28px;
+  color: #475569;
+}
+
+.stress-chart-example small {
+  color: var(--muted);
+  font-size: .7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.stress-chart-example strong {
+  font-style: italic;
+}
+
+.stress-chart-input {
+  width: 100%;
+  min-height: 190px;
+  resize: vertical;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 11px 12px;
+  color: var(--dark);
+  background: #fff;
+  font: inherit;
+  line-height: 1.65;
+}
+
+.stress-chart-input:focus {
+  border-color: #818cf8;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, .12);
+}
+
+/* Grouped 4 × 4 grammar practice. */
+.grammar-exercise-group {
+  display: grid;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.grammar-exercise-group-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 18px;
+  border: 1px solid #dbe3ef;
+  border-radius: 17px;
+  background: #f8fafc;
+}
+
+.grammar-exercise-group-heading h3 {
+  margin-top: 4px;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.grammar-exercise-group-heading p {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: .82rem;
+  line-height: 1.5;
+}
+
+.grammar-exercise-count {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: var(--indigo);
+  background: #eef2ff;
+  font-size: .75rem;
+  font-weight: 900;
+}
+
+.grammar-exercise-group-items {
+  display: grid;
+  gap: 10px;
+}
+
+.grammar-text-wrap {
+  display: grid;
+  gap: 7px;
+}
+
+.grammar-text-input {
+  width: 100%;
+  min-height: 48px;
+  border: 1.5px solid var(--border);
+  border-radius: 13px;
+  padding: 10px 12px;
+  color: var(--dark);
+  background: white;
+  font: inherit;
+}
+
+.grammar-text-input:focus {
+  border-color: #818cf8;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, .14);
+}
+
+@media (max-width: 900px) {
+  .exercise-with-sticky-media {
+    grid-template-columns: 1fr;
+  }
+
+  .exercise-with-sticky-media > .exercise-source-image {
+    position: static;
+    max-height: none;
+    margin: 16px 16px 0;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 620px) {
+  .stress-chart {
+    grid-template-columns: 1fr;
+  }
+
+  .stress-chart-column + .stress-chart-column {
+    border-top: 1px solid #cbd5e1;
+    border-left: 0;
+  }
+
+  .stress-chart-input {
+    min-height: 150px;
+  }
+
+  .grammar-exercise-group-heading {
+    flex-direction: column;
+  }
+}
+
+.exercise-card-sticky {
+  overflow: visible;
+}
+
+.exercise-card-sticky > .exercise-heading {
+  border-radius: inherit inherit 0 0;
+}

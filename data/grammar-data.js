@@ -879,5 +879,382 @@ window.GRAMMAR_DATA = [
       }
     ],
     "linkedLessonId": "lesson-6"
+  },
+  {
+    "id": "grammar-time-sequencers-connectors",
+    "order": 8,
+    "title": "Time sequencers and connectors",
+    "level": "A2",
+    "status": "available",
+    "page": "grammar-topic.html?id=grammar-time-sequencers-connectors",
+    "passScore": 100,
+    "saveOnlyOnPass": true,
+    "lockOnPass": true,
+    "revealAnswerOnError": false,
+    "usesTitle": "Как связать события и идеи",
+    "usesSubtitle": "Покажи порядок, причину, результат или контраст",
+    "formsTitle": "Главные связки Unit 2C",
+    "formsSubtitle": "Сначала определи смысл связи между двумя частями",
+    "overview": {
+      "lead": "Time sequencers помогают рассказать историю по порядку: когда что произошло. Connectors связывают две идеи и показывают причину, результат или контраст. Они не создают новое время глагола: форму глагола выбираем по смыслу предложения.",
+      "keyRule": "Порядок событий: Suddenly / The next day / Two minutes later / After that / when. Причина и результат: because / so. Контраст: but / although.",
+      "subjects": [
+        "TIME → порядок событий",
+        "REASON / RESULT → because / so",
+        "CONTRAST → but / although"
+      ],
+      "example": "I was tired when I reached the top. Two minutes later, I saw an old friend."
+    },
+    "uses": [
+      {
+        "icon": "⏱️",
+        "title": "Последовательность событий",
+        "text": "Используй time sequencers, чтобы читателю было понятно, что произошло сначала, потом и внезапно.",
+        "example": "The next day, we climbed the mountain. Two minutes later, it started to rain."
+      },
+      {
+        "icon": "➡️",
+        "title": "Причина и результат",
+        "text": "because вводит причину, а so — результат или следствие.",
+        "example": "I called the police because the door was open. The door was open, so I called the police."
+      },
+      {
+        "icon": "↔️",
+        "title": "Контраст",
+        "text": "but и although соединяют идеи, которые неожиданно противопоставлены друг другу.",
+        "example": "The tickets were expensive, but I bought one. Although the tickets were expensive, I bought one."
+      }
+    ],
+    "forms": [
+      {
+        "id": "time-sequencers",
+        "icon": "1→2",
+        "title": "Time sequencers",
+        "formula": "The next day / Two minutes later / After that / Suddenly + , + sentence",
+        "example": "After that, we decided to travel together.",
+        "translation": "После этого мы решили путешествовать вместе.",
+        "note": "В начале предложения после такого маркера обычно ставится запятая. Suddenly показывает неожиданное событие."
+      },
+      {
+        "id": "when",
+        "icon": "⏰",
+        "title": "when — когда",
+        "formula": "clause + when + clause · When + clause, + clause",
+        "example": "I was tired when I reached the top. · When I reached the top, I was tired.",
+        "translation": "Я устала, когда добралась до вершины.",
+        "note": "when связывает два события по времени. Если часть с when стоит первой, после неё обычно ставится запятая."
+      },
+      {
+        "id": "because-so",
+        "icon": "→",
+        "title": "because и so",
+        "formula": "result + because + reason · reason + , so + result",
+        "example": "I ran because I was late. · I was late, so I ran.",
+        "translation": "Я побежала, потому что опаздывала. · Я опаздывала, поэтому побежала.",
+        "note": "because отвечает на вопрос «почему?», so показывает, что произошло в результате. Не ставь because и so вместе для одной связи."
+      },
+      {
+        "id": "but-although",
+        "icon": "↔",
+        "title": "but и although",
+        "formula": "idea 1 + , but + idea 2 · Although + idea 1, + idea 2",
+        "example": "It was hot, but I had a great holiday. · Although it was hot, I had a great holiday.",
+        "translation": "Было жарко, но отпуск был отличным. · Хотя было жарко, отпуск был отличным.",
+        "note": "После although не добавляй but в той же конструкции: Although ..., but ... — ошибка."
+      },
+      {
+        "id": "sentence-types",
+        "icon": "Aa?",
+        "title": "Утверждение, отрицание и вопрос",
+        "formula": "connector не меняет форму глагола",
+        "example": "I stayed because I was tired. · I didn't stay because I was tired. · Did you leave because you were tired?",
+        "translation": "Связка соединяет части предложения, а утверждение, отрицание и вопрос строятся по обычному правилу времени.",
+        "note": "Отдельных коротких ответов у because, so, but, although и time sequencers нет: short answers зависят от глагола, например Yes, I did. / No, I didn't."
+      }
+    ],
+    "memoryRule": {
+      "title": "Как выбрать связку",
+      "steps": [
+        "Нужно показать, что было дальше? Выбери time sequencer: The next day, Two minutes later, After that, Suddenly.",
+        "Нужно сказать причину? Используй because.",
+        "Нужно показать результат? Используй so.",
+        "Нужен контраст? Используй but или although; с although не добавляй but.",
+        "Нужно связать события по времени внутри предложения? Используй when."
+      ]
+    },
+    "commonMistakes": [
+      {
+        "wrong": "Because I was late, so I ran to the station.",
+        "right": "Because I was late, I ran to the station. / I was late, so I ran to the station.",
+        "reason": "Для одной связи причина → результат выбирай либо because, либо so."
+      },
+      {
+        "wrong": "Although the tickets were expensive, but I bought one.",
+        "right": "Although the tickets were expensive, I bought one.",
+        "reason": "Although уже выражает контраст, поэтому but здесь не нужен."
+      },
+      {
+        "wrong": "After that we went home.",
+        "right": "After that, we went home.",
+        "reason": "После time sequencer в начале предложения обычно ставится запятая."
+      },
+      {
+        "wrong": "I called the police so the door was open.",
+        "right": "I called the police because the door was open.",
+        "reason": "Открытая дверь — причина звонка, поэтому нужен because."
+      }
+    ],
+    "quizGroups": [
+      {
+        "id": "1",
+        "title": "1. Choose the correct connector.",
+        "instructions": "Choose one answer.",
+        "difficulty": "Лёгкое"
+      },
+      {
+        "id": "2",
+        "title": "2. Complete the sentences.",
+        "instructions": "Write because, so, but, or although.",
+        "difficulty": "Среднее"
+      },
+      {
+        "id": "3",
+        "title": "3. Choose all the correct sentences.",
+        "instructions": "There may be more than one correct answer.",
+        "difficulty": "Повышенная сложность"
+      },
+      {
+        "id": "4",
+        "title": "4. Join the sentences.",
+        "instructions": "Write one sentence using the word in brackets.",
+        "difficulty": "Самое сложное"
+      }
+    ],
+    "quiz": [
+      {
+        "group": "1",
+        "type": "single",
+        "skill": "result",
+        "prompt": "I was very tired, ___ I went to bed early.",
+        "options": [
+          "because",
+          "so",
+          "but"
+        ],
+        "answer": 1,
+        "errorFeedback": "Есть ошибка. Определи, вторая часть — причина, результат или контраст."
+      },
+      {
+        "group": "1",
+        "type": "single",
+        "skill": "contrast",
+        "prompt": "___ it was raining, we went for a walk.",
+        "options": [
+          "Although",
+          "Because",
+          "So"
+        ],
+        "answer": 0,
+        "errorFeedback": "Есть ошибка. Здесь две идеи противопоставлены друг другу."
+      },
+      {
+        "group": "1",
+        "type": "single",
+        "skill": "reason",
+        "prompt": "I stayed at home ___ I was ill.",
+        "options": [
+          "because",
+          "so",
+          "although"
+        ],
+        "answer": 0,
+        "errorFeedback": "Есть ошибка. Вторая часть объясняет причину."
+      },
+      {
+        "group": "1",
+        "type": "single",
+        "skill": "time",
+        "prompt": "I was cooking ___ the phone rang.",
+        "options": [
+          "when",
+          "so",
+          "although"
+        ],
+        "answer": 0,
+        "errorFeedback": "Есть ошибка. Нужно связать два события по времени."
+      },
+      {
+        "group": "2",
+        "type": "gaps",
+        "skill": "reason",
+        "prompt": "Sentence 1",
+        "segments": [
+          "I didn't go out ",
+          " I was tired."
+        ],
+        "answers": [
+          "because"
+        ],
+        "errorFeedback": "Есть ошибка. Вторая часть объясняет причину."
+      },
+      {
+        "group": "2",
+        "type": "gaps",
+        "skill": "contrast",
+        "prompt": "Sentence 2",
+        "segments": [
+          "It was expensive, ",
+          " I bought it."
+        ],
+        "answers": [
+          "but"
+        ],
+        "errorFeedback": "Есть ошибка. Между двумя идеями нужен контраст."
+      },
+      {
+        "group": "2",
+        "type": "gaps",
+        "skill": "contrast",
+        "prompt": "Sentence 3",
+        "segments": [
+          "",
+          " she was late, her boss wasn't angry."
+        ],
+        "answers": [
+          "Although"
+        ],
+        "errorFeedback": "Есть ошибка. Связка стоит в начале и показывает контраст."
+      },
+      {
+        "group": "2",
+        "type": "gaps",
+        "skill": "result",
+        "prompt": "Sentence 4",
+        "segments": [
+          "The station was closed, ",
+          " we took a taxi."
+        ],
+        "answers": [
+          "so"
+        ],
+        "errorFeedback": "Есть ошибка. Вторая часть — результат первой."
+      },
+      {
+        "group": "3",
+        "type": "multiple",
+        "skill": "because / so",
+        "prompt": "Choose all the grammatically correct sentences.",
+        "options": [
+          "I called the police because the door was open.",
+          "The door was open, so I called the police.",
+          "Because the door was open, so I called the police."
+        ],
+        "answer": [
+          0,
+          1
+        ],
+        "errorFeedback": "Есть ошибка. Проверь, не используются ли because и so вместе для одной связи."
+      },
+      {
+        "group": "3",
+        "type": "multiple",
+        "skill": "but / although",
+        "prompt": "Choose all the grammatically correct sentences.",
+        "options": [
+          "The tickets were expensive, but I bought one.",
+          "Although the tickets were expensive, I bought one.",
+          "Although the tickets were expensive, but I bought one."
+        ],
+        "answer": [
+          0,
+          1
+        ],
+        "errorFeedback": "Есть ошибка. Проверь конструкцию с although и but."
+      },
+      {
+        "group": "3",
+        "type": "multiple",
+        "skill": "time sequencers",
+        "prompt": "Choose all the sentences with a correct time sequencer.",
+        "options": [
+          "The next day, we climbed the mountain.",
+          "Two minutes later, he came over to speak to me.",
+          "After that because, we went home."
+        ],
+        "answer": [
+          0,
+          1
+        ],
+        "errorFeedback": "Есть ошибка. Проверь форму и место time sequencer в предложении."
+      },
+      {
+        "group": "3",
+        "type": "multiple",
+        "skill": "when",
+        "prompt": "Choose all the grammatically correct sentences.",
+        "options": [
+          "I was tired when I reached the top.",
+          "When I reached the top, I was tired.",
+          "When I reached the top when I was tired."
+        ],
+        "answer": [
+          0,
+          1
+        ],
+        "errorFeedback": "Есть ошибка. Проверь, как when соединяет две части предложения."
+      },
+      {
+        "group": "4",
+        "type": "text",
+        "skill": "join with so",
+        "prompt": "I was tired. I went to bed early. (so)",
+        "answer": "I was tired, so I went to bed early.",
+        "acceptedAnswers": [
+          "I was tired, so I went to bed early.",
+          "I was tired so I went to bed early."
+        ],
+        "errorFeedback": "Есть ошибка. Сохрани смысл: первая часть — причина, вторая — результат."
+      },
+      {
+        "group": "4",
+        "type": "text",
+        "skill": "join with because",
+        "prompt": "She ran to the station. She was late. (because)",
+        "answer": "She ran to the station because she was late.",
+        "acceptedAnswers": [
+          "She ran to the station because she was late.",
+          "Because she was late, she ran to the station.",
+          "Because she was late she ran to the station."
+        ],
+        "errorFeedback": "Есть ошибка. Используй because, чтобы ввести причину."
+      },
+      {
+        "group": "4",
+        "type": "text",
+        "skill": "join with although",
+        "prompt": "The tickets were expensive. I bought one. (although)",
+        "answer": "Although the tickets were expensive, I bought one.",
+        "acceptedAnswers": [
+          "Although the tickets were expensive, I bought one.",
+          "Although the tickets were expensive I bought one.",
+          "I bought one although the tickets were expensive."
+        ],
+        "errorFeedback": "Есть ошибка. Используй although без but."
+      },
+      {
+        "group": "4",
+        "type": "text",
+        "skill": "join with when",
+        "prompt": "I reached the top. I saw an old friend. (when)",
+        "answer": "When I reached the top, I saw an old friend.",
+        "acceptedAnswers": [
+          "When I reached the top, I saw an old friend.",
+          "When I reached the top I saw an old friend.",
+          "I saw an old friend when I reached the top."
+        ],
+        "errorFeedback": "Есть ошибка. Используй when, чтобы связать два события по времени."
+      }
+    ],
+    "linkedLessonId": "lesson-7"
   }
 ];

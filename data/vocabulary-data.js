@@ -1642,5 +1642,204 @@ window.VOCABULARY_DATA = [
         "group": "irregular-verbs"
       }
     ]
+  },
+  {
+    "id": "vocab-unit2c",
+    "title": "Unit 2C · Sequencers, connectors and story words",
+    "label": "Unit 2C · 17 useful A2 words and phrases",
+    "icon": "🌙",
+    "type": "lesson",
+    "linkedLessonId": "lesson-7",
+    "page": "vocabulary.html?id=vocab-unit2c",
+    "description": "Полезная лексика уровня A2 из Unit 2C: последовательность событий, фразы из истории и слова для задания на произношение.",
+    "words": [
+      {
+        "id": "u2c-03",
+        "uniqueKey": "suddenly",
+        "legacyKey": "suddenly",
+        "en": "suddenly",
+        "ru": "внезапно",
+        "transcription": "",
+        "exampleEn": "Suddenly, the lights went out.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-04",
+        "uniqueKey": "the next day",
+        "legacyKey": "the next day",
+        "en": "the next day",
+        "ru": "на следующий день",
+        "transcription": "",
+        "exampleEn": "The next day, we travelled to the mountains.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-05",
+        "uniqueKey": "two minutes later",
+        "legacyKey": "two minutes later",
+        "en": "two minutes later",
+        "ru": "две минуты спустя",
+        "transcription": "",
+        "exampleEn": "Two minutes later, he came back.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-06",
+        "uniqueKey": "after that",
+        "legacyKey": "after that",
+        "en": "after that",
+        "ru": "после этого",
+        "transcription": "",
+        "exampleEn": "After that, we decided to go home.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-07",
+        "uniqueKey": "reach the top",
+        "legacyKey": "reach the top",
+        "en": "reach the top",
+        "ru": "добраться до вершины",
+        "transcription": "",
+        "exampleEn": "We reached the top before lunch.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-09",
+        "uniqueKey": "surprised",
+        "legacyKey": "surprised",
+        "en": "surprised",
+        "ru": "удивлённый",
+        "transcription": "",
+        "exampleEn": "I was surprised to see him there.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-10",
+        "uniqueKey": "come over",
+        "legacyKey": "come over",
+        "en": "come over",
+        "ru": "подойти / подойти к кому-то",
+        "transcription": "",
+        "exampleEn": "He came over to speak to me.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-11",
+        "uniqueKey": "carry on",
+        "legacyKey": "carry on",
+        "en": "carry on",
+        "ru": "продолжать",
+        "transcription": "",
+        "exampleEn": "They carried on seeing each other.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-12",
+        "uniqueKey": "get married",
+        "legacyKey": "get married",
+        "en": "get married",
+        "ru": "пожениться / выйти замуж",
+        "transcription": "",
+        "exampleEn": "They got married two years later.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-19",
+        "uniqueKey": "mean",
+        "legacyKey": "mean",
+        "en": "mean",
+        "ru": "жадный / скупой",
+        "transcription": "",
+        "exampleEn": "He has a lot of money, but he's really mean.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-20",
+        "uniqueKey": "cancel",
+        "legacyKey": "cancel",
+        "en": "cancel",
+        "ru": "отменять",
+        "transcription": "",
+        "exampleEn": "She cancelled her credit cards.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-22",
+        "uniqueKey": "purse",
+        "legacyKey": "purse",
+        "en": "purse",
+        "ru": "кошелёк / дамская сумочка",
+        "transcription": "",
+        "exampleEn": "She couldn't find her purse.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-23",
+        "uniqueKey": "go for a meal",
+        "legacyKey": "go for a meal",
+        "en": "go for a meal",
+        "ru": "пойти поесть / сходить в ресторан",
+        "transcription": "",
+        "exampleEn": "We wanted to go for a meal after the cinema.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-25",
+        "uniqueKey": "word stress",
+        "legacyKey": "word stress",
+        "en": "word stress",
+        "ru": "словесное ударение",
+        "transcription": "",
+        "exampleEn": "Listen carefully to the word stress.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-26",
+        "uniqueKey": "syllable",
+        "legacyKey": "syllable",
+        "en": "syllable",
+        "ru": "слог",
+        "transcription": "",
+        "exampleEn": "The stress is on the second syllable.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-27",
+        "uniqueKey": "although",
+        "legacyKey": "although",
+        "en": "although",
+        "ru": "хотя",
+        "transcription": "",
+        "exampleEn": "Although it was late, we stayed a little longer.",
+        "exampleRu": "",
+        "group": "unit2c"
+      },
+      {
+        "id": "u2c-30",
+        "uniqueKey": "invite",
+        "legacyKey": "invite",
+        "en": "invite",
+        "ru": "приглашать",
+        "transcription": "",
+        "exampleEn": "I want to invite them to dinner.",
+        "exampleRu": "",
+        "group": "unit2c"
+      }
+    ]
   }
 ];

@@ -1,0 +1,274 @@
+{
+  "id": "lesson-7",
+  "number": 7,
+  "title": "One dark October evening",
+  "subtitle": "English File · Unit 2C · time sequencers and connectors · word stress",
+  "status": "available",
+  "page": "lesson.html?id=lesson-7",
+  "vocabularyId": "vocab-unit2c",
+  "publishedAt": "2026-08-12",
+  "totalPoints": 29,
+  "notification": {
+    "enabled": true,
+    "version": 1
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "eyebrow": "1 GRAMMAR",
+      "title": "time sequencers and connectors"
+    },
+    {
+      "type": "grammar-link",
+      "title": "Time sequencers and connectors",
+      "text": "Разбери, как связывать события по времени и как использовать because, so, but и although.",
+      "href": "grammar-topic.html?id=grammar-time-sequencers-connectors",
+      "label": "Открыть тему в Grammar"
+    },
+    {
+      "type": "exercise",
+      "id": "l7-1a",
+      "title": "a. Complete the text with phrases from the list.",
+      "wordBank": [
+        "After that",
+        "One summer",
+        "Suddenly",
+        "The next day",
+        "Two minutes later",
+        "when"
+      ],
+      "image": "images/lesson-7/exercise-1a.png",
+      "imageAlt": "Workbook 2C exercise 1a: An AMAZING holiday",
+      "stickyImage": true,
+      "items": [
+        {
+          "id": "text",
+          "number": "",
+          "input": "gaps",
+          "prompt": "An AMAZING holiday",
+          "scoreByGap": true,
+          "segments": [
+            "1 One summer, I decided to travel to Peru. I flew to Lima and then travelled to a town near Machu Picchu to spend the night. 2 ",
+            ", I climbed the mountain to visit the monument. I was quite tired 3 ",
+            " I reached the top!\n\n4 ",
+            ", I saw a man who was at the same university as me. 5 ",
+            ", he came over to speak to me, and he was just as surprised as I was.\n\n6 ",
+            ", we decided to travel together. We had a great summer, and we carried on seeing each other when we got home. In fact, we got married two years later, and we now have a beautiful daughter called Beth."
+          ],
+          "answers": [
+            "The next day",
+            "when",
+            "Suddenly",
+            "Two minutes later",
+            "After that"
+          ],
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        }
+      ]
+    },
+    {
+      "type": "exercise",
+      "id": "l7-1b",
+      "title": "b. Circle the correct ending, a or b.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "example": true,
+          "prompt": "Although James was very late,\na his boss didn't say anything.\nb his boss got very angry.",
+          "exampleAnswer": "a"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "input": "single",
+          "prompt": "I got up late, so",
+          "options": [
+            "a I didn't have time for breakfast.",
+            "b I didn't hear the alarm clock."
+          ],
+          "answer": 0,
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "input": "single",
+          "prompt": "The tickets were really expensive, but",
+          "options": [
+            "a I decided not to buy one.",
+            "b I decided to buy one."
+          ],
+          "answer": 1,
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "input": "single",
+          "prompt": "Laura ran to the station because",
+          "options": [
+            "a she was late.",
+            "b she missed the train."
+          ],
+          "answer": 0,
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "input": "single",
+          "prompt": "Although my flat is small,",
+          "options": [
+            "a I need a bigger one.",
+            "b it's perfect for me."
+          ],
+          "answer": 1,
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        }
+      ]
+    },
+    {
+      "type": "exercise",
+      "id": "l7-1c",
+      "title": "c. Complete the sentences with a word from the list.",
+      "wordBank": [
+        "although (x2)",
+        "because",
+        "but (x2)",
+        "so (x2)"
+      ],
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "example": true,
+          "prompt": "I didn't have time, ___ I didn't have any breakfast.",
+          "exampleAnswer": "so"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "input": "text",
+          "prompt": "It was really hot, ___ I had a great holiday in Egypt.",
+          "answer": "but",
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "input": "text",
+          "prompt": "___ I don't really like Ryan, I went on a date with him.",
+          "answer": "Although",
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "input": "text",
+          "prompt": "The door to my flat was open, ___ I called the police.",
+          "answer": "so",
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "input": "text",
+          "prompt": "___ Mark has a lot of money, he's really mean.",
+          "answer": "Although",
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "input": "text",
+          "prompt": "Mandy cancelled her credit cards ___ she couldn't find her purse.",
+          "answer": "because",
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        },
+        {
+          "id": "7",
+          "number": "7",
+          "input": "text",
+          "prompt": "We wanted to go for a meal after the cinema ___ all the restaurants were closed.",
+          "answer": "but",
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "eyebrow": "2 PRONUNCIATION",
+      "title": "word stress"
+    },
+    {
+      "type": "exercise",
+      "id": "l7-2a",
+      "title": "a. Write the words in the chart.",
+      "wordBank": [
+        "across",
+        "after",
+        "again",
+        "along",
+        "although",
+        "awful",
+        "because",
+        "before",
+        "behind",
+        "birthday",
+        "evening",
+        "hurry",
+        "invite",
+        "perfect",
+        "quickly",
+        "summer"
+      ],
+      "image": "images/lesson-7/exercise-2a.png",
+      "imageAlt": "Workbook 2C exercise 2: pronunciation word stress",
+      "items": [
+        {
+          "id": "chart",
+          "number": "",
+          "input": "stress-chart",
+          "prompt": "",
+          "columns": [
+            {
+              "label": "1 First syllable stressed",
+              "example": "after",
+              "answers": [
+                "awful",
+                "birthday",
+                "evening",
+                "hurry",
+                "perfect",
+                "quickly",
+                "summer"
+              ]
+            },
+            {
+              "label": "2 Second syllable stressed",
+              "example": "across",
+              "answers": [
+                "again",
+                "along",
+                "although",
+                "because",
+                "before",
+                "behind",
+                "invite"
+              ]
+            }
+          ],
+          "explanation": "Есть ошибка. Исправь ответ и проверь ещё раз."
+        }
+      ]
+    },
+    {
+      "type": "audio",
+      "id": "l7-2b",
+      "title": "b. 2.3 Listen and check. Then listen again and repeat the words.",
+      "audio": "audio/English_File_4e_Pre-intermediate_WB_2.3.mp3",
+      "response": false
+    }
+  ]
+}

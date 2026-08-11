@@ -1090,7 +1090,14 @@
     }
 
     let control = '';
-    if (item.input === 'multiple' || item.input === 'single') {
+    if (item.input === 'stress-chart') {
+      const columns = Array.isArray(item.columns) ? item.columns : [];
+      control = `<div class="stress-chart">${columns.map((column, columnIndex) => `<label class="stress-chart-column">
+        <span class="stress-chart-heading">${escapeHtml(column.label || '')}</span>
+        ${column.example ? `<span class="stress-chart-example"><small>Example</small><strong>${escapeHtml(column.example)}</strong></span>` : ''}
+        <textarea class="stress-chart-input" data-stress-column="${columnIndex}" autocomplete="off" spellcheck="false" aria-label="${escapeHtml(column.label || `Column ${columnIndex + 1}`)}"></textarea>
+      </label>`).join('')}</div>`;
+    } else if (item.input === 'multiple' || item.input === 'single') {
       const inputType = item.input === 'multiple' ? 'checkbox' : 'radio';
       control = `<div class="option-list compact-options">${(item.options || []).map((option, optionIndex) => `<label class="option"><input type="${inputType}" name="${escapeHtml(inputId)}" value="${optionIndex}"><span>${escapeHtml(option)}</span></label>`).join('')}</div>`;
     } else if (item.input === 'select') {
@@ -1100,7 +1107,8 @@
     } else if (item.input === 'gaps') {
       const answers = Array.isArray(item.answers) ? item.answers : [];
       const segments = Array.isArray(item.segments) ? item.segments : [];
-      control = `<div class="sentence-gaps" aria-label="${prompt}">${answers.map((answer, gapIndex) => `${gapIndex < segments.length ? `<span>${escapeHtml(segments[gapIndex])}</span>` : ''}<input class="gap-input" data-gap-index="${gapIndex}" aria-label="Gap ${gapIndex + 1}" autocomplete="off">`).join('')}${segments.length > answers.length ? `<span>${escapeHtml(segments[segments.length - 1])}</span>` : ''}</div>`;
+      const renderGapSegment = (segment) => escapeHtml(segment || '').replaceAll('\n', '<br>');
+      control = `<div class="sentence-gaps" aria-label="${prompt}">${answers.map((answer, gapIndex) => `${gapIndex < segments.length ? `<span>${renderGapSegment(segments[gapIndex])}</span>` : ''}<input class="gap-input" data-gap-index="${gapIndex}" aria-label="Gap ${gapIndex + 1}" autocomplete="off">`).join('')}${segments.length > answers.length ? `<span>${renderGapSegment(segments[segments.length - 1])}</span>` : ''}</div>`;
     } else {
       control = `<input class="text-field" id="${escapeHtml(inputId)}" autocomplete="off" placeholder="${escapeHtml(item.placeholder || '')}">`;
     }
@@ -1141,10 +1149,13 @@
         : '';
       const player = block.audio ? `<audio class="audio-player" controls preload="none" src="${escapeHtml(block.audio)}"></audio>` : '';
       const exerciseImage = block.image ? `<figure class="exercise-source-image"><img src="${escapeHtml(block.image)}" alt="${escapeHtml(block.imageAlt || '')}" loading="lazy" decoding="async"></figure>` : '';
-      return `<article class="card lesson-block exercise-card" data-task="${escapeHtml(id)}" data-type="exercise">
+      const exerciseItems = `<div class="exercise-items">${items.map((item, itemIndex) => renderExerciseItem(item, id, itemIndex)).join('')}</div>`;
+      const exerciseBody = block.stickyImage && exerciseImage
+        ? `<div class="exercise-with-sticky-media">${exerciseImage}${exerciseItems}</div>`
+        : `${exerciseImage}${exerciseItems}`;
+      return `<article class="card lesson-block exercise-card${block.stickyImage ? ' exercise-card-sticky' : ''}" data-task="${escapeHtml(id)}" data-type="exercise">
         <div class="exercise-heading"><span class="eyebrow">Exercise</span><h3>${title}</h3>${block.instructions ? `<p class="muted exercise-instructions">${escapeHtml(block.instructions)}</p>` : ''}${player}${wordBank}</div>
-        ${exerciseImage}
-        <div class="exercise-items">${items.map((item, itemIndex) => renderExerciseItem(item, id, itemIndex)).join('')}</div>
+        ${exerciseBody}
       </article>`;
     }
     if (block.type === 'text' || block.type === 'translate') return `<article class="card lesson-block" data-task="${escapeHtml(id)}" data-type="${escapeHtml(block.type)}"><label class="field-label" for="${escapeHtml(id)}">${title}</label>${block.source ? `<p class="muted">${escapeHtml(block.source)}</p>` : ''}<input class="text-field" id="${escapeHtml(id)}" name="${escapeHtml(id)}" autocomplete="off"><div class="feedback"></div></article>`;
@@ -1198,6 +1209,41 @@
     let actual;
     let correct = false;
 
+    if (inputType === 'stress-chart') {
+      const columns = Array.isArray(item.columns) ? item.columns : [];
+      const normalizedColumns = columns.map((column) => ({
+        expected: new Set((Array.isArray(column.answers) ? column.answers : []).map(normalizeAnswer).filter(Boolean)),
+        example: normalizeAnswer(column.example || '')
+      }));
+      const actualColumns = [...itemNode.querySelectorAll('[data-stress-column]')].map((input) => {
+        const words = safeText(input.value).split(/[\s,;]+/).map(normalizeAnswer).filter(Boolean);
+        return new Set(words);
+      });
+      actual = {};
+      itemNode.querySelectorAll('[data-stress-column]').forEach((input, columnIndex) => {
+        actual[columnIndex] = input.value;
+      });
+
+      let correctCount = 0;
+      let total = 0;
+      normalizedColumns.forEach((column, columnIndex) => {
+        total += column.expected.size;
+        column.expected.forEach((word) => {
+          const inCorrectColumn = actualColumns[columnIndex]?.has(word);
+          const inWrongColumn = actualColumns.some((set, otherIndex) => otherIndex !== columnIndex && set.has(word));
+          if (inCorrectColumn && !inWrongColumn) correctCount += 1;
+        });
+      });
+      const targetWords = new Set(normalizedColumns.flatMap((column) => [...column.expected]));
+      const exampleWords = new Set(normalizedColumns.map((column) => column.example).filter(Boolean));
+      const enteredWords = actualColumns.flatMap((set) => [...set]).filter((word) => !exampleWords.has(word));
+      const hasUnexpected = enteredWords.some((word) => !targetWords.has(word));
+      const hasDuplicate = enteredWords.some((word, index) => enteredWords.indexOf(word) !== index);
+      correct = total > 0 && correctCount === total && !hasUnexpected && !hasDuplicate;
+      if (!correct && correctCount === total) correctCount = Math.max(0, total - 1);
+      return { actual, correct, correctCount, total };
+    }
+
     if (inputType === 'multiple') {
       actual = [...itemNode.querySelectorAll('input:checked')].map((input) => Number(input.value)).sort((a, b) => a - b);
       const expected = [...(item.answer || [])].map(Number).sort((a, b) => a - b);
@@ -1209,12 +1255,26 @@
       actual = itemNode.querySelector('select')?.value ?? '';
       correct = actual !== '' && Number(actual) === Number(item.answer);
     } else if (inputType === 'gaps') {
-      actual = [...itemNode.querySelectorAll('[data-gap-index]')].map((input) => input.value);
+      const inputs = [...itemNode.querySelectorAll('[data-gap-index]')];
+      actual = inputs.map((input) => input.value);
       const expected = Array.isArray(item.answers) ? item.answers : [];
-      correct = expected.length > 0 && expected.every((answer, index) => {
+      const gapResults = expected.map((answer, index) => {
         const accepted = Array.isArray(answer) ? answer : [answer];
-        return accepted.some((variant) => normalizeAnswer(variant) === normalizeAnswer(actual[index]));
+        return accepted.some((variant) => normalizeAnswer(variant) !== '' && normalizeAnswer(variant) === normalizeAnswer(actual[index]));
       });
+      correct = expected.length > 0 && gapResults.length === expected.length && gapResults.every(Boolean);
+      if (item.scoreByGap === true) {
+        inputs.forEach((input, index) => {
+          input.classList.toggle('is-valid', Boolean(gapResults[index]));
+          input.classList.toggle('is-invalid', !gapResults[index]);
+        });
+        return {
+          actual,
+          correct,
+          correctCount: gapResults.filter(Boolean).length,
+          total: expected.length
+        };
+      }
     } else {
       actual = itemNode.querySelector('input, textarea')?.value || '';
       correct = textAnswerMatches(item, actual);
@@ -1247,8 +1307,10 @@
         return;
       }
 
-      total += 1;
-      if (result.correct) correctCount += 1;
+      const itemTotal = Number.isFinite(Number(result.total)) && Number(result.total) > 0 ? Number(result.total) : 1;
+      const itemCorrectCount = Number.isFinite(Number(result.correctCount)) ? Number(result.correctCount) : (result.correct ? 1 : 0);
+      total += itemTotal;
+      correctCount += itemCorrectCount;
       itemNode.classList.toggle('is-correct', result.correct);
       itemNode.classList.toggle('is-wrong', !result.correct);
       itemNode.classList.remove('is-saved');
@@ -1296,7 +1358,12 @@
       const itemNode = node.querySelector(`[data-exercise-item="${CSS.escape(itemId)}"]`);
       if (!itemNode) return;
       const inputType = item.input || 'text';
-      if (inputType === 'multiple') {
+      if (inputType === 'stress-chart') {
+        const values = value && typeof value === 'object' ? value : {};
+        itemNode.querySelectorAll('[data-stress-column]').forEach((input, columnIndex) => {
+          input.value = safeText(values[columnIndex]);
+        });
+      } else if (inputType === 'multiple') {
         const selected = new Set(Array.isArray(value) ? value.map(Number) : []);
         itemNode.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = selected.has(Number(input.value)); });
       } else if (inputType === 'single') {
@@ -1573,6 +1640,13 @@
         </label>`).join('')}</div>`;
     }
 
+    if (type === 'text') {
+      return `<label class="grammar-text-wrap">
+        <span class="field-label">Write your sentence</span>
+        <input class="grammar-text-input" type="text" autocomplete="off" spellcheck="false" data-grammar-control placeholder="${escapeHtml(question.placeholder || '')}">
+      </label>`;
+    }
+
     if (type === 'gaps') {
       const segments = Array.isArray(question.segments) ? question.segments : [];
       const answerCount = Array.isArray(question.answers) ? question.answers.length : Math.max(0, segments.length - 1);
@@ -1595,11 +1669,19 @@
     const type = grammarQuestionType(question);
     if (type === 'select') return (node.querySelector('select')?.value || '') !== '';
     if (type === 'multiple') return Boolean(node.querySelector('input:checked'));
+    if (type === 'text') return normalizeAnswer(node.querySelector('input[type="text"]')?.value || '') !== '';
     if (type === 'gaps') {
       const inputs = [...node.querySelectorAll('[data-grammar-gap]')];
       return inputs.length > 0 && inputs.every((input) => normalizeAnswer(input.value) !== '');
     }
     return Boolean(node.querySelector('input:checked'));
+  }
+
+  function normalizeGrammarText(value) {
+    return normalizeAnswer(value)
+      .replace(/[,.!?;:]+/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   function readGrammarQuestionAnswer(question, node, markGaps = false) {
@@ -1614,6 +1696,16 @@
       const actual = [...node.querySelectorAll('input:checked')].map((input) => Number(input.value)).sort((a, b) => a - b);
       const expected = [...(Array.isArray(question.answer) ? question.answer : [])].map(Number).sort((a, b) => a - b);
       return { actual, correct: expected.length > 0 && JSON.stringify(actual) === JSON.stringify(expected) };
+    }
+
+    if (type === 'text') {
+      const actual = node.querySelector('input[type="text"]')?.value || '';
+      const accepted = Array.isArray(question.acceptedAnswers) && question.acceptedAnswers.length
+        ? question.acceptedAnswers
+        : [question.answer];
+      const normalizedActual = normalizeGrammarText(actual);
+      const correct = normalizedActual !== '' && accepted.some((answer) => normalizeGrammarText(answer) === normalizedActual);
+      return { actual, correct };
     }
 
     if (type === 'gaps') {
@@ -1648,6 +1740,9 @@
       if (type === 'select') {
         const select = node.querySelector('select');
         if (select) select.value = safeText(value);
+      } else if (type === 'text') {
+        const input = node.querySelector('input[type="text"]');
+        if (input) input.value = safeText(value);
       } else if (type === 'multiple') {
         const selected = new Set(Array.isArray(value) ? value.map(Number) : []);
         node.querySelectorAll('input[type="checkbox"]').forEach((input) => {
@@ -1824,7 +1919,7 @@
         <div class="grammar-test-intro">
           <div>
             <span class="eyebrow">Мини-тест</span>
-            <h2 id="mini-test-title">${quizCount} задания: от лёгкого к сложному</h2>
+            <h2 id="mini-test-title">${Array.isArray(topic.quizGroups) && topic.quizGroups.length ? `${topic.quizGroups.length} упражнения × ${Math.floor(quizCount / topic.quizGroups.length)} задания` : `${quizCount} задания: от лёгкого к сложному`}</h2>
             <p>Ответь на все задания. Для зачёта нужно ${quizCount} из ${quizCount}. ${topic.revealAnswerOnError === false ? 'При ошибке правильный ответ не показывается.' : 'Тест можно переделывать.'}</p>
           </div>
           <span class="grammar-test-goal">${quizCount} / ${quizCount}</span>
@@ -1845,15 +1940,32 @@
       const alreadyPassed = Boolean(currentState.passed || topic.passed);
       const lockedPassed = alreadyPassed && topic.lockOnPass === true;
 
-      quizRoot.innerHTML = `${quiz.map((question, index) => `<article class="card grammar-question-card" data-grammar-question="${index}">
+      const renderQuestion = (question, index, displayNumber = index + 1) => `<article class="card grammar-question-card" data-grammar-question="${index}">
         <div class="grammar-question-meta">
-          <span class="grammar-difficulty">${escapeHtml(question.difficulty || `${index + 1}`)}</span>
+          <span class="grammar-difficulty">${escapeHtml(question.difficulty || `${displayNumber}`)}</span>
           <span>${escapeHtml(question.skill || '')}</span>
         </div>
-        <h3>${index + 1}. ${escapeHtml(question.prompt)}</h3>
+        <h3>${displayNumber}. ${escapeHtml(question.prompt)}</h3>
         ${renderGrammarQuestionInput(question, index)}
         <div class="feedback"></div>
-      </article>`).join('')}
+      </article>`;
+      const quizGroups = Array.isArray(topic.quizGroups) ? topic.quizGroups : [];
+      const groupedQuestionIndexes = new Set();
+      const groupedMarkup = quizGroups.length ? quizGroups.map((group) => {
+        const indexes = quiz.map((question, index) => question.group === group.id ? index : -1).filter((index) => index >= 0);
+        indexes.forEach((index) => groupedQuestionIndexes.add(index));
+        if (!indexes.length) return '';
+        return `<section class="grammar-exercise-group" data-grammar-group="${escapeHtml(group.id || '')}">
+          <header class="grammar-exercise-group-heading">
+            <div><span class="eyebrow">${escapeHtml(group.difficulty || 'Exercise')}</span><h3>${escapeHtml(group.title || `Exercise ${group.id || ''}`)}</h3>${group.instructions ? `<p>${escapeHtml(group.instructions)}</p>` : ''}</div>
+            <span class="grammar-exercise-count">${indexes.length} / ${indexes.length}</span>
+          </header>
+          <div class="grammar-exercise-group-items">${indexes.map((index, localIndex) => renderQuestion(quiz[index], index, localIndex + 1)).join('')}</div>
+        </section>`;
+      }).join('') : '';
+      const ungroupedMarkup = quiz.map((question, index) => groupedQuestionIndexes.has(index) ? '' : renderQuestion(question, index)).join('');
+
+      quizRoot.innerHTML = `${groupedMarkup}${ungroupedMarkup}
       <article class="card grammar-test-actions">
         <div id="grammar-result" aria-live="polite">
           <strong>${lockedPassed ? 'Тема уже засчитана.' : alreadyPassed ? 'Тема засчитана, но тест можно пройти ещё раз.' : `Заполни все ${quiz.length} задания.`}</strong>
@@ -1867,7 +1979,24 @@
 
       const checkButton = byId('check-grammar');
       const retryButton = byId('retry-grammar');
-      restoreGrammarAnswers(quizRoot, quiz, currentState.answers);
+      restoreGrammarAnswers(quizRoot, quiz, alreadyPassed ? currentState.answers : (currentState.draftAnswers || currentState.answers));
+
+      const collectGrammarAnswers = () => quiz.map((question, index) => {
+        const node = quizRoot.querySelector(`[data-grammar-question="${index}"]`);
+        return node ? readGrammarQuestionAnswer(question, node, false).actual : '';
+      });
+
+      const saveGrammarDraft = () => {
+        if (lockedPassed) return;
+        const progress = window.ProgressService.loadGrammarProgress();
+        const previous = progress.topics[topic.id] || {};
+        progress.topics[topic.id] = {
+          ...previous,
+          draftAnswers: collectGrammarAnswers(),
+          updatedAt: new Date().toISOString()
+        };
+        window.ProgressService.saveGrammarProgress(progress);
+      };
 
       const updateCheckState = () => {
         if (lockedPassed) {
@@ -1896,6 +2025,7 @@
             feedback.className = 'feedback';
             feedback.textContent = '';
           }
+          saveGrammarDraft();
           updateCheckState();
         });
       });
@@ -1955,6 +2085,7 @@
             attempts: Number(previous.attempts || 0) + 1,
             bestScore: Math.max(Number(previous.bestScore || 0), percent),
             answers: passedNow ? answers : previous.answers,
+            draftAnswers: passedNow ? [] : answers,
             updatedAt: new Date().toISOString()
           };
           window.ProgressService.saveGrammarProgress(progress);
@@ -1991,6 +2122,12 @@
       });
 
       retryButton.addEventListener('click', () => {
+        const progress = window.ProgressService.loadGrammarProgress();
+        const previous = progress.topics[topic.id] || {};
+        if (!previous.passed) {
+          progress.topics[topic.id] = { ...previous, draftAnswers: [], updatedAt: new Date().toISOString() };
+          window.ProgressService.saveGrammarProgress(progress);
+        }
         renderQuiz();
         byId('mini-test-title')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
