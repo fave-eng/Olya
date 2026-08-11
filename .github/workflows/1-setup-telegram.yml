@@ -14,7 +14,10 @@ jobs:
       SUPABASE_PROJECT_ID: ${{ vars.SUPABASE_PROJECT_ID }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       NOTIFY_WEBHOOK_SECRET: ${{ secrets.NOTIFY_WEBHOOK_SECRET }}
-      TEACHER_CHAT_ID: ${{ secrets.TEACHER_CHAT_ID }}
+      # Target from https://t.me/c/3908088903/5
+      # Bot API chat id for a private supergroup is -100 + the internal c/... id.
+      TEACHER_CHAT_ID: "-1003908088903"
+      TEACHER_MESSAGE_THREAD_ID: "5"
 
     steps:
       - uses: actions/checkout@v4
@@ -31,8 +34,8 @@ jobs:
           test -n "$SUPABASE_PROJECT_ID" || (echo "Missing repository variable SUPABASE_PROJECT_ID" && exit 1)
           test -n "$TELEGRAM_BOT_TOKEN" || (echo "Missing TELEGRAM_BOT_TOKEN" && exit 1)
           test -n "$NOTIFY_WEBHOOK_SECRET" || (echo "Missing NOTIFY_WEBHOOK_SECRET" && exit 1)
-          test -n "$TEACHER_CHAT_ID" || (echo "Missing TEACHER_CHAT_ID" && exit 1)
           [[ "$TEACHER_CHAT_ID" =~ ^-?[0-9]+$ ]] || (echo "TEACHER_CHAT_ID must be an integer" && exit 1)
+          [[ "$TEACHER_MESSAGE_THREAD_ID" =~ ^[1-9][0-9]*$ ]] || (echo "TEACHER_MESSAGE_THREAD_ID must be a positive integer" && exit 1)
 
       - name: Save Edge Function secrets in Supabase
         shell: bash
@@ -42,13 +45,35 @@ jobs:
             --project-ref "$SUPABASE_PROJECT_ID" \
             TELEGRAM_BOT_TOKEN="$TELEGRAM_BOT_TOKEN" \
             NOTIFY_WEBHOOK_SECRET="$NOTIFY_WEBHOOK_SECRET" \
-            TEACHER_CHAT_ID="$TEACHER_CHAT_ID"
+            TEACHER_CHAT_ID="$TEACHER_CHAT_ID" \
+            TEACHER_MESSAGE_THREAD_ID="$TEACHER_MESSAGE_THREAD_ID"
 
-      - name: Deploy notification function
+      - name: Deploy notification and report function
         shell: bash
         run: |
           set -euo pipefail
           supabase functions deploy notify-telegram --project-ref "$SUPABASE_PROJECT_ID"
 
+      - name: Check deployed diagnostics endpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          ENDPOINT="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/notify-telegram"
+          RESULT=""
+          for attempt in 1 2 3 4 5; do
+            if RESULT="$(curl --fail-with-body --silent --show-error \
+              --request POST "$ENDPOINT" \
+              --header 'content-type: application/json' \
+              --header "x-notify-secret: ${NOTIFY_WEBHOOK_SECRET}" \
+              --data '{"action":"diagnostics"}')"; then
+              echo "$RESULT"
+              node -e 'const r=JSON.parse(process.argv[1]); if(!r.ok){console.error("Diagnostics failed", r); process.exit(1)}' "$RESULT" && exit 0
+            fi
+            echo "Diagnostics attempt $attempt failed; retrying..."
+            sleep 4
+          done
+          echo "Diagnostics did not pass after deployment."
+          exit 1
+
       - name: Done
-        run: echo "Telegram notification function is deployed."
+        run: echo "Telegram notifications and homework reports are configured for topic 5."

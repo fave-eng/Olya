@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Диагностика English Space: Supabase и Telegram">
+  <title>Диагностика · English Space</title>
+  <link rel="stylesheet" href="styles.css?v=7">
+  <style>
+    .diagnostics-layout{display:grid;gap:18px}.diag-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.diag-target{display:grid;gap:5px}.diag-target code{font-size:.95rem}.diag-list{display:grid;gap:10px}.diag-item{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;padding:14px;border:1px solid #e2e8f0;border-radius:16px;background:#fff}.diag-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#f1f5f9;font-weight:800}.diag-item.is-ok .diag-icon{background:#dcfce7;color:#166534}.diag-item.is-error .diag-icon{background:#fee2e2;color:#991b1b}.diag-item.is-running .diag-icon{background:#e0f2fe;color:#075985}.diag-copy strong{display:block;margin-bottom:3px}.diag-meta{font-size:.82rem;color:#64748b;margin-bottom:5px}.diag-detail{margin:0;overflow-wrap:anywhere}.diag-secret-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:end}.diag-secret-row label{display:grid;gap:6px}.diag-secret-row input{width:100%}.diag-output{padding:12px 14px;border-radius:14px;background:#0f172a;color:#e2e8f0;font:500 .84rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;overflow-wrap:anywhere;min-height:52px}.diag-note{margin:0}.diag-summary{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.diag-summary-badge{display:inline-flex;align-items:center;min-height:30px;padding:4px 10px;border-radius:999px;font-weight:750;background:#e2e8f0}.diag-summary-badge.ok{background:#dcfce7;color:#166534}.diag-summary-badge.error{background:#fee2e2;color:#991b1b}@media(max-width:720px){.diag-secret-row{grid-template-columns:1fr}.diag-secret-row .btn{width:100%}}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="config.js" defer></script>
+  <script src="diagnostics.js?v=1" defer></script>
+</head>
+<body class="has-bottom-nav" data-page="diagnostics" data-view="diagnostics">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <header class="hero hero-compact">
+    <span class="star one">✦</span><span class="star two">✦</span>
+    <div class="container hero-content reveal">
+      <span class="hero-badge">✦ System check</span>
+      <h1>Диагностика</h1>
+      <p>Supabase, сохранение прогресса, Telegram-отчёты и уведомления.</p>
+    </div>
+    <svg class="hero-wave" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true"><path fill="#f8fafc" d="M0,66 C220,102 410,10 696,52 C963,91 1115,99 1440,35 L1440,100 L0,100 Z"></path></svg>
+  </header>
+
+  <main id="main" class="main-content container diagnostics-layout">
+    <section class="card section reveal">
+      <div class="section-heading"><div><span class="eyebrow">Цель отправки</span><h2>Telegram</h2></div></div>
+      <div class="diag-target">
+        <strong>Группа: <code>-1003908088903</code></strong>
+        <strong>Тема: <code>message_thread_id = 5</code></strong>
+        <a href="https://t.me/c/3908088903/5" target="_blank" rel="noopener noreferrer">Открыть тему в Telegram ↗</a>
+      </div>
+    </section>
+
+    <section class="card section reveal">
+      <div class="section-heading"><div><span class="eyebrow">Полная проверка</span><h2>Подключения и сохранение</h2></div></div>
+      <p class="muted">Проверка показывает конкретный этап ошибки. Тестовые записи Supabase создаются под отдельным диагностическим student_id и после проверки удаляются серверной функцией — прогресс Оли не изменяется.</p>
+      <div class="diag-secret-row section">
+        <label>
+          <span class="field-label">Диагностический ключ</span>
+          <input id="diagnostics-secret" type="password" autocomplete="off" spellcheck="false" placeholder="NOTIFY_WEBHOOK_SECRET">
+        </label>
+        <button class="btn btn-primary" id="run-diagnostics" type="button">Проверить всё</button>
+        <button class="btn btn-secondary" id="clear-diagnostics" type="button">Очистить результаты</button>
+      </div>
+      <p class="muted diag-note">Ключ нужен только для серверной проверки Telegram и тестовых отправок. Он не сохраняется в localStorage или Supabase.</p>
+      <div class="diag-summary section" id="diagnostics-summary" aria-live="polite"></div>
+      <div class="diag-list section" id="diagnostics-results" aria-live="polite"></div>
+    </section>
+
+    <section class="card section reveal">
+      <div class="section-heading"><div><span class="eyebrow">Реальная отправка</span><h2>Тест Telegram</h2></div></div>
+      <p class="muted diag-note">Используется тот же диагностический ключ, который введён выше. Тестовые сообщения отправляются в реальную тему 5, но не меняют прогресс ученика.</p>
+      <div class="diag-toolbar section">
+        <button class="btn btn-primary" id="send-test-report" type="button">Отправить тестовый отчёт</button>
+        <button class="btn btn-secondary" id="send-test-notification" type="button">Отправить тестовое уведомление</button>
+      </div>
+      <div class="diag-output" id="telegram-test-output" aria-live="polite">Тест ещё не запускался.</div>
+    </section>
+
+    <section class="card section reveal">
+      <div class="section-heading"><div><span class="eyebrow">Что проверяется</span><h2>Этапы</h2></div></div>
+      <p class="muted">Браузер и localStorage → конфигурация Supabase → чтение четырёх таблиц прогресса → тест insert/update/read → очистка тестовых строк → Edge Function → серверный доступ к журналу отправок → Telegram Bot API → доступ бота к группе → наличие темы 5. Тестовые кнопки дополнительно проверяют фактическую отправку сообщения именно в тему.</p>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Основная навигация">
+    <a class="nav-link" data-nav="home" href="index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
+    <a class="nav-link" data-nav="homework" href="homework.html"><span class="nav-icon">📝</span><span>HW</span></a>
+    <a class="nav-link" data-nav="grammar" href="grammar.html"><span class="nav-icon">📐</span><span>Grammar</span></a>
+    <a class="nav-link" data-nav="vocabulary" href="vocabulary-hub.html"><span class="nav-icon">💥</span><span>Vocab</span></a>
+  </nav>
+</body>
+</html>

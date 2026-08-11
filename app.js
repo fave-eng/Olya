@@ -289,6 +289,39 @@
     }
   };
 
+
+  const TelegramService = {
+    endpoint() {
+      const baseUrl = safeText(config.supabase?.url).trim().replace(/\/+$/, '');
+      return baseUrl ? `${baseUrl}/functions/v1/notify-telegram` : '';
+    },
+    isConfigured() {
+      return Boolean(config.features?.telegramNotifications && this.endpoint());
+    },
+    async request(payload, headers = {}) {
+      if (!this.isConfigured()) throw new Error('Telegram integration is not configured');
+      const response = await fetch(this.endpoint(), {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', ...headers },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json().catch(() => ({ ok: false, error: `HTTP ${response.status}` }));
+      if (!response.ok || !result?.ok) {
+        const stage = safeText(result?.stage).trim();
+        const detail = safeText(result?.error, `HTTP ${response.status}`);
+        throw new Error(stage ? `${stage}: ${detail}` : detail);
+      }
+      return result;
+    },
+    async sendHomeworkReport(lessonId) {
+      return this.request({
+        action: 'homework_report',
+        studentId,
+        lessonId
+      });
+    }
+  };
+
   function migrateLegacyOlyaProgress() {
     const marker = key('legacy_migration_v1');
     if (window.localStorage.getItem(marker)) return;
@@ -1566,17 +1599,41 @@
       byId('submit-lesson').disabled = false;
     });
     const submitLessonButton = byId('submit-lesson');
-    if (submitLessonButton) submitLessonButton.addEventListener('click', () => {
+    if (submitLessonButton) submitLessonButton.addEventListener('click', async () => {
+      submitLessonButton.disabled = true;
       const updatedProgress = window.ProgressService.loadHomeworkProgress();
       updatedProgress.submissions[lesson.id] = { savedAt: new Date().toISOString(), status: CloudService.isConfigured() ? 'pending-cloud' : 'local' };
       if (!updatedProgress.completedIds.includes(lesson.id)) updatedProgress.completedIds.push(lesson.id);
       window.ProgressService.saveHomeworkProgress(updatedProgress);
-      showToast(CloudService.isConfigured() ? 'Ответы сохранены и отправляются в Supabase.' : 'Ответы сохранены на устройстве.');
+      showToast(CloudService.isConfigured() ? 'Ответы сохраняются в Supabase и готовится отчёт.' : 'Ответы сохранены на устройстве.');
       lockCompletedLesson(root);
       const actions = root.querySelector('.lesson-actions');
       if (actions) {
         actions.classList.add('lesson-completed-panel');
         actions.innerHTML = `<div id="lesson-result" aria-live="polite"><h3>Работа отправлена</h3><p class="muted">Ответы сохранены и больше не редактируются.</p></div><div class="completed-lock-message"><span class="completed-lock-icon" aria-hidden="true">🔒</span><div><h3>Работа выполнена</h3><p class="muted">Ответы проверены и заблокированы. Изменить или стереть их уже нельзя.</p></div></div>`;
+      }
+
+      if (!CloudService.isConfigured()) return;
+
+      try {
+        await window.ProgressService.syncToCloud('homework');
+      } catch (error) {
+        console.error('Не удалось сохранить отправленную работу в Supabase:', error);
+        showToast('Работа сохранена локально, но Supabase недоступен. Проверьте страницу «Диагностика».');
+        return;
+      }
+
+      if (!TelegramService.isConfigured()) {
+        showToast('Работа сохранена в Supabase. Telegram-отчёт не настроен.');
+        return;
+      }
+
+      try {
+        const report = await TelegramService.sendHomeworkReport(lesson.id);
+        showToast(report.skipped ? 'Работа сохранена. Отчёт уже был отправлен в Telegram.' : 'Работа сохранена. Отчёт отправлен в Telegram.');
+      } catch (error) {
+        console.error('Не удалось отправить Telegram-отчёт:', error);
+        showToast(`Работа сохранена, но отчёт Telegram не отправлен: ${safeText(error?.message, 'ошибка отправки')}`);
       }
     });
   }
