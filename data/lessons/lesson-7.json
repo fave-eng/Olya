@@ -37,9 +37,6 @@
         "Two minutes later",
         "when"
       ],
-      "image": "images/lesson-7/exercise-1a.png",
-      "imageAlt": "Workbook 2C exercise 1a: An AMAZING holiday",
-      "stickyImage": true,
       "items": [
         {
           "id": "text",
@@ -223,8 +220,6 @@
         "quickly",
         "summer"
       ],
-      "image": "images/lesson-7/exercise-2a.png",
-      "imageAlt": "Workbook 2C exercise 2: pronunciation word stress",
       "items": [
         {
           "id": "chart",
