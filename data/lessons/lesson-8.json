@@ -215,7 +215,18 @@
           "scoreByGap": true,
           "explanation": "There's an error. Use the sentences from a and check again."
         }
-      ]
+      ],
+      "unlockAfterStudentAnswers": {
+        "sourceBlockId": "l8-1a",
+        "itemIds": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ]
+      }
     },
     {
       "type": "section",
