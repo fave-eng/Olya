@@ -2323,7 +2323,7 @@ body[data-view="lesson"] #lesson-root {
   }
 }
 
-/* Lesson 7: source image stays attached to the exercise on desktop. */
+/* Optional exercise illustration: sticky beside the task on desktop, normal flow on smaller screens. */
 .exercise-with-sticky-media {
   display: grid;
   grid-template-columns: minmax(300px, .95fr) minmax(0, 1.05fr);
@@ -2340,7 +2340,8 @@ body[data-view="lesson"] #lesson-root {
   overflow: auto;
 }
 
-.exercise-with-sticky-media > .exercise-items {
+.exercise-with-sticky-media > .exercise-items,
+.exercise-with-sticky-media > .exercise-items-wrap {
   align-self: stretch;
 }
 
@@ -2532,3 +2533,89 @@ body[data-view="lesson"] #lesson-root {
 .exercise-card-sticky > .exercise-heading {
   border-radius: inherit inherit 0 0;
 }
+
+
+/* Exact-source reference material inside exercises. */
+.exercise-reference-list,
+.student-answer-reference {
+  display: grid;
+  gap: 8px;
+  margin: 16px 16px 0;
+  padding: 14px;
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.exercise-reference-row,
+.student-answer-reference-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: start;
+  gap: 9px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.exercise-reference-row strong,
+.student-answer-reference-row > span {
+  color: var(--indigo);
+  font-weight: 900;
+}
+
+.exercise-reference-row span,
+.student-answer-reference-row p {
+  margin: 0;
+}
+
+.student-answer-reference > strong {
+  color: #334155;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: .86rem;
+}
+
+.student-select-gaps {
+  align-items: center;
+}
+
+.student-select-gap {
+  width: min(100%, 430px);
+  min-height: 42px;
+  margin: 3px 5px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 7px 9px;
+  color: var(--dark);
+  background: #fff;
+  font: inherit;
+}
+
+.student-select-gap:focus {
+  border-color: #818cf8;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, .14);
+}
+
+.student-select-gap.is-invalid {
+  border-color: #fb7185;
+  background: #fff1f2;
+}
+
+.student-select-gap.is-valid {
+  border-color: #22c55e;
+  background: #f0fdf4;
+}
+
+@media (max-width: 620px) {
+  .exercise-reference-list,
+  .student-answer-reference {
+    margin: 12px 12px 0;
+    padding: 12px;
+  }
+
+  .student-select-gap {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+

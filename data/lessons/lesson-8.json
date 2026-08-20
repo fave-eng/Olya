@@ -1,0 +1,462 @@
+{
+  "id": "lesson-8",
+  "number": 8,
+  "title": "Practical English: Hotel problems",
+  "subtitle": "English File · Practical English Episode 1 · calling reception · I'll · Social English",
+  "status": "available",
+  "page": "lesson.html?id=lesson-8",
+  "vocabularyId": "vocab-practical-english-1",
+  "publishedAt": "2026-08-20",
+  "totalPoints": 27,
+  "notification": {
+    "enabled": true,
+    "version": 1
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "eyebrow": "1 CALLING RECEPTION",
+      "title": "CALLING RECEPTION"
+    },
+    {
+      "type": "exercise",
+      "id": "l8-1a",
+      "title": "a. Complete the sentences with a word from the list.",
+      "wordBank": [
+        "bother",
+        "have",
+        "'s",
+        "put",
+        "send",
+        "this"
+      ],
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "example": true,
+          "prompt": "I ___ a problem with the wi-fi.",
+          "segments": [
+            "I ",
+            " a problem with the wi-fi."
+          ],
+          "exampleAnswer": "have"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "input": "select",
+          "prompt": "I'll ___ you through to IT.",
+          "segments": [
+            "I'll ",
+            " you through to IT."
+          ],
+          "options": [
+            "bother",
+            "have",
+            "'s",
+            "put",
+            "send",
+            "this"
+          ],
+          "answer": 3,
+          "explanation": "There's an error. Correct your answer and check again."
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "input": "select",
+          "prompt": "I'll ___ somebody up right now.",
+          "segments": [
+            "I'll ",
+            " somebody up right now."
+          ],
+          "options": [
+            "bother",
+            "have",
+            "'s",
+            "put",
+            "send",
+            "this"
+          ],
+          "answer": 4,
+          "explanation": "There's an error. Correct your answer and check again."
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "input": "select",
+          "prompt": "I'm sorry to ___ you.",
+          "segments": [
+            "I'm sorry to ",
+            " you."
+          ],
+          "options": [
+            "bother",
+            "have",
+            "'s",
+            "put",
+            "send",
+            "this"
+          ],
+          "answer": 0,
+          "explanation": "There's an error. Correct your answer and check again."
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "input": "select",
+          "prompt": "Hello. ___ is room 315.",
+          "segments": [
+            "Hello. ",
+            " is room 315."
+          ],
+          "options": [
+            "bother",
+            "have",
+            "'s",
+            "put",
+            "send",
+            "this"
+          ],
+          "answer": 5,
+          "explanation": "There's an error. Correct your answer and check again."
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "input": "select",
+          "prompt": "There ___ a problem with the shower.",
+          "segments": [
+            "There",
+            " a problem with the shower."
+          ],
+          "options": [
+            "bother",
+            "have",
+            "'s",
+            "put",
+            "send",
+            "this"
+          ],
+          "answer": 2,
+          "explanation": "There's an error. Correct your answer and check again."
+        }
+      ]
+    },
+    {
+      "type": "exercise",
+      "id": "l8-1b",
+      "title": "b. Complete the conversations with sentences 1–6 from a.",
+      "studentAnswerReference": {
+        "sourceBlockId": "l8-1a",
+        "title": "Sentences 1–6 from a",
+        "itemIds": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ]
+      },
+      "items": [
+        {
+          "id": "conversation-1",
+          "number": "1",
+          "input": "student-select-gaps",
+          "hidePrompt": true,
+          "sourceBlockId": "l8-1a",
+          "sourceItemIds": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+          ],
+          "segments": [
+            "A Hello, reception.\nB Hello. This is room 315.\nA How can I help you?\nB ",
+            ".\nThere isn't any hot water.\nA I'm sorry, madam. ",
+            ".\nB Thank you."
+          ],
+          "answers": [
+            "6",
+            "3"
+          ],
+          "scoreByGap": true,
+          "explanation": "There's an error. Use the sentences from a and check again."
+        },
+        {
+          "id": "conversation-2",
+          "number": "2",
+          "input": "student-select-gaps",
+          "hidePrompt": true,
+          "sourceBlockId": "l8-1a",
+          "sourceItemIds": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+          ],
+          "segments": [
+            "A Hello, reception.\nB Hello, this is room 315 again. ",
+            ",\nbut there's one more thing.\nA How can I help you?\nB ",
+            ".\nI can't get a signal.\nA I'm sorry, madam. ",
+            ".\nB Thanks."
+          ],
+          "answers": [
+            "4",
+            "1",
+            "2"
+          ],
+          "scoreByGap": true,
+          "explanation": "There's an error. Use the sentences from a and check again."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "eyebrow": "2 I'LL",
+      "title": "I'LL"
+    },
+    {
+      "type": "grammar-link",
+      "title": "Will / 'll for offers and instant decisions",
+      "text": "Разбери, как использовать I'll для предложений помощи и решений, которые принимаются прямо сейчас.",
+      "href": "grammar-topic.html?id=grammar-will-offers",
+      "label": "Открыть тему в Grammar"
+    },
+    {
+      "type": "exercise",
+      "id": "l8-2",
+      "title": "Match problems 1–4 to offers a–d.",
+      "referenceListLabel": "Offers a–d",
+      "referenceList": [
+        {
+          "label": "a",
+          "text": "I'll see if we have a quieter one."
+        },
+        {
+          "label": "b",
+          "text": "I'll send two bottles to your room right now."
+        },
+        {
+          "label": "c",
+          "text": "I'll put you through to IT."
+        },
+        {
+          "label": "d",
+          "text": "I'll ask her to call you."
+        }
+      ],
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "example": true,
+          "prompt": "I have a problem with the wi-fi.",
+          "exampleAnswer": "c"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "input": "select",
+          "prompt": "This room is very noisy.",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "answer": 0,
+          "explanation": "There's an error. Match the problem to the correct offer."
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "input": "select",
+          "prompt": "I want to talk to the manager.",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "answer": 3,
+          "explanation": "There's an error. Match the problem to the correct offer."
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "input": "select",
+          "prompt": "There's no water in my mini-bar.",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "answer": 1,
+          "explanation": "There's an error. Match the problem to the correct offer."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "eyebrow": "3 SOCIAL ENGLISH",
+      "title": "SOCIAL ENGLISH"
+    },
+    {
+      "type": "exercise",
+      "id": "l8-3a",
+      "title": "a. Circle the correct words.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "example": true,
+          "prompt": "What's your room like? Do you have a good view / look?",
+          "exampleAnswer": "view"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "input": "single",
+          "prompt": "It's great to be / be here.",
+          "options": [
+            "to be",
+            "be"
+          ],
+          "answer": 0,
+          "explanation": "There's an error. Correct your answer and check again."
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "input": "single",
+          "prompt": "You can / must be really tired.",
+          "options": [
+            "can",
+            "must"
+          ],
+          "answer": 1,
+          "explanation": "There's an error. Correct your answer and check again."
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "input": "single",
+          "prompt": "I want / guess you're right.",
+          "options": [
+            "want",
+            "guess"
+          ],
+          "answer": 1,
+          "explanation": "There's an error. Correct your answer and check again."
+        },
+        {
+          "id": "5",
+          "number": "5",
+          "input": "single",
+          "prompt": "It's great to see you, too / two.",
+          "options": [
+            "too",
+            "two"
+          ],
+          "answer": 0,
+          "explanation": "There's an error. Correct your answer and check again."
+        },
+        {
+          "id": "6",
+          "number": "6",
+          "input": "single",
+          "prompt": "By the way / On the way, Martha wants to see you while you're here.",
+          "options": [
+            "By the way",
+            "On the way"
+          ],
+          "answer": 0,
+          "explanation": "There's an error. Correct your answer and check again."
+        }
+      ]
+    },
+    {
+      "type": "exercise",
+      "id": "l8-3b",
+      "title": "b. Complete the conversation with the missing words.",
+      "items": [
+        {
+          "id": "1",
+          "number": "1",
+          "example": true,
+          "prompt": "A Welcome to New York.\nB Thanks. It's great to be here.",
+          "exampleAnswer": "to be"
+        },
+        {
+          "id": "2",
+          "number": "2",
+          "input": "gaps",
+          "hidePrompt": true,
+          "prompt": "A Do you have a g_______ v_______?\nB Yes. I can see the Empire State Building from my window.",
+          "segments": [
+            "A Do you have a g",
+            " v",
+            "?\nB Yes. I can see the Empire State Building from my window."
+          ],
+          "answers": [
+            "ood",
+            "iew"
+          ],
+          "scoreByGap": true,
+          "explanation": "There's an error. Correct the missing words and check again."
+        },
+        {
+          "id": "3",
+          "number": "3",
+          "input": "gaps",
+          "hidePrompt": true,
+          "prompt": "A It's time to go. You m_______ b_______ really tired.\nB I g_______ you're right.",
+          "segments": [
+            "A It's time to go. You m",
+            " b",
+            " really tired.\nB I g",
+            " you're right."
+          ],
+          "answers": [
+            "ust",
+            "e",
+            "uess"
+          ],
+          "scoreByGap": true,
+          "explanation": "There's an error. Correct the missing words and check again."
+        },
+        {
+          "id": "4",
+          "number": "4",
+          "input": "gaps",
+          "hidePrompt": true,
+          "prompt": "A B_______ t_______ w_______, it's great to see you again.\nB Yes. It's great to see you, t_______.",
+          "segments": [
+            "A B",
+            " t",
+            " w",
+            ", it's great to see you again.\nB Yes. It's great to see you, t",
+            "."
+          ],
+          "answers": [
+            "y",
+            "he",
+            "ay",
+            "oo"
+          ],
+          "scoreByGap": true,
+          "explanation": "There's an error. Correct the missing words and check again."
+        }
+      ]
+    }
+  ],
+  "vocabularyLinkSubtitle": "21 useful words and phrases from this Practical English lesson"
+}

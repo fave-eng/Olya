@@ -1174,6 +1174,13 @@
     } else if (item.input === 'multiple' || item.input === 'single') {
       const inputType = item.input === 'multiple' ? 'checkbox' : 'radio';
       control = `<div class="option-list compact-options">${(item.options || []).map((option, optionIndex) => `<label class="option"><input type="${inputType}" name="${escapeHtml(inputId)}" value="${optionIndex}"><span>${escapeHtml(option)}</span></label>`).join('')}</div>`;
+    } else if (item.input === 'student-select-gaps') {
+      const answers = Array.isArray(item.answers) ? item.answers : [];
+      const segments = Array.isArray(item.segments) ? item.segments : [];
+      const sourceItemIds = Array.isArray(item.sourceItemIds) ? item.sourceItemIds.map((value) => safeText(value)).filter(Boolean) : [];
+      const renderGapSegment = (segment) => escapeHtml(segment || '').replaceAll('\n', '<br>');
+      const sourceOptions = sourceItemIds.map((sourceItemId) => `<option value="${escapeHtml(sourceItemId)}" data-student-source-option="${escapeHtml(sourceItemId)}">${escapeHtml(sourceItemId)}</option>`).join('');
+      control = `<div class="sentence-gaps student-select-gaps" data-student-source-block="${escapeHtml(item.sourceBlockId || '')}">${answers.map((answer, gapIndex) => `${gapIndex < segments.length ? `<span>${renderGapSegment(segments[gapIndex])}</span>` : ''}<select class="student-select-gap" data-student-gap-index="${gapIndex}" aria-label="Gap ${gapIndex + 1}"><option value="">Choose a sentence</option>${sourceOptions}</select>`).join('')}${segments.length > answers.length ? `<span>${renderGapSegment(segments[segments.length - 1])}</span>` : ''}</div>`;
     } else if (item.input === 'select') {
       control = `<select id="${escapeHtml(inputId)}"><option value="">Choose an answer</option>${(item.options || []).map((option, optionIndex) => `<option value="${optionIndex}">${escapeHtml(option)}</option>`).join('')}</select>`;
     } else if (item.input === 'textarea') {
@@ -1188,7 +1195,7 @@
     }
 
     return `<div class="exercise-item" data-exercise-item="${escapeHtml(itemId)}" data-input-type="${escapeHtml(item.input || 'text')}">
-      <div class="exercise-item-header">${numberMarkup}<label class="exercise-prompt" for="${escapeHtml(inputId)}">${prompt}</label></div>
+      <div class="exercise-item-header">${numberMarkup}${item.hidePrompt ? '' : `<label class="exercise-prompt" for="${escapeHtml(inputId)}">${prompt}</label>`}</div>
       <div class="exercise-control">${control}</div>
       <div class="feedback" aria-live="polite"></div>
     </div>`;
@@ -1223,10 +1230,20 @@
         : '';
       const player = block.audio ? `<audio class="audio-player" controls preload="none" src="${escapeHtml(block.audio)}"></audio>` : '';
       const exerciseImage = block.image ? `<figure class="exercise-source-image"><img src="${escapeHtml(block.image)}" alt="${escapeHtml(block.imageAlt || '')}" loading="lazy" decoding="async"></figure>` : '';
+      const referenceList = Array.isArray(block.referenceList) && block.referenceList.length
+        ? `<div class="exercise-reference-list" aria-label="${escapeHtml(block.referenceListLabel || 'Reference list')}">${block.referenceList.map((entry) => `<div class="exercise-reference-row"><strong>${escapeHtml(entry.label || '')}</strong><span>${escapeHtml(entry.text || '')}</span></div>`).join('')}</div>`
+        : '';
+      const studentAnswerReference = block.studentAnswerReference?.sourceBlockId
+        ? `<div class="student-answer-reference" data-student-answer-reference="${escapeHtml(block.studentAnswerReference.sourceBlockId)}">
+            <strong>${escapeHtml(block.studentAnswerReference.title || 'Use your answers')}</strong>
+            <div class="student-answer-reference-list">${(Array.isArray(block.studentAnswerReference.itemIds) ? block.studentAnswerReference.itemIds : []).map((sourceItemId) => `<div class="student-answer-reference-row" data-student-answer-reference-item="${escapeHtml(sourceItemId)}"><span>${escapeHtml(sourceItemId)}</span><p>___</p></div>`).join('')}</div>
+          </div>`
+        : '';
       const exerciseItems = `<div class="exercise-items">${items.map((item, itemIndex) => renderExerciseItem(item, id, itemIndex)).join('')}</div>`;
+      const exerciseContent = `${referenceList}${studentAnswerReference}${exerciseItems}`;
       const exerciseBody = block.stickyImage && exerciseImage
-        ? `<div class="exercise-with-sticky-media">${exerciseImage}${exerciseItems}</div>`
-        : `${exerciseImage}${exerciseItems}`;
+        ? `<div class="exercise-with-sticky-media">${exerciseImage}<div class="exercise-items-wrap">${exerciseContent}</div></div>`
+        : `${exerciseImage}${exerciseContent}`;
       return `<article class="card lesson-block exercise-card${block.stickyImage ? ' exercise-card-sticky' : ''}" data-task="${escapeHtml(id)}" data-type="exercise">
         <div class="exercise-heading"><span class="eyebrow">Exercise</span><h3>${title}</h3>${block.instructions ? `<p class="muted exercise-instructions">${escapeHtml(block.instructions)}</p>` : ''}${player}${wordBank}</div>
         ${exerciseBody}
@@ -1325,6 +1342,24 @@
     } else if (inputType === 'single') {
       actual = itemNode.querySelector('input:checked')?.value ?? '';
       correct = Number(actual) === Number(item.answer);
+    } else if (inputType === 'student-select-gaps') {
+      const inputs = [...itemNode.querySelectorAll('[data-student-gap-index]')];
+      actual = inputs.map((input) => input.value);
+      const expected = Array.isArray(item.answers) ? item.answers.map((value) => safeText(value)) : [];
+      const gapResults = expected.map((answer, index) => safeText(actual[index]) !== '' && safeText(actual[index]) === answer);
+      correct = expected.length > 0 && gapResults.length === expected.length && gapResults.every(Boolean);
+      inputs.forEach((input, index) => {
+        input.classList.toggle('is-valid', Boolean(gapResults[index]));
+        input.classList.toggle('is-invalid', !gapResults[index]);
+      });
+      if (item.scoreByGap === true) {
+        return {
+          actual,
+          correct,
+          correctCount: gapResults.filter(Boolean).length,
+          total: expected.length
+        };
+      }
     } else if (inputType === 'select') {
       actual = itemNode.querySelector('select')?.value ?? '';
       correct = actual !== '' && Number(actual) === Number(item.answer);
@@ -1443,6 +1478,9 @@
       } else if (inputType === 'single') {
         const input = itemNode.querySelector(`input[value="${CSS.escape(safeText(value))}"]`);
         if (input) input.checked = true;
+      } else if (inputType === 'student-select-gaps') {
+        const values = Array.isArray(value) ? value : [];
+        itemNode.querySelectorAll('[data-student-gap-index]').forEach((select, gapIndex) => { select.value = safeText(values[gapIndex]); });
       } else if (inputType === 'select') {
         const select = itemNode.querySelector('select');
         if (select) select.value = safeText(value);
@@ -1482,6 +1520,85 @@
         const input = node.querySelector('input, textarea');
         if (input) input.value = safeText(value);
       }
+    });
+  }
+
+
+  function lessonExerciseItem(blocks, blockId, itemId) {
+    const block = blocks.find((entry) => entry.type === 'exercise' && safeText(entry.id) === safeText(blockId));
+    if (!block) return { block: null, item: null };
+    const item = (Array.isArray(block.items) ? block.items : []).find((entry) => safeText(entry.id) === safeText(itemId));
+    return { block, item: item || null };
+  }
+
+  function currentExerciseItemParts(item, itemNode) {
+    if (!item) return [];
+    if (item.example) return [safeText(item.exampleAnswer)];
+    if (!itemNode) return [''];
+
+    const inputType = item.input || 'text';
+    if (inputType === 'gaps') {
+      return [...itemNode.querySelectorAll('[data-gap-index]')].map((input) => safeText(input.value));
+    }
+    if (inputType === 'select') {
+      const select = itemNode.querySelector('select');
+      const option = select?.selectedOptions?.[0];
+      return [select?.value === '' ? '' : safeText(option?.textContent)];
+    }
+    if (inputType === 'student-select-gaps') {
+      return [...itemNode.querySelectorAll('[data-student-gap-index]')].map((select) => safeText(select.value));
+    }
+
+    const input = itemNode.querySelector('input, textarea');
+    return [safeText(input?.value)];
+  }
+
+  function completedExerciseItemText(item, itemNode) {
+    if (!item) return '';
+    const parts = currentExerciseItemParts(item, itemNode);
+    const segments = Array.isArray(item.segments) ? item.segments : [];
+
+    if (segments.length) {
+      let sentence = '';
+      const gapCount = Math.max(parts.length, segments.length - 1);
+      for (let index = 0; index < gapCount; index += 1) {
+        sentence += safeText(segments[index]);
+        sentence += safeText(parts[index]) || '___';
+      }
+      sentence += safeText(segments[gapCount] ?? segments[segments.length - 1]);
+      return sentence.replace(/\s+/g, ' ').trim();
+    }
+
+    const prompt = safeText(item.prompt);
+    const replacement = safeText(parts[0]) || '___';
+    return prompt.replace(/_{2,}/, replacement).replace(/\s+/g, ' ').trim();
+  }
+
+  function syncStudentAnswerDependencies(root, blocks) {
+    const sourceText = (blockId, itemId) => {
+      const { item } = lessonExerciseItem(blocks, blockId, itemId);
+      if (!item) return '';
+      const blockNode = root.querySelector(`[data-task="${CSS.escape(safeText(blockId))}"]`);
+      const itemNode = blockNode?.querySelector(`[data-exercise-item="${CSS.escape(safeText(itemId))}"]`);
+      return completedExerciseItemText(item, itemNode);
+    };
+
+    root.querySelectorAll('[data-student-answer-reference]').forEach((reference) => {
+      const sourceBlockId = safeText(reference.dataset.studentAnswerReference);
+      reference.querySelectorAll('[data-student-answer-reference-item]').forEach((row) => {
+        const itemId = safeText(row.dataset.studentAnswerReferenceItem);
+        const copy = row.querySelector('p');
+        if (copy) copy.textContent = sourceText(sourceBlockId, itemId) || '___';
+      });
+    });
+
+    root.querySelectorAll('[data-student-source-block]').forEach((control) => {
+      const sourceBlockId = safeText(control.dataset.studentSourceBlock);
+      control.querySelectorAll('[data-student-source-option]').forEach((option) => {
+        const itemId = safeText(option.dataset.studentSourceOption);
+        const sentence = sourceText(sourceBlockId, itemId);
+        option.textContent = sentence ? `${itemId} — ${sentence}` : itemId;
+      });
     });
   }
 
@@ -1586,6 +1703,9 @@
       savedResult?.answers
     );
     restoreLessonAnswers(root, blocks, restoredAnswers);
+    syncStudentAnswerDependencies(root, blocks);
+    root.addEventListener('input', () => syncStudentAnswerDependencies(root, blocks));
+    root.addEventListener('change', () => syncStudentAnswerDependencies(root, blocks));
     if (savedResult && Number(savedResult.total) > 0) {
       byId('lesson-result').innerHTML = `<h3>Сохранённый результат: ${Number(savedResult.correct || 0)} из ${Number(savedResult.total || 0)}</h3><p class="muted">${Number(savedResult.percent || 0)}% правильных ответов</p>`;
     }

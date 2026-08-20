@@ -1841,5 +1841,248 @@ window.VOCABULARY_DATA = [
         "group": "unit2c"
       }
     ]
+  },
+  {
+    "id": "vocab-practical-english-1",
+    "title": "Practical English · Hotel problems",
+    "label": "Practical English · 21 useful words and phrases",
+    "icon": "🏨",
+    "type": "lesson",
+    "linkedLessonId": "lesson-8",
+    "page": "vocabulary.html?id=vocab-practical-english-1",
+    "description": "Полезные слова и фразы из Practical English: звонок на ресепшен, проблемы в отеле и Social English.",
+    "words": [
+      {
+        "id": "pe1-01",
+        "uniqueKey": "reception",
+        "legacyKey": "reception",
+        "en": "reception",
+        "ru": "ресепшен / стойка регистрации",
+        "transcription": "",
+        "exampleEn": "Hello, reception.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-02",
+        "uniqueKey": "wi-fi",
+        "legacyKey": "wi-fi",
+        "en": "wi-fi",
+        "ru": "вай-фай / беспроводной интернет",
+        "transcription": "",
+        "exampleEn": "I have a problem with the wi-fi.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-03",
+        "uniqueKey": "have a problem with",
+        "legacyKey": "have a problem with",
+        "en": "have a problem with",
+        "ru": "иметь проблему с / у меня проблема с",
+        "transcription": "",
+        "exampleEn": "I have a problem with the wi-fi.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-04",
+        "uniqueKey": "put someone through",
+        "legacyKey": "put someone through",
+        "en": "put someone through",
+        "ru": "соединить кого-то по телефону",
+        "transcription": "",
+        "exampleEn": "I'll put you through to IT.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-05",
+        "uniqueKey": "send somebody up",
+        "legacyKey": "send somebody up",
+        "en": "send somebody up",
+        "ru": "прислать кого-то наверх / в номер",
+        "transcription": "",
+        "exampleEn": "I'll send somebody up right now.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-06",
+        "uniqueKey": "bother",
+        "legacyKey": "bother",
+        "en": "bother",
+        "ru": "беспокоить / тревожить",
+        "transcription": "",
+        "exampleEn": "I'm sorry to bother you.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-07",
+        "uniqueKey": "shower",
+        "legacyKey": "shower",
+        "en": "shower",
+        "ru": "душ",
+        "transcription": "",
+        "exampleEn": "There's a problem with the shower.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-08",
+        "uniqueKey": "hot water",
+        "legacyKey": "hot water",
+        "en": "hot water",
+        "ru": "горячая вода",
+        "transcription": "",
+        "exampleEn": "There isn't any hot water.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-09",
+        "uniqueKey": "signal",
+        "legacyKey": "signal",
+        "en": "signal",
+        "ru": "сигнал / связь",
+        "transcription": "",
+        "exampleEn": "I can't get a signal.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-10",
+        "uniqueKey": "manager",
+        "legacyKey": "manager",
+        "en": "manager",
+        "ru": "менеджер / управляющий",
+        "transcription": "",
+        "exampleEn": "I want to talk to the manager.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-11",
+        "uniqueKey": "mini-bar",
+        "legacyKey": "mini-bar",
+        "en": "mini-bar",
+        "ru": "мини-бар",
+        "transcription": "",
+        "exampleEn": "There's no water in my mini-bar.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-12",
+        "uniqueKey": "quiet",
+        "legacyKey": "quiet",
+        "en": "quiet → quieter",
+        "ru": "тихий → тише",
+        "transcription": "",
+        "exampleEn": "I'll see if we have a quieter one.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-13",
+        "uniqueKey": "bottle",
+        "legacyKey": "bottle",
+        "en": "bottle",
+        "ru": "бутылка",
+        "transcription": "",
+        "exampleEn": "I'll send two bottles to your room right now.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-14",
+        "uniqueKey": "right now",
+        "legacyKey": "right now",
+        "en": "right now",
+        "ru": "прямо сейчас",
+        "transcription": "",
+        "exampleEn": "I'll send somebody up right now.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-15",
+        "uniqueKey": "see if",
+        "legacyKey": "see if",
+        "en": "see if",
+        "ru": "посмотреть / проверить, можно ли",
+        "transcription": "",
+        "exampleEn": "I'll see if we have a quieter one.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-16",
+        "uniqueKey": "guess",
+        "legacyKey": "guess",
+        "en": "guess",
+        "ru": "полагать / думаю",
+        "transcription": "",
+        "exampleEn": "I guess you're right.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-17",
+        "uniqueKey": "by the way",
+        "legacyKey": "by the way",
+        "en": "by the way",
+        "ru": "кстати",
+        "transcription": "",
+        "exampleEn": "By the way, Martha wants to see you while you're here.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-18",
+        "uniqueKey": "while",
+        "legacyKey": "while",
+        "en": "while",
+        "ru": "пока / в то время как",
+        "transcription": "",
+        "exampleEn": "Martha wants to see you while you're here.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-19",
+        "uniqueKey": "welcome",
+        "legacyKey": "welcome",
+        "en": "welcome",
+        "ru": "добро пожаловать",
+        "transcription": "",
+        "exampleEn": "Welcome to New York.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-20",
+        "uniqueKey": "one more thing",
+        "legacyKey": "one more thing",
+        "en": "one more thing",
+        "ru": "ещё одна вещь / ещё один момент",
+        "transcription": "",
+        "exampleEn": "There's one more thing.",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      },
+      {
+        "id": "pe1-21",
+        "uniqueKey": "what's ... like?",
+        "legacyKey": "what's ... like?",
+        "en": "What's ... like?",
+        "ru": "Какой / какая / какое ...?",
+        "transcription": "",
+        "exampleEn": "What's your room like?",
+        "exampleRu": "",
+        "group": "practical-english-1"
+      }
+    ]
   }
 ];

@@ -1256,5 +1256,405 @@ window.GRAMMAR_DATA = [
       }
     ],
     "linkedLessonId": "lesson-7"
+  },
+  {
+    "id": "grammar-will-offers",
+    "order": 9,
+    "title": "Will / ’ll: offers and instant decisions",
+    "level": "A2",
+    "status": "available",
+    "page": "grammar-topic.html?id=grammar-will-offers",
+    "passScore": 100,
+    "saveOnlyOnPass": true,
+    "lockOnPass": true,
+    "revealAnswerOnError": false,
+    "usesTitle": "Когда используем will / ’ll",
+    "usesSubtitle": "В этом уроке главное — предложение помощи и решение, принятое прямо сейчас",
+    "formsTitle": "Форма will",
+    "formsSubtitle": "После will всегда используется начальная форма глагола без to",
+    "overview": {
+      "lead": "Will часто используется, когда решение появляется прямо в момент разговора: человек слышит о проблеме и сразу предлагает помощь или говорит, что сделает. В разговорной речи после I, you, he, she, it, we, they очень часто используется краткая форма ’ll.",
+      "keyRule": "Subject + will / ’ll + base verb. После will не ставим to и не добавляем -s, -ed или -ing к смысловому глаголу.",
+      "subjects": [
+        "OFFER → предложение помощи",
+        "NOW → решение принято сейчас",
+        "FORM → will / ’ll + base verb"
+      ],
+      "example": "There’s a problem with the shower. — I’ll send somebody up right now."
+    },
+    "uses": [
+      {
+        "icon": "🤝",
+        "title": "Предложение помощи",
+        "text": "Используй I’ll, когда ты реагируешь на проблему и предлагаешь, что сделаешь для другого человека.",
+        "example": "I’ll put you through to IT."
+      },
+      {
+        "icon": "⚡",
+        "title": "Решение прямо сейчас",
+        "text": "Если решение возникло во время разговора, will подходит лучше, чем be going to.",
+        "example": "This room is very noisy. — I’ll see if we have a quieter one."
+      },
+      {
+        "icon": "📞",
+        "title": "Обещание или немедленное действие",
+        "text": "Will также может сообщать, что говорящий обещает выполнить действие или организовать его.",
+        "example": "I’ll ask her to call you."
+      }
+    ],
+    "forms": [
+      {
+        "id": "affirmative",
+        "icon": "+",
+        "title": "Утверждение",
+        "formula": "I / you / he / she / it / we / they + will + base verb",
+        "example": "I will send somebody up. = I’ll send somebody up.",
+        "translation": "Я пришлю кого-нибудь наверх / в номер.",
+        "note": "Форма will одинакова для всех лиц. В разговоре will обычно сокращается до ’ll."
+      },
+      {
+        "id": "negative",
+        "icon": "−",
+        "title": "Отрицание",
+        "formula": "subject + will not / won’t + base verb",
+        "example": "I won’t forget to call you.",
+        "translation": "Я не забуду вам позвонить.",
+        "note": "Стандартная краткая отрицательная форма — won’t, а не willn’t."
+      },
+      {
+        "id": "question",
+        "icon": "?",
+        "title": "Вопрос и короткий ответ",
+        "formula": "Will + subject + base verb? · Yes, subject will. / No, subject won’t.",
+        "example": "Will you call the manager? — Yes, I will. / No, I won’t.",
+        "translation": "Вы позвоните менеджеру? — Да. / Нет.",
+        "note": "В вопросе will ставится перед подлежащим. В коротком ответе смысловой глагол не повторяется."
+      },
+      {
+        "id": "base-verb",
+        "icon": "V1",
+        "title": "Глагол после will",
+        "formula": "will + call / send / ask / see / put",
+        "example": "I’ll ask her to call you.",
+        "translation": "Я попрошу её вам позвонить.",
+        "note": "После will используется базовая форма: не will to call, не will calls, не will called. Написание самого смыслового глагола не меняется."
+      },
+      {
+        "id": "will-vs-going-to",
+        "icon": "↔",
+        "title": "Will или be going to",
+        "formula": "decision now → will · plan made before → be going to",
+        "example": "The wi-fi isn’t working. I’ll call reception. · I’m going to call reception after dinner.",
+        "translation": "Wi-fi не работает. Я позвоню на ресепшен. · Я собираюсь позвонить на ресепшен после ужина.",
+        "note": "В первом случае решение появилось сейчас из-за ситуации. Во втором это уже заранее сформированный план."
+      }
+    ],
+    "memoryRule": {
+      "title": "Как быстро выбрать форму",
+      "steps": [
+        "Сначала спроси: решение появилось прямо сейчас как реакция на ситуацию? Если да, используй will / ’ll.",
+        "Поставь подлежащее перед will в утверждении: I’ll, she’ll, we’ll.",
+        "После will используй только начальную форму глагола без to.",
+        "Для отрицания используй won’t + base verb.",
+        "Для вопроса перенеси will перед подлежащим: Will you ...?"
+      ]
+    },
+    "commonMistakes": [
+      {
+        "wrong": "I’ll to send somebody up.",
+        "right": "I’ll send somebody up.",
+        "reason": "После will не используется to."
+      },
+      {
+        "wrong": "She will calls you.",
+        "right": "She will call you.",
+        "reason": "После will глагол остаётся в базовой форме, даже с he / she / it."
+      },
+      {
+        "wrong": "I willn’t forget.",
+        "right": "I won’t forget.",
+        "reason": "Правильная краткая отрицательная форма — won’t."
+      },
+      {
+        "wrong": "Will you to call the manager?",
+        "right": "Will you call the manager?",
+        "reason": "В вопросе после подлежащего тоже используется базовая форма без to."
+      },
+      {
+        "wrong": "I’m going to help you right now. [решение только что принято]",
+        "right": "I’ll help you right now.",
+        "reason": "Когда решение появляется прямо в момент разговора, обычно используем will."
+      }
+    ],
+    "quizGroups": [
+      {
+        "id": "1",
+        "title": "1. Choose the correct form.",
+        "instructions": "Choose one answer.",
+        "difficulty": "Лёгкое"
+      },
+      {
+        "id": "2",
+        "title": "2. Complete the sentences.",
+        "instructions": "Write the missing form of will and the verb where necessary.",
+        "difficulty": "Среднее"
+      },
+      {
+        "id": "3",
+        "title": "3. Choose all the correct sentences.",
+        "instructions": "There may be more than one correct answer.",
+        "difficulty": "Повышенная сложность"
+      },
+      {
+        "id": "4",
+        "title": "4. Build the sentence.",
+        "instructions": "Write a complete sentence from the prompt.",
+        "difficulty": "Самое сложное"
+      }
+    ],
+    "quiz": [
+      {
+        "group": "1",
+        "type": "single",
+        "skill": "offer",
+        "prompt": "There’s a problem with the shower. — ___ send somebody up right now.",
+        "options": [
+          "I’ll",
+          "I’m",
+          "I did"
+        ],
+        "answer": 0,
+        "errorFeedback": "Есть ошибка. Нужна форма для немедленного предложения помощи."
+      },
+      {
+        "group": "1",
+        "type": "single",
+        "skill": "base verb",
+        "prompt": "Choose the correct sentence.",
+        "options": [
+          "I’ll put you through to IT.",
+          "I’ll to put you through to IT.",
+          "I’ll putting you through to IT."
+        ],
+        "answer": 0,
+        "errorFeedback": "Есть ошибка. Проверь форму глагола после will."
+      },
+      {
+        "group": "1",
+        "type": "single",
+        "skill": "negative",
+        "prompt": "Choose the correct negative form.",
+        "options": [
+          "I won’t forget.",
+          "I willn’t forget.",
+          "I don’t will forget."
+        ],
+        "answer": 0,
+        "errorFeedback": "Есть ошибка. Вспомни краткую отрицательную форму will."
+      },
+      {
+        "group": "1",
+        "type": "single",
+        "skill": "will vs going to",
+        "prompt": "The wi-fi has just stopped working. You decide now to call reception. What do you say?",
+        "options": [
+          "I’ll call reception.",
+          "I’m going to called reception.",
+          "I called reception."
+        ],
+        "answer": 0,
+        "errorFeedback": "Есть ошибка. Решение принято прямо сейчас."
+      },
+      {
+        "group": "2",
+        "type": "gaps",
+        "skill": "affirmative",
+        "prompt": "Complete the sentence.",
+        "segments": [
+          "I",
+          " ",
+          " her to call you."
+        ],
+        "answers": [
+          [
+            "’ll",
+            "'ll",
+            "will"
+          ],
+          "ask"
+        ],
+        "errorFeedback": "Есть ошибка. Используй will / ’ll и базовую форму глагола."
+      },
+      {
+        "group": "2",
+        "type": "gaps",
+        "skill": "affirmative",
+        "prompt": "Complete the sentence.",
+        "segments": [
+          "We",
+          " ",
+          " if we have a quieter room."
+        ],
+        "answers": [
+          [
+            "’ll",
+            "'ll",
+            "will"
+          ],
+          "see"
+        ],
+        "errorFeedback": "Есть ошибка. После will нужен глагол в базовой форме."
+      },
+      {
+        "group": "2",
+        "type": "gaps",
+        "skill": "negative",
+        "prompt": "Complete the sentence.",
+        "segments": [
+          "I ",
+          " ",
+          " to call the manager."
+        ],
+        "answers": [
+          [
+            "won’t",
+            "won't",
+            "will not"
+          ],
+          "forget"
+        ],
+        "errorFeedback": "Есть ошибка. Проверь отрицательную форму и глагол после неё."
+      },
+      {
+        "group": "2",
+        "type": "gaps",
+        "skill": "question",
+        "prompt": "Complete the question.",
+        "segments": [
+          "",
+          " you ",
+          " the manager?"
+        ],
+        "answers": [
+          "Will",
+          "call"
+        ],
+        "errorFeedback": "Есть ошибка. В вопросе will стоит перед подлежащим."
+      },
+      {
+        "group": "3",
+        "type": "multiple",
+        "skill": "base verb",
+        "prompt": "Choose all the grammatically correct sentences.",
+        "options": [
+          "I’ll send two bottles to your room.",
+          "She’ll call you later.",
+          "He’ll to speak to the manager."
+        ],
+        "answer": [
+          0,
+          1
+        ],
+        "errorFeedback": "Есть ошибка. После ’ll используется базовая форма глагола без to."
+      },
+      {
+        "group": "3",
+        "type": "multiple",
+        "skill": "negative / question",
+        "prompt": "Choose all the grammatically correct sentences.",
+        "options": [
+          "I won’t forget.",
+          "Will you call reception?",
+          "Will you to call reception?"
+        ],
+        "answer": [
+          0,
+          1
+        ],
+        "errorFeedback": "Есть ошибка. Проверь отрицание won’t и форму глагола в вопросе."
+      },
+      {
+        "group": "3",
+        "type": "multiple",
+        "skill": "instant decision",
+        "prompt": "The guest says, “There’s no water in my mini-bar.” Choose all natural immediate responses.",
+        "options": [
+          "I’ll send two bottles to your room right now.",
+          "I’ll see what I can do.",
+          "I was sending two bottles yesterday."
+        ],
+        "answer": [
+          0,
+          1
+        ],
+        "errorFeedback": "Есть ошибка. Нужна естественная реакция и решение, принятое сейчас."
+      },
+      {
+        "group": "3",
+        "type": "multiple",
+        "skill": "will vs going to",
+        "prompt": "Choose all sentences where will is natural for a decision made now.",
+        "options": [
+          "The phone is ringing. I’ll answer it.",
+          "You look tired. I’ll make some coffee.",
+          "I bought the tickets yesterday. I’ll going to travel on Friday."
+        ],
+        "answer": [
+          0,
+          1
+        ],
+        "errorFeedback": "Есть ошибка. Выбери реакции, в которых решение появляется в момент речи."
+      },
+      {
+        "group": "4",
+        "type": "text",
+        "skill": "offer",
+        "prompt": "Make an offer: I / send / somebody up / right now",
+        "answer": "I'll send somebody up right now.",
+        "acceptedAnswers": [
+          "I'll send somebody up right now.",
+          "I’ll send somebody up right now.",
+          "I will send somebody up right now."
+        ],
+        "errorFeedback": "Есть ошибка. Построй утверждение с I’ll / I will + base verb."
+      },
+      {
+        "group": "4",
+        "type": "text",
+        "skill": "offer",
+        "prompt": "Make an offer: I / put / you through to IT",
+        "answer": "I'll put you through to IT.",
+        "acceptedAnswers": [
+          "I'll put you through to IT.",
+          "I’ll put you through to IT.",
+          "I will put you through to IT."
+        ],
+        "errorFeedback": "Есть ошибка. После will используй put без to."
+      },
+      {
+        "group": "4",
+        "type": "text",
+        "skill": "question",
+        "prompt": "Make a question: you / call / the manager",
+        "answer": "Will you call the manager?",
+        "acceptedAnswers": [
+          "Will you call the manager?"
+        ],
+        "errorFeedback": "Есть ошибка. Начни вопрос с Will."
+      },
+      {
+        "group": "4",
+        "type": "text",
+        "skill": "negative",
+        "prompt": "Make a negative sentence: I / not forget / to call you",
+        "answer": "I won't forget to call you.",
+        "acceptedAnswers": [
+          "I won't forget to call you.",
+          "I won’t forget to call you.",
+          "I will not forget to call you."
+        ],
+        "errorFeedback": "Есть ошибка. Используй won’t / will not + base verb."
+      }
+    ]
   }
 ];
