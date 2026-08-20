@@ -1244,9 +1244,22 @@
       const exerciseBody = block.stickyImage && exerciseImage
         ? `<div class="exercise-with-sticky-media">${exerciseImage}<div class="exercise-items-wrap">${exerciseContent}</div></div>`
         : `${exerciseImage}${exerciseContent}`;
+      const dependencySourceBlockId = safeText(block.unlockAfterStudentAnswers?.sourceBlockId);
+      const dependencyItemIds = Array.isArray(block.unlockAfterStudentAnswers?.itemIds)
+        ? block.unlockAfterStudentAnswers.itemIds.map((value) => safeText(value)).filter(Boolean)
+        : [];
+      const gatedExerciseBody = dependencySourceBlockId
+        ? `<div class="student-dependent-exercise is-waiting" data-student-dependency-source="${escapeHtml(dependencySourceBlockId)}" data-student-dependency-items="${escapeHtml(dependencyItemIds.join(','))}">
+            <div class="student-dependency-lock" data-student-dependency-lock>
+              <span class="student-dependency-lock-icon" aria-hidden="true">🔒</span>
+              <div><strong>Сначала закончи предыдущее задание</strong><p>Когда все ответы в части a будут заполнены, здесь появятся твои готовые предложения.</p></div>
+            </div>
+            <div class="student-dependency-content" data-student-dependency-content hidden>${exerciseBody}</div>
+          </div>`
+        : exerciseBody;
       return `<article class="card lesson-block exercise-card${block.stickyImage ? ' exercise-card-sticky' : ''}" data-task="${escapeHtml(id)}" data-type="exercise">
         <div class="exercise-heading"><span class="eyebrow">Exercise</span><h3>${title}</h3>${block.instructions ? `<p class="muted exercise-instructions">${escapeHtml(block.instructions)}</p>` : ''}${player}${wordBank}</div>
-        ${exerciseBody}
+        ${gatedExerciseBody}
       </article>`;
     }
     if (block.type === 'text' || block.type === 'translate') return `<article class="card lesson-block" data-task="${escapeHtml(id)}" data-type="${escapeHtml(block.type)}"><label class="field-label" for="${escapeHtml(id)}">${title}</label>${block.source ? `<p class="muted">${escapeHtml(block.source)}</p>` : ''}<input class="text-field" id="${escapeHtml(id)}" name="${escapeHtml(id)}" autocomplete="off"><div class="feedback"></div></article>`;
@@ -1562,8 +1575,13 @@
       let sentence = '';
       const gapCount = Math.max(parts.length, segments.length - 1);
       for (let index = 0; index < gapCount; index += 1) {
-        sentence += safeText(segments[index]);
-        sentence += safeText(parts[index]) || '___';
+        const segment = safeText(segments[index]);
+        let part = safeText(parts[index]);
+        if (part && /(?:^|[.!?]\s+)$/.test(segment) && /^[a-z]/.test(part)) {
+          part = `${part.charAt(0).toUpperCase()}${part.slice(1)}`;
+        }
+        sentence += segment;
+        sentence += part || '___';
       }
       sentence += safeText(segments[gapCount] ?? segments[segments.length - 1]);
       return sentence.replace(/\s+/g, ' ').trim();
@@ -1575,13 +1593,31 @@
   }
 
   function syncStudentAnswerDependencies(root, blocks) {
-    const sourceText = (blockId, itemId) => {
+    const sourceItemState = (blockId, itemId) => {
       const { item } = lessonExerciseItem(blocks, blockId, itemId);
-      if (!item) return '';
+      if (!item) return { text: '', complete: false };
       const blockNode = root.querySelector(`[data-task="${CSS.escape(safeText(blockId))}"]`);
       const itemNode = blockNode?.querySelector(`[data-exercise-item="${CSS.escape(safeText(itemId))}"]`);
-      return completedExerciseItemText(item, itemNode);
+      const parts = currentExerciseItemParts(item, itemNode);
+      const complete = item.example === true || (parts.length > 0 && parts.every((part) => safeText(part).trim() !== ''));
+      return { text: completedExerciseItemText(item, itemNode), complete };
     };
+    const sourceText = (blockId, itemId) => sourceItemState(blockId, itemId).text;
+
+    root.querySelectorAll('[data-student-dependency-source]').forEach((dependency) => {
+      const sourceBlockId = safeText(dependency.dataset.studentDependencySource);
+      const itemIds = safeText(dependency.dataset.studentDependencyItems)
+        .split(',')
+        .map((value) => value.trim())
+        .filter(Boolean);
+      const ready = itemIds.length > 0 && itemIds.every((itemId) => sourceItemState(sourceBlockId, itemId).complete);
+      dependency.classList.toggle('is-waiting', !ready);
+      dependency.classList.toggle('is-ready', ready);
+      const lock = dependency.querySelector('[data-student-dependency-lock]');
+      const content = dependency.querySelector('[data-student-dependency-content]');
+      if (lock) lock.hidden = ready;
+      if (content) content.hidden = !ready;
+    });
 
     root.querySelectorAll('[data-student-answer-reference]').forEach((reference) => {
       const sourceBlockId = safeText(reference.dataset.studentAnswerReference);

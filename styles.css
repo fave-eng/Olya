@@ -2574,6 +2574,45 @@ body[data-view="lesson"] #lesson-root {
   font-size: .86rem;
 }
 
+.student-dependent-exercise {
+  min-width: 0;
+}
+
+.student-dependency-lock {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 16px;
+  padding: 16px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: #475569;
+}
+
+.student-dependency-lock[hidden],
+.student-dependency-content[hidden] {
+  display: none !important;
+}
+
+.student-dependency-lock-icon {
+  flex: 0 0 auto;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.student-dependency-lock strong {
+  display: block;
+  color: #334155;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: .92rem;
+}
+
+.student-dependency-lock p {
+  margin: 4px 0 0;
+  line-height: 1.5;
+}
+
 .student-select-gaps {
   align-items: center;
 }
